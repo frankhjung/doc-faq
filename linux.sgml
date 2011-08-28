@@ -1,0 +1,2654 @@
+<qandaset defaultlabel=qanda id=Link>
+
+<title>Linux Frequently Asked Questions</title>
+
+<qandaentry>
+<question>
+<para>
+What version of Linux am I running?
+</para>
+</question>
+<answer>
+<para>
+<orderedlist>
+<listitem>
+<para>
+Use data from the 
+<ulink url="http://www.linuxbase.org/"><citetitle>Linux Standards Base</citetitle></ulink>, on
+<ulink url="http://www.debian.org/"><citetitle>Debian</citetitle></ulink> it can be read from
+<filename>/etc/lsb-release</filename>.
+</para>
+</listitem>
+<listitem>
+<para>
+To get your system information, use:
+<programlisting><![CDATA[
+uname -a
+]]></programlisting>
+</para>
+</listitem>
+<listitem>
+<para>
+To show release information (Debian, Ubuntu), use:
+<programlisting><![CDATA[
+cat /etc/lsb-release
+]]></programlisting>
+</para>
+</listitem>
+</orderedlist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to create a summary of images in a directory?
+</para>
+</question>
+<answer>
+<para>
+This command will generate a postcard size summary of images:
+<programlisting><![CDATA[
+convert 'vid:*.jpg' directory.miff
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to resize directory for preview with the GIMP?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+for f in *.jpg; do convert -size 80x60 $f ${f#../};done
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to rotate a picture right by 90 degrees?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+mogrify -rotate 90 p6260018.jpg
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to clear or empty log files?
+</para>
+</question>
+<answer>
+<para>
+To maintain a log directory:
+<programlisting><![CDATA[
+cp file.log file.log.0
+cat /dev/null > file.log
+compress file.log.0
+]]></programlisting>
+</para>
+<para>
+General rule of thumb:
+</para>
+<para>
+Do not remove log files - null them. If you just remove the log file and a
+process has the file open, this space will not be reallocated until the demon
+is stopped.
+</para>
+<para>
+To empty a log file:
+<programlisting><![CDATA[
+cat /dev/null > file.log
+find /tmp -name '*.log' -exec cp /dev/null {} \;
+echo > file.log
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to label tapes?
+</para>
+</question>
+<answer>
+<para>
+You can label tapes by:
+<programlisting><![CDATA[
+mt -f <tape device> rew
+echo "tape label and date etc"|dd of=<tape device>
+dump filesystems
+mt -f <tape device> rewoffl.
+]]></programlisting>
+</para>
+<para>
+When you want to retrieve the tape label do:
+<programlisting><![CDATA[
+dd if=<tape device>
+]]></programlisting>
+</para>
+<para>
+When retrieving filesystems, just remember to skip the first save set as it
+is the label.
+To retrieve the 2nd filesystem dumped do:
+<programlisting><![CDATA[
+mt -f <tape device> rew
+mt -f <no rewind tape device> fsf 2
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to forward email?
+</para>
+</question>
+<answer>
+<para>
+Add the following entry to <filename>$HOME/.forward</filename>:
+<screen>
+\frank@troll, jungf@ains.net.au
+</screen>
+This says that mail should keep one copy for the local account, and send one
+copy to my AINS account.
+</para>
+<para>
+When on vacation, do this:
+<screen>
+\jungf, "| /usr/bin/vacation jungf"
+</screen>
+This keeps one copy for the local account, and sends one nasty message
+(stored in a file called .vacation for example) to the sender of any mail.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+What mail is currently queued to send?
+</para>
+</question>
+<answer>
+<para>
+If you are using <command>sendmail(8)</command>, then:
+<screen>
+sendmail -bp   
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+What does the ? mark mean under the tty field in the process status (<command>ps -ef</command>)?
+</para>
+</question>
+<answer>
+<para>
+The "?" mark indicates that the process is not attached to any terminal.
+This happens typically for daemons, where the process becomes the leader of the
+group and detaches itself from the terminal.
+</para>
+<para>
+See also <command>pstree(1)</command> and <command>ps axf</command>.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to show which users have not logged on recently?
+</para>
+</question>
+<answer>
+<para>
+The following script reports users who have recently signed in/out.
+Limitations: doesn't register remote logins.
+<programlisting><![CDATA[
+#!/bin/ksh
+# Display Recent Logins
+# This is really slow for large "last" - so simplify
+last | cut -d" " -f1 | sort -u > ./last.out
+for i in $( cut -d: -f1 /etc/passwd | sort -u )
+do
+   grep $i ./last.out > /dev/null
+   if [ $? -eq 0 ]
+     then print $i"\tOk"
+     else print $i"\tNone"
+   fi
+done
+rm ./last.out
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to format an ASCII file into PostScript?
+</para>
+</question>
+<answer>
+<para>
+This example uses <command>a2ps(1)</command>. Print PostScript to an ASCII
+printer by piping to <command>ghostview(1)</command>:
+<programlisting><![CDATA[
+lp filename | a2ps -2q --strip=3 -o -|gs - -sDEVICE=ljet3 -sOutputFile=|lpr
+]]></programlisting>
+Alternatively:
+<programlisting><![CDATA[
+gv filename | a2ps -P display
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to save a subset of a PDF document?
+</para>
+</question>
+<answer>
+<para>
+This example uses <command>pdftops(1)</command> to specify a range of pages to
+print.  The input format is PDF, and the result is a PostScript file:
+<programlisting><![CDATA[
+pdftops -f 1 -l 2 document.pdf document.ps
+]]></programlisting>
+Use <command>gv(1)</command> to view results.
+</para>
+<para>
+Another way to split a PDF document is to use <command>pdftk(1)</command>.  For
+example to split an 8 page document into pages 1-7, and page 8 use:
+<programlisting><![CDATA[
+pdftk document.pdf cat 1-7 output document-1-7.pdf
+]]></programlisting>
+To split a document into seperate pages you first need to know how many there are in the document,
+<programlisting><![CDATA[
+PAGES=$(pdfinfo document.pdf| awk '/Pages:/ {print $2}')
+]]></programlisting>
+Then split using:
+<programlisting><![CDATA[
+for (( p=1; p <= $PAGES; p++)); do \
+	pdftk document.pdf cat $p output document.pdf-$p.pdf; \
+done
+]]></programlisting>
+Another way to split a document is by using <command>gs(1)</command>:
+<programlisting><![CDATA[
+gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dFirstPage=1 -dLastPage=1 -sOutputFile=document-1-7.pdf document.pdf
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How can I collect all input and output in a terminal session?
+</para>
+</question>
+<answer>
+<para>
+Try <command>script(1)</command>, for example:
+<programlisting><![CDATA[
+script -a filename            // this appends to filename
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to send a binary files when using email?
+</para>
+</question>
+<answer>
+<para>
+Compress with uuencoding:
+<screen>
+tar cf - files | gzip | uuencode files.tar.gz &gt; files.tar.gz.uu
+</screen>
+To extract use:
+<screen>
+uudecode -p files.tar.gz.uu | gzip -c -d - | tar xf -
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to generate random numbers from a shell?
+</para>
+</question>
+<answer>
+<para>
+To generate a random number, using Korn Shell, between $LO and $HI
+(inclusive), use the following code:
+<programlisting><![CDATA[
+#/bin/ksh
+(( RANGE = HI - LO + 1 ))
+(( NUMBER = RANDOM % RANGE + LO ))
+# $NUMBER now contains your "random" number in the specified range.
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to remove a directory that is too deep for <command>ls(1)</command> or
+<command>rm -R</command>?
+</para>
+</question>
+<answer>
+<para>
+Use following script (which does not use <command>pwd(1)</command>):
+<programlisting><![CDATA[
+#!/usr/local/bin/bash
+
+# Recursive Traversal of Directories
+rm_branch () {
+   # go to bottom of directory tree
+   if [[ -d $dirName ]]; then
+      print "going into directory $dirName"
+      cd $dirName; 
+      rm_branch
+   else
+      print "at bottom of $dirName"
+      return 0
+   fi
+
+   cd ..
+   rmdir $dirName;
+}
+
+# test it
+if [[ -d $dirName ]]; then
+   dirName = ${1};
+   rm_branch;
+fi
+]]></programlisting>
+</para>
+<para>
+This is easier to implement, but very slow to execute:
+<programlisting><![CDATA[
+#!/bin/local/bin/bash
+
+rm_branch() {
+   if [[ -d $dirName ]]; then
+      DIR=$dirName
+      while [ -d $dirName ]
+      do
+         mv $dirName $dirName.x
+         cd $dirName.x
+         mv $dirName ../$dirName
+         cd ..
+         rm -r $dirName.x
+      done
+   fi
+}
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+What devices are available?
+</para>
+</question>
+<answer>
+<para>
+Use the <command>lspci(8)</command>:
+<screen>
+lspci -v
+</screen>
+This will provide a list of devices on this machine. See also
+<command>lsusb(8)</command> for a list of USB devices, or
+<command>fdisk(8)</command>. Note that devices can be mounted by device, UUID
+or label. To list mounted devices by UUID use blkid(8).  Each will be mapped to
+an entries under <filename>/dev/disk/</filename>.
+</para>
+<para>
+To list block devices use <command>blkid(8)</command>.  This will also show the
+associated UUID.
+</para>
+<para>
+Another tool is <command>devkit-disks(1)</command>.  This has a dump option
+that will list very detailed information of mounted devices. Example:
+<screen>
+devkit-disks --dump
+</screen>
+Information about a singe device can also be captured, but for that you
+need the name of the device file.  Use a combination of commands, like:
+<screen>
+devkit-disks --enumerate 
+devkit-disks --enumerate-device-files
+devkit-disks --show-info /dev/disk/by-uuid/10807b5e-24f6-4031-bdd1-bd07c08afaa3
+</screen>
+</para>
+<para>
+To list input devices use <command>xinput(1)</command>.  It is a utility that
+also allows you to configure and test X input devices.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+   <para>
+   How to copy an audio CD (and convert to MP3 or OGG)?
+   </para>
+</question>
+<answer>
+<orderedlist>
+<listitem>
+   <para>
+   This can be done using <command>dagrab(1)</command>, to dump an audio CD to
+   disk and <command>lame(1)</command> to convert WAV to MP3.
+   </para>
+   <para>
+   FreeBSD: To copy an entire audio CD to disk as WAV files:
+   <screen>dagrab -a -d /dev/acd0c -f "Sacred_Fire-%02d.wav"</screen>
+   Linux: To copy an entire audio CD to disk as WAV files:
+   <screen>cdda2wav -x -B -D 0,0,0</screen>
+   Or the more friendly:
+   <screen>nice cdda2wav -D 0,1,0 -alltracks -x -Q -H -S 48 -v disable &</screen>
+   You may also try the <command>cdparanoia(1)</command> with
+   <screen>cdparanoia -w -B -d /dev/dvd </screen>
+   or more simply:
+   <screen>cdparanoia -w -B </screen>
+   The advantage of <command>cdparanoia(1)</command> is better quality and easier
+   access to specific tracks.
+   </para>
+</listitem>
+<listitem>
+   <para>
+   FreeBSD: To copy only certain tracks of an audio CD to disk as WAV files:
+   <screen>dagrab -d /dev/acd0c -f "%02d-Sacred_File.wav" 1 2 3 5 7 11</screen>
+   </para>
+   <para>
+   Where the options to <command>dagrab(1)</command> are:
+   <simplelist type=horiz columns=2>
+      <member>-a</member> 
+      <member>Dumps all tracks and ignores the optional track list.</member>
+      <member>-d</member> 
+      <member>Sets  the  cdrom  device  name.</member> 
+      <member>-f</member> 
+      <member>Sets the output name for dumping tracks.</member> 
+      <member>-i</member> 
+      <member>Prints out the track list from the current cd.</member> 
+   </simplelist>
+   This will copy the Audio CD's to disk as WAV files.
+   </para>
+</listitem>
+<listitem>
+   <para>
+   FreeBSD: Don't write these WAV files straight to disk though,
+   as you will get a nasty audible "click" recorded between each track.
+   To eliminate this click use <command>sox(1)</command> to convert to raw
+   audio:
+   <screen>for f in *.wav; do sox $f ${f%%wav}raw; done</screen>
+   </para>
+</listitem>
+<listitem>
+   <para>
+   Linux: You can seperate these file into volumes with:
+   <screen>v=01 && for f in audio_??.wav; do mv $f audio_${v}_${f##audio_}; done</screen>
+   </para>
+</listitem>
+<listitem>
+   <para>
+   To convert WAV to OGG Vorbis format use:
+   <command>oggenc(1)</command>:
+   <screen>oggenc *.wav</screen>
+   </para>
+</listitem>
+<listitem>
+   <para>
+   To convert WAV to MP3 use:
+   <command>lame(1)</command>:
+   <screen>for w in *.wav; do lame -h $w ${w%%wav}mp3; done</screen>
+   </para>
+</listitem>
+<listitem>
+   <para>
+   To convert MP3 to OGG use:
+   <command>mp32ogg(1)</command>:
+   <screen>mp32ogg  --preserve-timestamp [dir1] [dir2] ...</screen>
+   </para>
+</listitem>
+<listitem>
+   <para>
+   To convert OGG to MP3 use:
+   <command>soundconvert.pl(1)</command>:
+   <screen>for f in *.ogg; do soundconvert -o MP3 "$f"; done</screen>
+   </para>
+</listitem>
+<listitem>
+   <para>
+   To determine space used by mp3 files use
+   <screen>du -mc *.mp3</screen>
+   Or by album:
+   <screen>for ((i=1;i&lt;10;i++)); do du -cm audio_0${i}_??.mp3; done</screen>
+   </para>
+</listitem>
+<listitem>
+   <para>
+   FreeBSD: To write to CD use <command>burncd(1)</command>:
+   <screen>burncd -s 8 -f /dev/acd0c audio *.raw fixate</screen>
+   </para>
+   <para>
+   Linux: To write to CD use <command>cdrecord(1)</command>:
+   <screen>cdrecord -v -ignsize speed=6 dev=/dev/cdrom -dao -useinfo *.wav</screen>
+   or, which uses TAO single session write mode:
+   <screen>cdrecord -v speed=8 dev=0,0 *.wav</screen>
+   </para>
+</listitem>
+<listitem>
+   <para>
+   Finally, if you wish to update an MP3 files ID3 tag, use <command>mid3v2</command>,
+   <screen>for f in *.mp3; do mid3v2 -t ${f%%.mp3} -A "The Pod Delusion" $f ; done</screen>
+   This sets the title and Album.
+   </para>
+</listitem>
+</orderedlist>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to copy  data CD?
+</para>
+</question>
+<answer>
+<para>
+<orderedlist>
+<listitem>
+    <para>
+    Copy a data CD:
+    <screen>
+    dd if=/dev/cdrom of=image.iso
+    </screen>
+    This command can also be used to write an ISO image to a USB device:
+    <screen>
+    dd if=/path/to/iso of=/dev/usb_device
+    </screen>
+    </para>
+</listitem>
+<listitem>
+    <para>
+    Check image before writing:
+    <screen>
+    mount -t iso9660 -o loop image.iso /mnt/cdrom
+    </screen>
+    This uses the loop back device.  See <command>mount(8)</command> and search
+    for a section entitled "THE LOOP DEVICE".
+    </para>
+</listitem>
+<listitem>
+    <para>
+    Write the image to the CD:
+    <screen>
+    cdrecord -v -speed=6 dev=/dev/cdrom image.iso
+    </screen>
+    </para>
+</listitem>
+</orderedlist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to record a multi-session CD?
+</para>
+</question>
+<answer>
+<para>
+This answer is for use of <command>cdrecord(1)</command>.
+Recall for a single (or first) session CD, follow this plan:
+<orderedlist>
+<listitem>
+    <para>
+    Find location of CDRW device.  This will be used in dev option of <command>cdrecord(1)</command>):
+    <screen>
+    cdrecord -scanbus
+    </screen>
+    </para>
+</listitem>
+<listitem>
+    <para>
+    Write ISO image:
+    <screen>
+    mkisofs -R -J -o image.iso /thedirectory/
+    </screen>
+    </para>
+    </listitem>
+    <listitem>
+    <para>
+    Write the image to the CD:
+    <screen>
+    cdrecord -v -speed=6 dev=/dev/cdrom image.iso
+    </screen>
+    </para>
+</listitem>
+</orderedlist>
+Now, for a multi-session CD use:
+<orderedlist>
+<listitem>
+    <para>
+    Where did last session finish?
+    <screen>
+    info=`cdrecord -msinfo dev=/dev/cdrom`
+    </screen>
+    </para>
+</listitem>
+<listitem>
+    <para>
+    Use the previous session information to build new ISO image:
+    <screen>
+    mkisofs -C $info -o image.iso /thedirectory
+    </screen>
+    </para>
+</listitem>
+<listitem>
+    <para>
+    Add -multi option when writing multi-session disks:
+    <screen>
+    cdrecord -v -multi -speed=6 dev=/dev/cdrom image.iso
+    </screen>
+    </para>
+</listitem>
+</orderedlist>
+</para>
+<para>
+To test an ISO image before writing, use:
+<screen>
+    mount -t iso9660 -o loop image.raw /mnt/image
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to blank a re-writable CD?
+</para>
+</question>
+<answer>
+<para>
+This answer is for use of <command>cdrecord(1)</command>.
+<para>
+To blank a CDRW use
+<screen>
+    cdrecord -v dev=/dev/cdrom blank=fast
+</screen>
+Other options for blank are all and session. This uses <command>wodim(1)</command> under the covers.
+<screen>
+    wodim blank=fast dev=/dev/cdrom
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to manage a CUPS printer?
+</para>
+</question>
+<answer>
+<para>
+<orderedlist>
+<listitem>
+    <para>
+    CUPS has a web management interface here: 
+    <ulink url="http://localhost:631/admin">http://localhost:631/admin</ulink>.
+    </para>
+</listitem>
+<listitem>
+    <para>
+    As superuser start CUPS printer daemon with:
+    <screen>
+    /etc/init.d/cupsys start
+    </screen>
+    Cups configuration is in <filename>/etc/cups/cupsd.conf</filename>.
+    </para>
+</listitem>
+<listitem>
+    <para>
+    To see printer status use:
+    <screen>
+    lpstat -t
+    </screen>
+    </para>
+</listitem>
+<listitem>
+    <para>
+    To remove all spooled job entries use:
+    <screen>
+    lprm -P OfficeJet -
+    </screen>
+    </para>
+</listitem>
+</orderedlist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+Is it possible to grep through a directory and all subdirectory's of that
+directory?
+</para>
+</question>
+<answer>
+<para>
+<screen>
+    $ find directory_name -print | xargs grep required_pattern
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to FTP using a script?
+</para>
+</question>
+<answer>
+<para>
+Use the $HOME/.netrc resource script.  For example:
+<programlisting><![CDATA[
+#!/bin/ksh
+
+#
+# Start of Program Timestamp
+#
+echo `date +'%Y-%m-%d %T Program Started'` $0
+
+# define constants
+REMOTEHOST=255.255.255.255  # your IP address here
+FILE="file_name_here"
+
+# Create .netrc file in $HOME the ftp resource script
+echo "machine $REMOTEHOST
+login username
+password userpassword
+macdef init
+cd directory_name_here
+binary
+get $FILE
+bye
+
+" > $HOME/.netrc
+
+# for ftp to use the .netrc from $HOME you MUST have these rights:
+chmod 600 $HOME/.netrc
+ftp $REMOTEHOST
+
+# Now remove .netrc
+rm -f $HOME/.netrc
+
+#
+# End of Program Timestamp
+#
+echo `date +'%Y-%m-%d %T Program Ended'` $0
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How can you turn off cookies?
+</para>
+</question>
+<answer>
+<para>
+You can forcibly switch off cookies in Communicator/Navigator by:
+<command>
+rm -f ~/.netscape/cookies
+ln -s /dev/null ~/.netscape/cookies
+</command>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to add five years to a date and display in following format: dd-mmm-YYYY?
+</para>
+</question>
+<answer>
+<para>
+From a shell script this can be achieved by:
+<screen>
+date "+%d-%b-$((year=$(date +%Y)+5))"
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+What is the regular expression need to match a 24 hour clock?
+</para>
+</question>
+<answer>
+<para>
+Try
+<screen>
+([01]?[0-9]|2[0-3]):[0-5][0-9]
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+Is there a way to change the date timestamp on a file?
+</para>
+</question>
+<answer>
+<para>
+Use <command>touch(1)</command>, and using the arguments (months, days, hours,
+minutes, optional century and years, optional seconds) instead of the
+current time:
+<screen>
+touch -t MMDDhhmm[[CC]YY][.ss]
+</screen>
+If the -t option does not exist read the man page for the equivalent.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How can you extract from a corrupted TAR file?
+</para>
+</question>
+<answer>
+<para>
+In many case if there is a corrupted tar file, the following command can
+be used in an attempt to extract the file:
+<screen>
+cat [tar-filename] | tar -xvf -
+</screen>
+Where "-" is the <filename>STDOUT</filename>.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to compare files and show differences?
+</para>
+<para>
+I have 2 text files, (text1 and text2), which are both about 2000 lines long,
+and almost identical, except for some minor differences.
+How do I print lines that appear only in file text1, and not in the file text2?
+How can I print the differences into a third file?
+</para>
+</question>
+<answer>
+<para>
+Use <command>comm(1)</command> command.
+<screen>
+comm text1 text2
+</screen>
+This will print 3 columns:
+<simplelist type=horiz columns=1>
+   <member>1st column contains lines in file text1 only</member>
+   <member>2nd column contains lines in file text2 only</member>
+   <member>3rd column contains lines that are in both file text1 and text2</member>
+</simplelist>
+You can then mask any of these columns by:
+<screen>
+comm -23 text1 text2
+</screen>
+This will not print column2 and column3, giving you lines available in
+text1 and not in text2.  This output can then be redirected to a file.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How do you do decimal calculations in a Shell script?
+</para>
+</question>
+<answer>
+<para>
+Use <command>bc(1)</command>:
+<example>
+<title>To calculate 12/3</title>
+<screen>
+echo 12/3 | bc -l
+4.00000000000000000000
+</screen>
+</example>
+So to do this in a script do something like:
+<programlisting><![CDATA[
+#!/bin/ksh
+# Decimal Calculations
+if [[ $# -eq 3 ]]; then
+   echo "$1$2$3" | bc -l
+fi
+]]></programlisting>
+</para>
+<para>
+As an aside, <command>bc(1)</command> can also be scripted to perform calculations.  For example:
+<programlisting><![CDATA[
+#!/usr/bin/bc -q
+for ( i=0; i<10; i++) {
+   print (i+1) % 12, "\n"
+}
+quit
+]]></programlisting>
+Which is just a complicated way to count from 1 to 10.
+</para>
+<para>
+In <command>bash(1)</command> you can count from 1 to 10 by:
+<programlisting><![CDATA[
+for ((i=1;i<11;i++));
+do 
+   echo $i; 
+   read; 
+done
+]]></programlisting>
+</para>
+<para>
+You can take it one step further by using <command>expr(1)</command>:
+<programlisting><![CDATA[
+for ((i=4;i<9;i++));
+do 
+    echo mv ring4-$i.jpg ring4-0`expr $i - 3`.jpg;
+done
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to synchronise system date?
+</para>
+</question>
+<answer>
+<para>
+Using <command>ntpdate(8)</command>:
+<screen>
+/usr/sbin/ntpdate -svq pool.ntp.org ntp.cs.mu.OZ.AU augean.eleceng.adelaide.edu.au 
+</screen>
+Script this and save into <filename>/etc/cron.daily/ntpdate</filename>.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to add new fonts to X11?
+</para>
+</question>
+<answer>
+<para>
+Please add all new fonts to new sub-directories of
+<filename class='directory'>/usr/X11R6/lib/X11/fonts</filename>.
+</para>
+<para>
+   <orderedlist>
+   <listitem>
+      <para>untar font to fonts directory</para>
+   </listitem>
+   <listitem>
+      <para>add new font to list in <filename>/etc/XF86Config</filename></para>
+   </listitem>
+   <listitem>
+      <para>(re)start X</para>
+   </listitem>
+   </orderedlist>
+</para>
+<para>
+New fonts can be tested by:
+   <orderedlist>
+   <listitem>
+      <para>untar font to fonts directory</para>
+   </listitem>
+   <listitem>
+      <para>call:
+      <screen>
+        $ xset fp+ /usr/X11R6/lib/X11/fonts/newFont
+        $ xset fp rehash
+        $ xfontsel
+      </screen>
+      </para>
+   </listitem>
+   </orderedlist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+Why can't I download mail?
+</para>
+<para>
+More precisely, why do I get this error message when running <command>fetchmail</command>?
+<screen>
+fetchmail: SMTP error: 451 4.1.8 &lt;name@domain.com&gt;... Domain of sender
+address name@domain.com does not resolve
+</screen>
+</para>
+</question>
+<answer>
+<para>
+A simple explanation:
+<literallayout>
+Posted by Adriaan Tijsseling on April 26, 2002 at 23:48:46:
+
+If you use dialup networking and you have sendmail starting up at
+boottime, then you will have fetchmail problems when trying to retrieve
+mail from an external server.
+
+Sendmail loads it's data when it starts up, but does not update with a
+SIGHUP. So, if you dialup, make sure to HUP the sendmail, otherwise your
+fetchmail will complain with an SMTP error: 451 4.1.8 ... Domain of sender
+address foo@foo.com does not resolve. 
+</literallayout>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How do you configure a modem?
+</para>
+</question>
+<answer>
+<para>
+<orderedlist>
+<listitem>
+<para>
+ppp: This is a user process PPP software package.  Normally, PPP is
+implemented as a part of the kernel (e.g., as managed by
+<command>pppd(8)</command>) and it's thus somewhat hard to debug and/or
+modify its behaviour.  However, in this implementation PPP is done as a
+done as a user process with the help of the tunnel device driver (tun).
+</para>
+</listitem>
+<listitem>
+<para>
+<command>netstat</command>: The <command>netstat -rnf inet</command>
+command allows you to view your IPV4 routing table; tun0 is the tunnel
+device driver your modem uses with PPP. Flags of UG indicate that you
+have a gateway that is up. The IP address associated with this entry is
+the address of your default gateway.
+</para> 
+</listitem>
+<listitem>
+<para> 
+Modem Access Control:
+<screen>
+vi /etc/group
+</screen>
+Change the network: line to 
+<screen>
+network:*:69:username1,username2, 
+</screen>
+Where username1,username2 is a comma-separated list of the users you
+wish to give ppp access to.
+<screen>
+vi /etc/ppp/ppp.conf
+</screen>
+At the end of the default: section, add the following line:
+<screen>
+allow users username1 username2
+</screen>
+Again, substitute the actual usernames and save the file. Now your
+users should be able to connect to the Internet using ppp.
+</para> 
+</listitem>
+</orderedlist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to install files? 
+</para>
+</question>
+<answer>
+<para>
+Use <command>install(1)</command>, for example:
+<orderedlist>
+
+<listitem>
+<para>Copy rather than move the file to install location:
+<screen>
+install -c /home/frank/bin/save2cd /usr/local/sbin/save2cd
+</screen>
+</para> 
+</listitem>
+
+<listitem>
+<para>To install a new file and set attributes:
+<screen>
+install -cp -m 555 -o root -g wheel /home/frank/bin/save2cd /usr/local/sbin/
+</screen>
+</para> 
+</listitem>
+
+</orderedlist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+Why do I get "bad interpreter" errors when running a script?
+</para>
+</question>
+<answer>
+<para>
+If you are getting the following error:
+<screen>
+bash: ./someScript: bad interpreter: No such file or directory
+</screen>
+Then, it's likely you have embedded <command>^M</command>.  So run the
+<command>perl(1)</command> one liner to remove them, and all will be
+happy.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+Where is xxx started during the start-up boot sequence?
+</para>
+</question>
+<answer>
+<para>
+The resource configuration system reads in configuration defaults from
+<filename>/etc/defaults/rc.conf</filename>, and system-specific details
+from <filename>/etc/rc.conf</filename>, and then proceeds to mount the
+system filesystems mentioned in <filename>/etc/fstab</filename>, start up
+networking services, starts up miscellaneous system daemons, and finally
+runs the startup scripts of locally installed packages.
+</para>
+<para>
+Part of the <filename>/etc/defaults/rc.conf</filename> file:
+<screen>
+local_startup="/usr/local/etc/rc.d /usr/X11R6/etc/rc.d" # startup script dirs.
+rc_conf_files="/etc/rc.conf /etc/rc.conf.local"
+</screen>
+The <filename>/etc/defaults/rc.conf</filename> is a file full of useful
+variables that you can set to change the default startup behavior of your
+system.  You should not edit this file though.  Put any overrides into one
+of the <filename>rc_conf_files</filename> instead and you will be able to
+update these defaults later without spamming your local configuration
+information.
+</para>
+<para>
+The <filename>rc_conf_files</filename> files should only contain values
+which override values set in this file.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How can realaudio be captured for local replay?
+</para>
+</question>
+<answer>
+<para>Take these steps to retreive a Realaudio stream and convert to WAV.
+<orderedlist>
+<listitem>
+<para>Get realaudio from web-site using <command>vsound</command> and <command>realplay</command>:
+<screen>
+vsound -n -f ScienceShow.au realplay http://www.abc.net.au/rn/mod/science.ram
+</screen>
+</para> 
+</listitem>
+<listitem>
+<para>Convert from Sun audio to WAV:
+<screen>
+sox ScienceShow.au MarsQuestAndBirdBrains.wav
+</screen>
+</para>
+<para>
+Get <command>vsound</command> from 
+<filename class='directory'>http://www.xenoclast.org/vsound/</filename>.
+</para>
+</listitem>
+</orderedlist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to format and mount a MS-DOS or VFAT device?
+</para>
+</question>
+<answer>
+<para>
+It depends what type of device you are managing.
+</para>
+<para>
+For diskette use these commands:
+<orderedlist>
+    <listitem>
+    <para>
+    To format a MS-DOS diskette:
+    <screen>
+    fdformat -f 1440 /dev/fd0
+    disklabel -w -r /dev/fd0 fd1440
+    newfs_msdos fd0 fd1440
+    </screen>
+    </para>
+    </listitem>
+    <listitem>
+    <para>
+    To mount a DOS diskette:
+    <screen>
+    mount_msdos -u frank -g staff /dev/fd0 /mnt/floppy
+    </screen>
+    </para>
+    </listitem>
+</orderedlist>
+</para>
+<para>
+For VFAT USB device use these commands:
+<orderedlist>
+    <listitem>
+    <para>
+    To format a VFAT device: (this will also set the label)
+    <screen>
+    mkfs.vfat -n FRANKJUNG /dev/sdb1
+    </screen>
+    </para>
+    </listitem>
+    <listitem>
+    <para>
+    To show label:
+    <screen>
+    dosfslabel /dev/sdb1
+    </screen>
+    </para>
+    </listitem>
+    <listitem>
+    <para>
+    Mount using normal vfat entries in <filename>/etc/fstab</filename>
+    <screen>
+    /dev/sdb1   /media/usb   vfat   rw,user,noauto   0   0
+    </screen>
+    </para>
+    </listitem>
+</orderedlist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+Why is the network so slow?
+</para>
+</question>
+<answer>
+<para>
+One possible answer is problems resolving names.   Try commenting out
+<command>bind</command> in <filename>/etc/host.conf</filename>.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to quickly compare MD5 checksums?
+</para>
+</question>
+<answer>
+<para>
+To compare MD5 checksum use:
+<screen>
+md5 -q file.tgz | diff -b file.tgz.md5 -
+</screen>
+Or using <command>md5sum(1)</command> 
+<screen>
+md5sum -c uml2-SDK-1.0.2.zip.md5sum
+</screen>
+Where <filename>uml2-SDK-1.0.2.zip.md5sum</filename> file contains the
+checksum, followed by the file name.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to restart console mouse cursor?
+</para>
+</question>
+<answer>
+<para>
+To control the console mouse (not the mouse in X) use:
+<screen>
+/etc/init.d/gpm [start|stop]
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to reset the root password?
+</para>
+</question>
+<answer>
+<para>
+Use the following option when booting:
+<screen>
+linux init=/bin/bash rw
+</screen>
+This should drop you to a root shell, just edit <filename>/etc/passwd</filename>, and run 
+<command>sync</command> before you reboot. 
+</para>
+<para>
+When using the rescue disk:
+<screen>
+rescue root=/dev/hda1 init=/bin/bash rw
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to over come a blocked site?
+</para>
+</question>
+<answer>
+<para>
+If a site is blocked (such as George W. Bush's site during 2004 campaign), then
+use a proxy such as Coral. ie the blocked site
+<ulink url="http://www.georgewbush.com/">http://www.georgewbush.com/</ulink>
+Can be viewed by Coral by appending <literal>.nyud.net:8090</literal> to give 
+<ulink url="http://www.georgewbush.com.nyud.net:8090/">http://www.georgewbush.com.nyud.net:8090/</ulink>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to print special characters on console?
+</para>
+</question>
+<answer>
+<para>
+Using the vim editor and you know the hex code:
+<screen>
+ctl-v xYY = to insert character with hex code YY
+</screen>
+You can get the hex code of a character from vim with:
+<screen>
+ga = character code under cursor
+</screen>
+To enter a special character in <command>vim</command> enter the 
+decimal code. For example to print û, then
+<screen>
+ctrl-v 251
+</screen>
+</para>
+<para>
+Special characters can be written to console (for example):
+<screen>
+echo $'\xFB'
+</screen>
+Which should print û. See <command>iso_8859-1(7)</command> or
+<command>ascii(7)</command> for more codes.
+</para>
+<para>
+Alternately, a more drastic measure is <command>xmodmap(1)</command>. Under X
+there are some additional tools like <command>xev(1)</command>, to print X key
+events.
+</para>
+<para>
+For XFree86, the solution is to enter xmodmap -e "keycode xx = Multi_key" or
+xmodmap -e "keysym yy = Multi_key" where 'xx' is the keycode or 'yy' the keysym
+of the key you choose to be the 'Compose'-key. (Use xev to get these values.)
+</para>
+<para>
+Alternatively you can add keycode xx = Multi_key to your ~/.xmodmaprc. This way
+it happens automagically.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to remove a USB device?
+</para>
+</question>
+<answer>
+<para>
+You have to remove the USB module if you want to plug in another device.
+To do this use:
+<screen>
+rmmod usb-storage
+</screen>
+You do not need to add a USB module, since the kernel will pick this up automatically.
+Before:
+<screen>
+usb-storage            60256   0 (unused)
+usb-ohci               17000   0 (unused)
+usbcore                54240   1 [printer usb-storage usb-ohci]
+</screen>
+After:
+<screen>
+usb-ohci               17000   0 (unused)
+usbcore                54240   1 [printer usb-ohci]
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to clean-up CUPS spooled jobs?
+</para>
+</question>
+<answer>
+<para>
+The following removes entries from the completed jobs log:
+<screen>
+lprm -P OfficeJet -
+</screen>
+</para>
+<para>
+To find spooled job entries older than 7 days:
+<screen>
+find /var/spool/cups -type f -ctime +7 -print
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+What are the files in <filename class='directory'>/var/log/ksymoops</filename>?
+</para>
+</question>
+<answer>
+<para>
+These are files generated by <command>modprobe(8)</command> whenever a module 
+is added or removed. There is no switch to turn logging off. The script
+<command>insmod_ksymoops_clean</command> can be used to clean this directory.
+Or you can delete the directory.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to capture screenshots?
+</para>
+</question>
+<answer>
+<para>
+Images can be grabbed and converted to PNG format with the following commands:
+<screen>
+xwd -frame -out temp_image
+xwdtopnm temp_image  > fig1.pnm
+convert fig1.pnm fig1.png
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to get reminders for important events?
+</para>
+</question>
+<answer>
+<para>
+This uses the <command>calendar(1)</command> command.  It takes a simple
+formatted text file as input, and displays events within a user specified
+number of days forward from today.  I use this feature to remind me of
+birthdays and warn me when bills are due.  It is really easy to maintain, and
+versatile.
+<orderedlist>
+<listitem>
+<para>Create a file called <filename>~/.calendar/calendar</filename>.
+The file will contain tab delimetered entries like:
+<programlisting><![CDATA[
+/* $Id: linux.sgml 900 2011-07-03 08:21:40Z frank $ */
+#ifndef _calendar_frank_
+#define _calendar_frank_
+
+LANG=en_AU
+
+#include <calendar.australia>
+#include <calendar.birthday>
+#include <calendar.reminder>
+
+#endif
+]]></programlisting>
+</para>
+<para>
+And this is what a the <filename>calendar.australia</filename> file looks like
+<programlisting><![CDATA[
+/*
+ * Australian holidays
+ *
+ * $FreeBSD$
+ */
+#ifndef _calendar_australia_
+#define _calendar_australia_
+
+LANG=UTF-8
+
+/* Australia */
+Jan 26	Australia Day Holiday (Australia, except NSW, Vic)
+Mar/SunLast	Daylight Savings Time ends in ACT, NSW, SA, TAS and VIC.
+Apr 25	Anzac Day (Australian and New Zealand Army Corps) Day (Australia)
+Jun/MonSecond	Queen's Birthday Holiday (Australia, except WA)
+Oct/SunLast	Daylight Savings Time starts in ACT, NSW, SA and VIC.
+
+/* ACT, NSW, common */
+Mar 18	Canberra Day (ACT)
+8/MonFirst	Bank Holiday (ACT, NSW)
+10/MonFirst	Labour Day (ACT, NSW, SA)
+
+/* Victoria */
+3/MonSecond	Labour Day (Vic)
+Nov/TueFirst	Melbourne Cup (Vic)
+
+/* Tasmania */
+Feb 11	Regatta Day (Tas)
+Feb 27	Launceston Cup (Tas)
+Mar 11	Eight Hours Day (Tas)
+Oct/SunFirst	Daylight Savings Time starts in TAS.
+Oct 10	Launceston Show Day (Tas)
+Oct 24	Hobart Show Day (Tas)
+Nov 04	Recreation Day (N Tas)
+
+/* South Australia */
+May/MonThird	Adelaide Cup (SA)
+Dec 26	Proclamation Day holiday (SA)
+
+/* Western Australia */
+3/MonFirst	Labour Day (WA)
+6/MonFirst	Foundation Day (WA)
+Sep 30	Queen's Birthday (WA)
+
+/* Northern Territory */
+5/MonFirst	May Day (NT)
+7/FriFirst	Alice Springs Show Day (NT)
+7/FriSecond	Tennant Creek Show Day (NT)
+7/FriThird	Katherine Show Day (NT)
+7/FriLast	Darwin Show Day (NT)
+8/MonFirst	Picnic Day (NT)
+
+/* Queensland */
+5/MonFirst	Labour Day (Qld)
+Aug 14	RNA Show Day (Brisbane metro)
+
+#endif
+]]></programlisting>
+</para>
+<para>
+This is the same way I setup my <filename>calendar.reminder</filename> file.
+By providing a month, day then a description I can easily maintain a reminder
+system for my regular bills.
+</para>
+</listitem>
+<listitem>
+<para>
+Now, activate and automatic reminder via email by adding the following entries
+to <command>crontab(5)</command>.  The following will give me warning of events
+7 days in advance:
+<screen>
+@reboot /usr/bin/calendar -A 7 | mail -e -s "Reminders from Calendar" frank@localhost
+@daily  /usr/bin/calendar -A 7 | mail -e -s "Reminders from Calendar" frank@localhost
+</screen>
+</para>
+</listitem>
+</orderedlist>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+Where are the Australian mirrors for Debian?
+</para>
+</question>
+<answer>
+<para>
+From
+<ulink url="http://www.debian.org/mirror/list-non-US">
+<citetitle>http://www.debian.org/mirror/list-non-US</citetitle>
+</ulink> there are
+<literallayout>
+ftp://ftp.wa.au.debian.org/debian-non-US/
+http://ftp.wa.au.debian.org/debian-non-US/
+
+ftp://ftp.au.debian.org/debian-non-US/
+http://ftp.au.debian.org/debian-non-US/
+
+ftp://mirror.aarnet.edu.au/debian-non-US/
+http://mirror.aarnet.edu.au/debian-non-US/
+
+ftp://ftp.monash.edu.au/pub/linux/debian-non-US/
+http://ftp.monash.edu.au/pub/linux/debian-non-US/
+
+ftp://ftp.progsoc.uts.edu.au/pub/Linux/debian-non-US/
+http://ftp.progsoc.uts.edu.au/pub/Linux/debian-non-US/
+
+ftp://ftp.uwa.edu.au/mirrors/linux/debian-non-US/
+
+ftp://mirror.eftel.com/debian-non-US/
+http://mirror.eftel.com/debian-non-US/
+
+ftp://mirror.pacific.net.au/debian-non-US/
+http://mirror.pacific.net.au/debian-non-US/
+
+ftp://ftp.iinet.net.au/debian/debian-non-US/
+http://ftp.iinet.net.au/debian/debian-non-US/
+
+ftp://debian.ihug.com.au/debian-non-US/
+http://debian.ihug.com.au/debian-non-US/
+
+ftp://debian.vicnet.net.au/debian-non-US/
+http://debian.vicnet.net.au/debian-non-US/ 
+</literallayout>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to create a temporary file?
+</para>
+</question>
+<answer>
+<para>
+Using Korn shell and a combination of current program and current process id:
+<programlisting><![CDATA[
+# create a unique temporary file
+tempfile=/tmp/${0##*/}.$$
+debug "Using tempfile ${tempfile}"
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to remove control characters from a file?
+</para>
+</question>
+<answer>
+<para>
+The problem is you have unwanted hex characters in a file.
+How can they be removed? 
+</para>
+<para>
+Firstly, the value of the characters can be use found using
+<command>less(1)</command>.
+</para>
+<para>
+Or use <command>od(1)</command> to see *what* the control characters are:
+<programlisting><![CDATA[
+od -cx my_file| less
+]]></programlisting>
+</para>
+<para>
+These characters can be replaced using sed(1):
+<programlisting><![CDATA[
+sed 's/\x00//g' my_file > my_new_file
+]]></programlisting>
+</para>
+<para>
+But, if you think it is just bad control characters - then you can short cut
+this using:
+<programlisting><![CDATA[
+sed '' my_file > my_new_file
+]]></programlisting>
+What <command>sed(1)</command> does here is print to stdout
+(<filename>my_new_file</filename>) only non-control characters.
+</para>
+<para>
+There are some decent hex editors on Linux.  From the command line there is a
+tool <command>xxd(1)</command> that will make hex dump to ASCII and the ability to
+reverse the process.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to read emails formatted in HTML?
+</para>
+</question>
+<answer>
+<para>
+Add the following into <filename>/etc/mailcap</filename> or <filename>~/.mailcap</filename>:
+<programlisting><![CDATA[
+text/html; /usr/bin/lynx -dump -force_html '%s'; copiousoutput; description=HTML Text; nametemplate=%s.html
+]]></programlisting>
+You can also use a web browser if you are running X:
+<programlisting><![CDATA[
+text/html; /usr/bin/firefox '%s'; description=HTML Text; test=test -n "$DISPLAY";  nametemplate=%s.html
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to resize gnucash reports saved to HTML?
+</para>
+</question>
+<answer>
+<para>
+Apply stylesheet with
+<programlisting><![CDATA[
+<STYLE TYPE="text/css">
+    TD { font-size: 8pt; }
+</STYLE>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How do you (re)set local timezone?
+</para>
+</question>
+<answer>
+<para>
+For Debian based systems use <command>dpkg-reconfigure(1)</command>, as in:
+<programlisting><![CDATA[
+dpkg-reconfigure tzdata
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+Hint on how to unpack an <filename>TAR</filename> archives.
+</para>
+</question>
+<answer>
+<para>
+You don't need to move a <filename>.tar</filename> archive file to a certain
+directory because it happens to be in the directory you want to extract it into.
+Instead, unpack a <filename>.tar</filename> archive file into any directory you
+like using the -C option:
+<programlisting><![CDATA[
+tar xvf -C tmp/a/b/c newarc.tar.gz
+]]></programlisting>
+Making a habit of using -C is preferable to moving the archive file to where
+you want to unpack it, changing to that directory, and only then extracting its
+contents - especially if the archive file belongs somewhere else.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to read a Java style properties file from a shell script?
+</para>
+</question>
+<answer>
+<para>
+To search for a properties value called "key", use:
+<programlisting><![CDATA[
+KEY=`awk 'BEGIN{FS="="}; /^key/ {printf("%s", $2); exit}' java.properties`
+]]></programlisting>
+</para>
+<para>
+The problem is if there is embedded spaces. In which case use:
+<programlisting><![CDATA[
+`awk 'BEGIN{FS="[ \t]*=[ \t]*"}; /^[ \t]*key/ {printf("%s", $2); exit}' java.properties`
+]]></programlisting>
+</para>
+<para>
+Here is a little test program for the above process:
+<programlisting><![CDATA[
+# create a temporary properties file
+tempproperties=/tmp/${0##*/}.$$
+echo "key1=value1"      >  $tempproperties
+echo "key2 = value2"    >> $tempproperties
+echo "key3= value3"     >> $tempproperties
+echo "key4 =value4"     >> $tempproperties
+echo " key5 = value5"   >> $tempproperties
+
+key1=`awk 'BEGIN{FS="[ \t]*=[ \t]*"}; /^[ \t]*key1/ {printf("%s", $2); exit}' $tempproperties`
+key2=`awk 'BEGIN{FS="[ \t]*=[ \t]*"}; /^[ \t]*key2/ {printf("%s", $2); exit}' $tempproperties`
+key3=`awk 'BEGIN{FS="[ \t]*=[ \t]*"}; /^[ \t]*key3/ {printf("%s", $2); exit}' $tempproperties`
+key4=`awk 'BEGIN{FS="[ \t]*=[ \t]*"}; /^[ \t]*key4/ {printf("%s", $2); exit}' $tempproperties`
+key5=`awk 'BEGIN{FS="[ \t]*=[ \t]*"}; /^[ \t]*key5/ {printf("%s", $2); exit}' $tempproperties`
+
+test "$key1" != "value1" && echo "expected \"value1\" got \"$key1\""
+test "$key2" != "value2" && echo "expected \"value2\" got \"$key2\""
+test "$key3" != "value3" && echo "expected \"value3\" got \"$key3\""
+test "$key4" != "value4" && echo "expected \"value4\" got \"$key4\""
+test "$key5" != "value5" && echo "expected \"value5\" got \"$key5\""
+
+echo "key1=$key1"
+echo "key2=$key2"
+echo "key3=$key3"
+echo "key4=$key4"
+echo "key5=$key5"
+
+/bin/rm -f $tempproperties
+]]></programlisting>
+</para>
+<para>
+Another way to do this is:
+<programlisting><![CDATA[
+# general pattern to search for a key from a properties file
+value=$(grep "^key1.*=" ${propertiesFile} | sed 's/^.*=//')
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to remove empty lines from a file?
+</para>
+</question>
+<answer>
+<para>
+In <command>vim(1)</command> this can be done globally using:
+<programlisting><![CDATA[
+:%g/^$/d
+]]></programlisting>
+</para>
+<para>
+A related problem is to remove white space from a line. 
+To remove leading white space use:
+<programlisting><![CDATA[
+:%s/^\s\+//
+]]></programlisting>
+To remove trailing white space use:
+<programlisting><![CDATA[
+:%s/\s\+$//
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+Why do I get the error <quote>Host or domain name not found</quote>?
+</para>
+</question>
+<answer>
+<para>
+<command>Postfix(1)</command> is using DNS to lookup the outgoing address
+specified in <filename>/etc/mailname</filename>.  Disable DNS lookups by adding
+this line to <filename>/etc/postfix/main.cf</filename>
+<programlisting><![CDATA[
+disable_dns_lookups = yes
+]]></programlisting>
+This will allow mail to be correctly delivered to users on localhost.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+What programs understand tabs?
+</para>
+</question>
+<answer>
+<para>
+Scripting languages (Perl, awk, etc), can parse and write tab-separated data.
+The following table lists some other Linux utilities that handle tabs.
+<table frame='all'><title>Some utilities that understand tabs</title>
+<tgroup cols='2' align='left' colsep='1' rowsep='1'>
+<thead>
+<row>
+  <entry>Utility</entry>
+  <entry>Description</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry>cat(1)</entry>
+  <entry>Concatenate files and print on the standard output</entry>
+</row>
+<row>
+  <entry>cut(1)</entry>
+  <entry>Remove sections from each line of files</entry>
+</row>
+<row>
+  <entry>echo(1), printf(1)</entry>
+  <entry>Display a line of text</entry>
+</row>
+<row>
+  <entry>expand(1), unexpand(1)</entry>
+  <entry>Converts between TABS and spaces</entry>
+</row>
+<row>
+  <entry>paste(1)</entry>
+  <entry>Merge lines of files</entry>
+</row>
+<row>
+  <entry>sed(1)</entry>
+  <entry>Stream editor for filtering and transforming text</entry>
+</row>
+<row>
+  <entry>sort(1)</entry>
+  <entry>Sort lines of text files</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to check and repair a file system?
+</para>
+</question>
+<answer>
+<para>
+Determine which file system you want to check.  This can be done by inspecting
+<filename>/etc/fstab</filename>.  Use <command>fsck(8)</command>.  
+<programlisting><![CDATA[
+fsck.vfat -vfalt /dev/sdb1
+]]></programlisting>
+Alternatively, for <filename>ext2</filename> and <filename>ext4</filename> file systems try:
+<programlisting><![CDATA[
+e2fsck -vfp /dev/sdb1
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to switch to a virtual screen?
+</para>
+</question>
+<answer>
+<para>
+Normally you can do this by pressing <command>CTL-ALT-FNv</command>, where v is
+the virtual screen to switch to.  However, if this keyboard mapping is not supported 
+then use <command>chvt(1)</command>.  You will need root access to invoke this.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to re-map keyboard?
+</para>
+</question>
+<answer>
+<para>
+This is done using <command>xbindkeys(1)</command>. Assume you want to re-map
+F5 to start a X terminal.
+<orderedlist>
+<listitem>
+<para>
+Create a xbindkeys configuration file:
+<screen>
+HOME:~$ xbindkeys -d > ~/.xbindkeysrc
+</screen>
+</para>
+</listitem>
+<listitem>
+<para>
+Determine what the keycode is for F5: 
+<screen>
+HOME:~$ xbindkeys -k
+Press combination of keys or/and click under the window.
+You can use one of the two lines after "NoCommand"
+in $HOME/.xbindkeysrc to bind a key.
+"(Scheme function)"
+    m:0x10 + c:237
+    Mod2 + XF86KbdBrightnessDown
+</screen>
+</para>
+</listitem>
+<listitem>
+<para>
+Edit this file, adding the following lines:
+<screen>
+# F5 = xterm
+"xterm -sb -right"
+    m:0x10 + c:237
+</screen>
+</para>
+</listitem>
+<listitem>
+<para>
+xbindkeys is invoked on X window startup by adding this into <filename>~/.xprofile</filename>:
+</para>
+<screen>
+# use my keyboard bindings
+nice xbindkeys &
+</screen>
+</listitem>
+</orderedlist>
+Re-start X window session, and F5 should now start a X11 terminal.
+</para>
+<para>
+Finally, to see a summary of keyboard bindings use <command>xbindkeys_show</command>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to support the Mac wired 220 aluminium keyboard?
+</para>
+</question>
+<answer>
+<para>
+To fully support this keyboard you may want to re-map to support the code changes:
+<itemizedlist>
+<listitem>
+<para>
+Where is the <command>insert</command> key?
+</para>
+<para>
+This can be accessed by pressing <command>fn + return</command>.
+</para>
+</listitem>
+<listitem>
+<para>
+Where is the <command>num-lock</command> key?
+</para>
+<para>
+This is mapped to <command>clear</command> on the number pad.
+</para>
+</listitem>
+<listitem>
+<para>
+Where are the function keys?
+</para>
+<para>
+By default the <command>fn</command> key has priority (priority=0).  So, to
+access <command>F8</command> for example, press <command>fn + F8</command>.
+This can be re-mapped to give the function key priority. So function keys are
+used as first key. Pressing <command>F8</command> key will behave like a
+<command>F8</command>. Pressing <command>fn + F8</command> will act as special
+key (play/pause).  To change to this key priority:
+    <orderedlist>
+    <listitem>
+    <para>
+    Add the following line to <filename>/etc/modprobe.d/hid_apple.conf</filename>
+    <programlisting><![CDATA[
+    options hid_apple fnmode=2
+    ]]></programlisting>
+    </para>
+    </listitem>
+    <listitem>
+    <para>
+    Run <command> update-initramfs -u </command>
+    </para>
+    </listitem>
+    <listitem>
+    <para>
+    Reboot.
+    </para>
+    </listitem>
+    </orderedlist>
+</para>
+</listitem>
+</itemizedlist>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to list subversion repository projects?
+</para>
+</question>
+<answer>
+<para>
+Using just <command>svn(1)</command> and <command>awk(1)</command>:
+<programlisting><![CDATA[
+svn list -R file:///var/lib/svn/frank/trunk |awk -F/ '$NF ~ /^$/ && NF <= 3'
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to set subversion keywords?
+</para>
+</question>
+<answer>
+<para>
+Using just <command>svn(1)</command>:
+<programlisting><![CDATA[
+svn propset svn:keywords "Id" *.sgml
+]]></programlisting>
+Commit the changed files:
+<programlisting><![CDATA[
+svn ci -m "* applied svn keyword substitution" *.sgml
+]]></programlisting>
+</para>
+
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to combine a number of PDF files?
+</para>
+</question>
+<answer>
+<para>
+Ghostscript <command>gs(1)</command> gives you the power to combine files, convert files, and much more,
+all from the command line. To combine several input files into one
+combined PDF using Ghostscript:
+<programlisting><![CDATA[
+gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=combined.pdf \
+    first.pdf second.pdf third.pdf [...]
+]]></programlisting>
+Equivalently, using the -o option:
+<programlisting><![CDATA[
+gs -sDEVICE=pdfwrite -dSAFER -o combined.pdf
+    first.pdf second.pdf third.pdf [...]
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to copy a large amount of data?
+</para>
+</question>
+<answer>
+<para>
+To copy from a source to some target directory using the <command>tar(1)</command>:
+<programlisting><![CDATA[
+tar cvf - source_directory | ( cd target_directory && tar xBf - )
+]]></programlisting>
+This will fail if the target directory doesn't exist.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to indent a file in vim?
+</para>
+</question>
+<answer>
+<para>
+Ensure the following are set in your <filename>.vimrc</filename>
+<screen>
+set expandtab         " don't use tabs use spaces to give consistent output
+set tabstop=4         " change default tabs
+set softtabstop=4     " how many spaces used when using TAB in insert mode
+set shiftwidth=4      " change default shift widt
+set shiftround        " indent to nearest tabstop
+set textwidth=0       " don't wrap words by default
+set autoindent        " always set autoindenting on
+set smartindent       " do smart autoindenting when starting a new line
+set cinoptions+=j1    " indentation of java anonymous classes
+
+:if has("autocmd")
+    " Enabled file type detection
+    " Use the default filetype settings. If you also want to load indent files
+    " to automatically do language-dependent indenting add 'indent' as well.
+    filetype plugin indent on
+:endif " has ("autocmd")
+</screen>
+</para>
+<para>
+Restart vim. Now, to indent a file in vim use the command <command>gg=G</command>.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to synchronise files in a directory on a USB stick to a local directory?
+</para>
+</question>
+<answer>
+<para>
+Using <command>rsync(1)</command>:
+<programlisting><![CDATA[
+rsync -riW /media/verbatim/oss/dev/graph /home/frank/dev
+]]></programlisting>
+This will recursively iterate through the source directory, showing files
+changed. Note that the target does not include the source directory.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+Why do I get an error when running <command>showrgb(1)</command>?
+</para>
+</question>
+<answer>
+<para>
+If you get this error message when showing the RGB colour program:
+<screen>
+showrgb:  unable to open rgb database "/usr/share/X11/rgb"
+</screen>
+This is likely due to a broken symbolic link.  Fix it with:
+<programlisting><![CDATA[
+ln -s /etc/X11/rgb.txt /usr/share/X11
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to import a project directory to subversion?
+</para>
+</question>
+<answer>
+<para>
+Assuming the project directory is a subdirectory of the current directory, use
+the following command:
+<programlisting><![CDATA[
+svn import file:///var/lib/svn/home/project -m "initial import"
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to move a subversion project to a different location?
+</para>
+</question>
+<answer>
+<para>
+I had incorrectly loaded a project into the wrong path.
+I wanted under trunk, but put it under home.  How do I move it?
+Simple:
+<programlisting><![CDATA[
+svn mv file:///var/lib/svn/home/project file:///var/lib/svn/home/trunk/project
+]]></programlisting>
+List the results using:
+<programlisting><![CDATA[
+svn list file:///var/lib/svn/home/trunk
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to determine the model and revision of your video chipset?
+</para>
+</question>
+<answer>
+<para>
+Use the <command>lspci(8)</command> command. Type:
+<programlisting><![CDATA[
+lspci -v | grep VGA
+]]></programlisting>
+This will display the required information. On my system the output looks like this:
+<screen>
+01:00.0 VGA compatible controller: nVidia Corporation NV44 [GeForce 6200 TurboCache(TM)] (rev a1)
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to merge PDF pages?
+</para>
+</question>
+<answer>
+<para>
+Using Ghostscript <command>gs(1)</command>:
+<programlisting><![CDATA[
+gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=firstANDsecond.pdf -dBATCH first.pdf second.pdf
+]]></programlisting>
+</para>
+<para>
+If this doens't give the results you want, try <command>psmerge(1)</command>:
+<programlisting><![CDATA[
+psmerge -ofirstANDsecond.pdf first.pdf second.pdf
+]]></programlisting>
+This gives good results, but the result file size is larger than that achieved with Ghostscript.
+</para>
+<para>
+Another method uses the <command>pdfjoin(1)</command> command:
+<programlisting><![CDATA[
+pdfjoin --outfile firstANDsecond.pdf first.pdf second-8.pdf
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to send an email attachment?
+</para>
+</question>
+<answer>
+<para>
+This is how to send mail attachments using commands,
+<command>uuencode(1)</command> to prepare the attachment, then sending via
+<command>mailx(1)</command>:
+<orderedlist> 
+<listitem> 
+<para>
+<screen>
+uuencode /home/ccuser/d364875/reports/buildtimes.xml > attachment
+</screen>
+</para>
+</listitem> 
+<listitem> 
+<screen>
+mailx -s "attachment.zip" frankhjung@company.dom < attachment
+</screen>
+</listitem> 
+</orderedlist> 
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to set the volume name of a device?
+</para>
+</question>
+<answer>
+<para>
+Use <command>tune2fs(8)</command>:
+<programlisting><![CDATA[
+tune2fs -L MYNAME /dev/sdb2
+]]></programlisting>
+List device information using either <command>tune2fs(8)</command>, or <command>volname</command>:
+<programlisting><![CDATA[
+tune2fs -l /dev/sdb2
+volname /dev/sdb2
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+
+<qandaentry>
+<question>
+<para>
+How to efficiently search through many files?
+</para>
+</question>
+<answer>
+<para>
+Use the following:
+<programlisting><![CDATA[
+find /dir/path -type f -print0 | xargs -0 grep -Hi "search term"
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to use MPlayer to record live streams from the Internet
+</para>
+</question>
+<answer>
+<para>
+All you need to record a live stream from the web is
+<command>MPlayer(1)</command>. Use the -dumpstream argument to capture a MMS,
+ASF or Live WMV stream to a file called <filename>stream.dump</filename>.
+</para>
+<para>
+For example:
+<programlisting><![CDATA[
+mplayer -dumpstream mmsh://streamer3.carnation.hu/mtvonlinem2?MSWMExt=.asf
+]]></programlisting>
+will create a stream.dump file that you can later rename to my_recorded_stream.wmv.
+</para>
+<para>
+Note: This will not work with Flash-powered streams.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to run a command periodically, forever?
+</para>
+</question>
+<answer>
+<para>
+Try the <command>watch(1)</command> command.  For example,
+<programlisting><![CDATA[
+watch -n 5 command
+]]></programlisting>
+Will run a command every 5 seconds.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to manage podcasts?
+</para>
+</question>
+<answer>
+<para>
+<ulink url="http://podracer.sourceforge.net/">Podracer</ulink> was written by
+<author><firstname>Lorenzo</firstname><surname>Taylor</surname></author>. It is
+a simple to use, command line tool that uses only two plain text configuration
+files:
+<screen><![CDATA[
+$HOME/.podracer/podracer.conf - configure podracer behaviour
+$HOME/.podracer/subscriptions - list of subscriptions
+]]></screen>
+</para>
+<para>
+<variablelist>
+<varlistentry>
+    <term>Configuration</term>
+    <listitem>
+        <para>
+        This file is used to customise podracers download behaviour. With sane
+        defaults, the only settings that I changed were, 
+        <variablelist>
+        <varlistentry>
+            <term>poddir</term>
+            <listitem>
+                <para>
+                the default root location to save podcasts into 
+                </para>
+            </listitem>
+        </varlistentry>
+        </variablelist>
+        And two other entries indicating where the log files are to be recored.
+        </para>
+    </listitem>
+</varlistentry>
+<varlistentry>
+    <term>Subscriptions</term>
+    <listitem>
+        <para>
+        Like the name suggests this a plain text file listing the podcasts you
+        subscribe to. The format is simple,
+        <screen>
+        RSS_feed target_directory_relative_to_poddir 
+        </screen>
+        As this is a plain text file, where comments can be added by appending
+        <literal>#</literal> to a line, it becomes a useful historical record
+        of podcasts I listen to. 
+        </para>
+    </listitem>
+</varlistentry>
+<varlistentry>
+    <term>Maintenance</term>
+    <listitem>
+        <para>
+        To get the most out of podracer, schedule jobs to run during off-peaks times.
+        <programlisting><![CDATA[
+# update podcasts (run every day at 03:03)
+3 3 * * * podracer 
+        ]]></programlisting>
+        To effortlessly manage podcasts so I don't become overrun by them, I
+        keep only one months worth. This is managed by another crontab entry,
+        <programlisting><![CDATA[
+# clean-up old podcasts
+@daily find $HOME/music/podcasts/ -name '*.mp3' -type f -mtime +31 -exec rm -v {} \;
+        ]]></programlisting>
+        </para>
+    </listitem>
+</varlistentry>
+</variablelist>
+</answer>
+</qandaentry>
+
+<!-- TO COMPLETE
+<qandaentry>
+<question>
+<para>
+How to start a process from TTY without GDM, GNOME or KDE?
+</para>
+</question>
+<answer>
+<para>
+There a multiple parts to this answer:
+   <simplelist type=horiz columns=1>
+      <member>switch off graphical display manager (GDM)</member> 
+      <member>allocate a job to a TTY session</member> 
+      <member></member> 
+   </simplelist>
+<programlisting><![CDATA[
+some code
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+-->
+
+<!-- to add a new FAQ entry
+<qandaentry>
+<question>
+<para>
+The question.
+</para>
+</question>
+<answer>
+<para>
+The answer.
+<programlisting><![CDATA[
+some code
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+-->
+
+</qandaset>

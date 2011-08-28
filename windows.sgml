@@ -1,0 +1,1095 @@
+<qandaset defaultlabel=qanda id=windows>
+
+<!--
+build with: db2html index.sgml
+$Id: windows.sgml 869 2011-03-16 12:08:49Z frank $
+-->
+
+<title>Microsoft Windows Frequently Asked Questions</title>
+
+<qandaentry>
+<question>
+<para>
+What registry parameter is used to hide a server from the browser?
+</para>
+</question>
+<answer>
+<para>  
+<orderedlist>
+<listitem>
+<para>
+Under the
+<screen>
+    HKEY_LOCAL_MACHINE
+</screen>
+subtree, go to the following subkey:
+<screen>
+    \SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters
+</screen>
+</para>
+</listitem>
+<listitem>
+<para>
+From the Edit menu, choose Add Value and type:
+<screen>
+    Hidden
+</screen>
+NOTE: This value is case sensitive and must begin with a capital H.
+</para>
+</listitem>
+<listitem>
+<para>
+In the Data Type field, choose
+<screen>
+    REG_DWORD
+</screen>
+and choose OK.
+</para>
+</listitem>
+<listitem>
+<para>
+In the Data field, type 1 to enable hiding and choose OK.
+</para>
+<para>
+NOTE: Data field range: 0 or 1 with a default of 0 (false)
+</para>
+</listitem>
+<listitem>
+<para>
+Restart your computer.
+</para>
+</listitem>
+</orderedlist>
+</para>
+</answer>
+
+</qandaentry>
+<qandaentry>
+<question>
+<para>
+How can I resolve an IP Address conflict, even though I'm using DHCP?
+</para>
+</question>
+<answer>
+<para>
+Release and renew IP address:
+<screen><![CDATA[
+C:\> ipconfig /?
+   /release Release the IP address for the specified adapter.
+   /renew   Renew the IP address for the specified adapter.
+C:\> ipconfig /release
+C:\> ipconfig /renew
+]]></screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How can I delete a local profile?
+</para>
+</question>
+<answer>
+<para>
+Using the System Control panel applet any locally stored profile can be
+deleted.
+</para>
+<para>
+Start the System control panel applet (start - settings - control panel -
+system)
+<itemizedlist spacing=compact mark=opencircle>
+   <listitem>
+   <para>
+   Click the "User Profiles" tab,
+   </para>
+   </listitem>
+   <listitem>
+   <para>
+   Select the profile and click Delete,
+   </para>
+   </listitem>
+   <listitem>
+   <para>
+   Click Yes to the confirmation,
+   </para>
+   </listitem>
+   <listitem>
+   <para>
+   Click OK.
+   </para>
+   </listitem>
+</itemizedlist>
+Please note you can't delete a profile if you are currently logged on as that
+user, an area that the profile is in use will be displayed.
+</para>
+<para>
+If you want to remotely delete a locally stored profile you can use the
+<command>DELPROF.EXE</command> utility which is supplied with the <systemitem
+class="OSname"> Windows NT</systemitem> Server Resource Kit. The tool deletes
+all profiles that have not been used for a given number of days, for example:
+<screen><![CDATA[
+C:\> delprof /p /q /i /c:\garfield /d:3
+]]></screen>
+Would delete any profiles that have not been used for 3 days.  Where:
+<simplelist columns="2" type="horiz">
+<member>/p</member><member>Prompts for confirmation before deleting each profile. </member>
+<member>/q</member><member>Quiet mode.  Suppresses the deletion confirmation prompt.</member>
+<member>/i</member><member>Ignore errors.</member>
+<member>/c:[computername]</member><member>The computer name.</member>
+<member>/d</member><member>The number of days the profile needs to be older than.</member>
+</simplelist>
+</para>
+</answer>
+</qandaentry>
+<qandaentry>
+<question>
+    <para>
+    How can I schedule jobs to run at specific times?
+    </para>
+</question>
+<answer>
+<para>
+There are two ways to do this:
+<orderedlist>
+    <listitem>
+    <para>
+    There is a command line tool to do this called: <command>AT</command>.
+    It schedules commands and programs to run on a
+    computer at a specified time and date. The Schedule service must be running to
+    use the <command>AT</command> command.
+    <screen><![CDATA[
+C:\> AT [\\computername] [ [id] [/DELETE] | /DELETE [/YES]]
+C:\> AT [\\computername] time [/INTERACTIVE] [ /EVERY:date[,...] | /NEXT:date[,...]] "command"
+    ]]></screen>
+    </para>
+    <para>
+    Where:
+    <simplelist columns="2" type="horiz">
+        <member>\\computername</member> <member>Specifies a remote computer. Commands are scheduled on the local computer if this parameter is omitted.</member>
+        <member>id</member> <member>Is an identification number assigned to a scheduled command.</member>
+        <member>/delete</member> <member>Cancels a scheduled command. If id is omitted, all the scheduled commands on the computer are canceled.</member>
+        <member>/yes</member> <member>Used with cancel all jobs command when no further confirmation is desired.</member>
+        <member>time</member> <member>Specifies the time when command is to run.</member>
+        <member>/interactive</member> <member>Allows the job to interact with the desktop of the user who is logged on at the time the job runs.</member>
+        <member>/every:date[,...]</member> <member>Runs the command on each specified day(s) of the week or month. If date is omitted, the current day of the month is assumed.</member>
+        <member>/next:date[,...]</member> <member>Runs the specified command on the next occurrence of the day (for example, next Thursday).  If date is omitted, the current day of the month is assumed.</member>
+        <member>"command"</member> <member>Is the <systemitem class=OSname>Windows NT</systemitem> command, or batch program to be run.</member>
+    </simplelist>
+    </para>
+    <para>
+    <example>
+    <title>
+    To see what has been scheduled:
+    </title>
+    <screen><![CDATA[
+C:\> AT 
+Status ID   Day                     Time          Command Line
+---------------------------------------------------------------------------
+        2   Each M T W Th F         00:00 AM      "DEL /Q E:\SEND\BAK\*.*"
+    ]]></screen>
+    </example>
+    <example>
+    <title>
+    To remove an entry from the schedule:
+    </title>
+    <screen><![CDATA[
+C:\> AT 2 /DELETE
+    ]]></screen>
+    </example>
+    <example>
+    <title>
+    To add an entry for every working day at midnight:
+    </title>
+    <screen><![CDATA[
+C:\> AT 00:00 /EVERY:M,T,W,TH,F "DEL /Q E:\SEND\BAK\*.*"
+Added a new job with job ID = 1
+    ]]></screen>
+    <screen><![CDATA[
+C:\> AT
+Status ID   Day                     Time          Command Line
+---------------------------------------------------------------------------
+        1   Each M T W Th F         00:00 AM      "DEL /Q E:\SEND\BAK\*.*"
+    ]]></screen>
+    </example>
+    </para>
+    </listitem>
+    <listitem>
+    <para>
+    The other way is using the <command>schtasks</command>.
+        <orderedlist>
+        <listitem>
+        <para>
+        scedule a task to run daily at 6pm as user frank, 
+        <screen><![CDATA[
+schtasks /create /sc daily /st 18:00:00 /ru frank /tn "my program" /tr "/path_to/my/program"
+        ]]></screen>
+        </para>
+        </listitem>
+        <listitem>
+        <para>
+        check current scheduled tasks, 
+        <screen><![CDATA[
+schtasks /query
+        ]]></screen>
+        </para>
+        </listitem>
+        <listitem>
+        <para>
+        test run sceduled task, 
+        <screen><![CDATA[
+schtasks /run /tn "my program"
+        ]]></screen>
+        </para>
+        </listitem>
+        <listitem>
+        <para> 
+        remove scheduled job 
+        <screen><![CDATA[
+schtasks /delete /tn "my program"
+        ]]></screen>
+        </para>
+        </listitem>
+        </orderedlist>
+    </para>
+    </listitem>
+</orderedlist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to set command line completion?
+</para>
+</question>
+<answer>
+<para>
+Command line completion is set off by default (!?)
+You can define the key to perform command completion character by setting
+the registry entry:
+</para>
+<para>
+<screen>
+[My Computer\HKEY_CURRENT_USERS\Software\Microsoft\Command Processor\CompletionChar]
+</screen>
+</para>
+<para>
+For example, to use the <keycode>TAB</keycode> key for command completion, set this value to:
+9 (Hexadecimal).
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+What are the command line function keys?
+</para>
+</question>
+<answer>
+<para>
+<simplelist type=horiz columns=2>
+<member>F1</member><member>retypes the previous command one character at a time</member>
+<member>F2</member><member>brings up a dialog and asks <userinput>Enter the char to copy up to:</userinput></member>
+<member>F3</member><member>retypes the last command in full</member>
+<member>F4</member><member>brings up a dialog and asks <userinput>Enter char to delete up to:</userinput></member>
+<member>F5</member><member>as for F3</member>
+<member>F6</member><member>Print EOF character (Ctrl+Z)</member>
+<member>F7</member><member>brings up a dialog of all the recent command history</member>
+<member>F8</member><member>brings up each of the most recent commands, one at a time</member>
+<member>F9</member><member>brings up a dialog and asks <userinput>Enter command number:</userinput></member>
+</simplelist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How do you delete a locked dll?
+</para>
+</question>
+<answer>
+<para>
+   One way of doing this is:
+   <orderedlist spacing=compact>
+   <listitem>
+      <para>
+      Unregister dll, type <command>regsvr32 /u your_bad.dll</command>.
+      </para>
+   </listitem>
+   <listitem>
+      <para>
+      Delete "your_bad.dll" file.
+      </para>
+   </listitem>
+   </orderedlist>
+   </para>
+   <para>
+   For networked files use:
+   <orderedlist spacing=compact>
+   <listitem>
+      <para>
+      START &gt; PROGRAMS &gt; COMMAND PROMPT
+      </para>
+   </listitem>
+   <listitem>
+      <para>
+      <command>NET FILE</command>
+      Will list all the locked files, with the ID, File name, User name
+      and the number of locks. Before deleting the file, the lock must be
+      released.
+      </para>
+   </listitem>
+   <listitem>
+      <para>
+      <command>NET FILE ID# /close</command>
+      ie: 
+      <screen>NET FILE 11 /close</screen>
+      </para>
+   </listitem>
+   <listitem>
+      <para>
+      Delete the file
+      </para>
+   </listitem>
+   </orderedlist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How can show a timestamp in a DOS script?
+</para>
+</question>
+<answer>
+<para>
+From a script, such as piping comments out to a log file:
+<screen>
+    echo exit|cmd /q /k prompt $D $T
+</screen>
+</para>
+<para>
+Test this from command line with:
+<screen>
+    exit|cmd /q /k prompt $D $T
+</screen>
+</para>
+<para>
+This is for Windows NT.
+See <ulink url="http://www.robvanderwoude.com/index.html">
+<citetitle>http://www.robvanderwoude.com/index.html</citetitle> </ulink> for
+more scripting tips.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to perform action on most recent files?
+</para>
+</question>
+<answer>
+<para>
+This script makes use of the exit errorlevel facility only available to Win2000+.
+Yes, it took them that long to do it ...
+<programlisting><![CDATA[
+@echo off
+
+rem This script will purge old Perforce archives.
+
+set /a count=0
+
+for /f "delims==" %%i in ('dir /b /o-d *.rar') do call :purge %%~i
+
+rem subroutines
+
+:purge
+call :check %1
+rem Only retain the 7 most recent files
+rem @echo have errorlevel %errorlevel%
+if errorlevel 8 @del /p %1
+goto:EOF
+
+:check
+set /a count += 1
+rem @echo %count% %1
+if exist %1 exit /b %count%
+exit /b 0
+
+:end
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to start command prompt from a specific direcory from Windows explorer?
+</para>
+</question>
+<answer>
+<para>
+Save the following as <filename>DOSHERE.INF</filename>, and install from 
+<command>WindowsExplorer</command>.
+<programlisting><![CDATA[
+;
+; "Command Prompt Here" PowerToy
+;
+; Copyright 1996 Microsoft Corporation
+;
+[version]
+signature="$CHICAGO$"
+
+[DosHereInstall]
+CopyFiles = DosHere.Files.Inf
+AddReg    = DosHere.Reg
+
+[DefaultInstall]
+CopyFiles = DosHere.Files.Inf
+AddReg    = DosHere.Reg
+
+[DefaultInstall.ntx86]
+CopyFiles = DosHere.Files.Inf
+AddReg    = DosHere.Reg.NT
+
+[DefaultUnInstall]
+DelFiles  = DosHere.Files.Inf
+DelReg    = DosHere.Reg
+
+[DefaultUnInstall.ntx86]
+DelFiles  = DosHere.Files.Inf
+DelReg    = DosHere.Reg.NT
+
+[SourceDisksNames]
+55="DOS Prompt Here","",1
+
+[SourceDisksFiles]
+DOSHERE.INF=55
+
+[DestinationDirs]
+DosHere.Files.Inf = 17
+
+[DosHere.Files.Inf]
+DOSHERE.INF
+
+[DosHere.Reg]
+HKLM,%UDHERE%
+HKLM,%UDHERE%,DisplayName,,"%DosHereName%"
+HKLM,%UDHERE%,UninstallString,,"%10%\rundll.exe setupx.dll,InstallHinfSection DefaultUninstall 132 %17%\DosHere.inf"
+HKCR,Directory\Shell\DosHere,,,"%DosHereAccel%"
+HKCR,Directory\Shell\DosHere\command,,,"%10%\command.com /k cd ""%1"""
+HKCR,Drive\Shell\DosHere,,,"%DosHereAccel%"
+HKCR,Drive\Shell\DosHere\command,,,"%10%\command.com /k cd ""%1"""
+
+[DosHere.Reg.NT]
+HKLM,%UDHERE%
+HKLM,%UDHERE%,DisplayName,,"%DosHereName%"
+HKLM,%UDHERE%,UninstallString,,"rundll32.exe syssetup.dll,SetupInfObjectInstallAction DefaultUninstall 132 %17%\DosHere.inf"
+HKCR,Directory\Shell\DosHere,,,"%DosHereAccel%"
+HKCR,Directory\Shell\DosHere\command,,,"%11%\cmd.exe /k cd ""%1"""
+HKCR,Drive\Shell\DosHere,,,"%DosHereAccel%"
+HKCR,Drive\Shell\DosHere\command,,,"%11%\cmd.exe /k cd ""%1"""
+
+[Strings]
+DosHereName="Command Prompt Here PowerToy"
+DosHereAccel="Command &Prompt Here"
+UDHERE="Software\Microsoft\Windows\CurrentVersion\Uninstall\DosHere"
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to set the Windows 2000 time server?
+</para>
+</question>
+<answer>
+<para>
+<orderedlist spacing=compact>
+<listitem>
+<para>
+stop windows time server
+<command>net stop w32time</command>
+</para>
+</listitem>
+<listitem>
+<para>
+set sntp server to something reliable ...
+<command>net time /setsntp:203.21.84.4</command>
+</para>
+</listitem>
+<listitem>
+<para>
+re-start windows time server
+<command>net start w32time</command>
+</para>
+</listitem>
+<listitem>
+<para>
+synchronise local machine to time server
+<command>w32tm -s</command>
+</para>
+</listitem>
+</orderedlist>
+</para>
+<para>
+Other tricks:
+<orderedlist>
+<listitem>
+<para>
+show the timezone
+<command>w32tm -tz</command>
+</para>
+</listitem>
+<listitem>
+<para>
+show the time server being used (stored in registry)
+<screen>net time /querysntp</screen>
+</para>
+</orderedlist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How do you build a path variable dynamically?
+</para>
+</question>
+<answer>
+<para>
+In times gone past, we would have been burnt at the stake for coding in
+DOS. Here is an example:  You want to create a path variable
+dynamically. Easy?
+</para>
+<para>
+My first attempt was obvious (and wrong) :
+</para>
+<para>
+<programlisting><![CDATA[
+set LIST=
+for %%i in (*) do set LIST=%LIST% %%i
+echo %LIST%
+]]></programlisting>
+</para>
+<para>
+This just returns the last value, as %LIST% is expanded just ONCE.
+</para>
+<para>
+You need to make a special "Enable Delayed Variable" incantation, and
+use the magical "!" token:
+</para>
+<para>
+<programlisting><![CDATA[
+setlocal EnableDelayedExpansion=
+set LIST=
+for %%i in (*) do set LIST=!LIST! %%i
+echo %LIST%
+endlocal
+]]></programlisting>
+</para>
+<para>
+Why would I want to do this?  The reason _I_ needed to do this was to
+build a java classpath dynamically:
+</para>
+<para>
+<programlisting><![CDATA[
+setlocal EnableDelayedExpansion=
+set LIBDIR=lib
+set JARS=
+for %%j in (%LIBDIR%\*.jar) do set JARS=!JARS!;%%j
+echo jars=%JARS%
+endlocal
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to alphabetise the start menu for ease of use?
+</para>
+</question>
+<answer>
+<para>
+With a fresh installation of Windows XP, all of your programs appear in the
+Start menu alphabetically. As you install more software, the order becomes
+disorganised. You can sort things out by right-clicking one of the entries in
+the menu and selecting <command>Sort By Name</command>.
+</para>
+<para>
+Alternatively, to make alphabetical order a permanent feature, launch the Registry
+Editor and go to -
+<screen>
+    HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MenuOrder\StartMenu2\Programs
+</screen>
+In the right-hand pane, right-click <command>Order</command> and select
+<command>Delete</command>.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+What non-Microsoft software tools can I use?
+</para>
+</question>
+<answer>
+<para>
+There are a number of alternatives covered by GPL type licences: (See more here
+<ulink url="http://www.opensourcewindows.org/">
+<citetitle>Open Source Windows</citetitle>
+</ulink>,  
+<ulink url="http://www.codeplex.com/">
+<citetitle>Codeplex</citetitle>
+</ulink>, and 
+<ulink url="http://www.theopendisc.com/">
+<citetitle>The Open Disc</citetitle>
+</ulink>.
+<itemizedlist>
+
+<listitem>
+<para>
+Multi-protocol chat clients
+<ulink url="http://www.pidgin.im/">
+<citetitle>Pidgin http://www.pidgin.im/</citetitle>
+</ulink>.
+</para>
+<para>
+See also OS X version
+<ulink url="http://adium.im/">
+<citetitle>Adium http://adium.im/</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Convert between video formats
+<ulink url="http://handbrake.fr/">
+<citetitle>HandBrake http://handbrake.fr/</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Defragment your harddisk
+<ulink url="http://en.wikipedia.org/wiki/JkDefrag">
+<citetitle>JKDefrag http://en.wikipedia.org/wiki/JkDefrag</citetitle>
+</ulink> 
+</para>
+<para>
+Maintain software and registry 
+<ulink url="http://www.ccleaner.com/">
+<citetitle>CCleaner http://www.ccleaner.com/</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Write CD/DVD 
+<ulink url="http://www.cdburnerxp.se/">
+<citetitle>CDBurnerXP http://www.cdburnerxp.se/</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Virus scanners 
+<ulink url="http://free.grisoft.com/">
+<citetitle>AVG Free http://free.grisoft.com</citetitle>
+</ulink>.
+</para>
+<para>
+See also 
+<ulink url="http://www.clamav.net/">
+<citetitle>Clam AV http://www.clamav.net/</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Unix tools 
+<ulink url="http://unxutils.sourceforge.net/">
+<citetitle>GNU utilities for Win32 http://unxutils.sourceforge.net</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Web browser 
+<ulink url="http://www.mozilla.com/firefox/">
+<citetitle>Firefox http://www.mozilla.com/firefox</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Drawing tool 
+<ulink url="http://www.inkscape.org/">
+<citetitle>Inkscape http://www.inkscape.org</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Free telnet and ssh client 
+<ulink url="http://www.putty.org/">
+<citetitle>PuTTY http://www.putty.org/</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Remote control software
+<ulink url="http://www.tightvnc.com/">
+<citetitle>TightVNC http://www.tightvnc.com/</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+
+<listitem>
+<para>
+Libre Office (The Document Foundation)
+<ulink url="http://www.libreoffice.org/">
+<citetitle>Libre Office http://www.libreoffice.org/</citetitle>
+</ulink>.
+</para>
+<para>
+Open Office (Oracle)
+<ulink url="http://www.openoffice.org/">
+<citetitle>Open Office http://www.openoffice.org/</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Create PDF's 
+<ulink url="http://www.pdfforge.org/">
+<citetitle>PDFCreator http://www.pdfforge.org/</citetitle>
+</ulink>.
+</para>
+<para>
+Alternatively there is 
+<ulink url="http://www.cutepdf.com/">
+<citetitle>CutePDF http://www.cutepdf.com/</citetitle>
+</ulink>.
+</para>
+<para>
+A fast PDF reader is 
+<ulink url="http://www.foxitsoftware.com/">
+<citetitle>Foxit http://www.foxitsoftware.com/</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Unix tail 
+<ulink url="http://tailforwin32.sourceforge.net/">
+<citetitle>Tail for Win32 http://tailforwin32.sourceforge.net/</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Email 
+<ulink url="http://www.mozilla.com/thunderbird/">
+<citetitle>Thunderbird http://www.mozilla.com/thunderbird/</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Multi-media player 
+<ulink url="http://www.videolan.org/">
+<citetitle>VideoLAN - VLC media player at http://www.videolan.org</citetitle>
+</ulink>.
+</para>
+<para>
+See also the jukebox 
+<ulink url="http://www.rockbox.org/">
+<citetitle>ROCKbox http://www.rockbox.org</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+Text editors 
+<ulink url="http://www.vim.org/">
+<citetitle>Vim http://www.vim.org</citetitle>
+</ulink> or
+<ulink url="http://notepad-plus.sourceforge.net">
+<citetitle>Notepad++</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+File compare and merge 
+<ulink url="http://www.winmerge.org/">
+<citetitle>WinMerge http://www.winmerge.org/</citetitle>
+</ulink>.
+</para>
+<para>
+You can also do the same using the <command>Vim</command> tool
+<command>gvimdiff [file1] [file2]</command> or <command>gvim -d [file1]
+[file2]</command>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+An open source virtual machine is 
+<ulink url="http://www.virtualbox.org/">
+<citetitle>VirtualBox http://www.virtualbox.org/</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+A free X window server is 
+<ulink url="http://sourceforge.net/projects/xming/">
+<citetitle>Xming http://sourceforge.net/projects/xming/</citetitle>
+</ulink>. 
+</para>
+</listitem>
+
+<listitem>
+<para>
+For a zip archives, use 
+<ulink url="http://www.7-zip.org/">
+<citetitle>7-zip http://www.7-zip.org/</citetitle>
+</ulink>.
+</para>
+<para>
+I used to use Zip Genius under Windows, but it had too many stray pop-up error
+pages and was just an annoyances.
+</para>
+</listitem>
+
+<listitem>
+<para>
+For a an explorer plug-in for CVS, use 
+<ulink url="http://www.tortoisecvs.org/">
+<citetitle>TortoiseCVS http://www.tortoisecvs.org/</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
+For school students the mathematics package 
+<ulink url="http://www.geogebra.org">
+<citetitle>GeoGebra http://www.geogebra.org/</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+</itemizedlist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to read from properties file from a script?
+</para>
+</question>
+<answer>
+<para>
+If there is a value you want to use that exists in a property file, then try
+this -
+<programlisting><![CDATA[
+@echo off
+
+setlocal
+set BASE_DIR=%~dp0
+
+:CUSTOM_PROPERTIES
+rem get value of my.key read from custom properties file
+if not exist %BASE_DIR%../etc/custom.properties goto ERROR
+for /F "eol=# tokens=1,2* delims== " %%i in (%BASE_DIR%../etc/custom.properties) do @if "%%i"=="my.key" set MY_KEY=%%j
+
+:SHOW
+echo my.key now set to %MY_KEY%
+goto :END
+
+:ERROR
+echo Error! File not found etc/custom.properties            
+
+:END
+endlocal
+exit /b 0
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to convert from a FAT file system to NTFS?
+</para>
+</question>
+<answer>
+<para>
+Open a command window and type (replacing x: with the correct volume):
+<screen>
+    convert x: /fs:ntfs
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to try another program if the first is not found?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+edit etc\custom.properties
+if errorlevel 9009 @notepad etc\custom.properties
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to get a response from user?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+set /p response=Perform this function? (y/n/q)
+if /i "%response%."=="n." goto NO
+if /i "%response%."=="q." goto QUIT
+if /i "%response%."=="y." goto YES
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to protect against malicious software?
+</para>
+</question>
+<answer>
+<para>
+Microsoft provide a Malicious Software Removal Tool <command>mrt.exe</command>
+that can be downloaded from here <ulink
+url="http://www.microsoft.com/security/malwareremove/default.aspx">http://www.microsoft.com/security/malwareremove/default.aspx</ulink>.
+It has the following command line switches:
+<simplelist type=horiz columns=2>
+<member>/Q or /quiet</member> <member>Uses quiet mode. This option suppresses the user interface of the tool.</member> 
+<member>/?</member> <member>Displays a dialog box that lists the command-line switches.</member>
+<member>/N</member> <member>Runs in detect-only mode. In this mode, malicious software will be reported to the user, but it will not be removed.</member>
+<member>/F</member> <member>Forces an extended scan of the computer.</member>
+<member>/F:Y</member> <member>Forces an extended scan of the computer and automatically cleans any infections that are found.</member>
+</simplelist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to run a program during startup or shutdown?
+</para>
+</question>
+<answer>
+<para>
+If running Windows XP or later, use the Windows XP management console:
+<command>gpedit.msc</command>. Add your program to execute to:
+<screen>
+    Windows Settings > Scripts
+</screen> 
+There you can make a script, which is executed at Logoff (shutdown, restart
+respectively).
+</para>
+<para>
+There is another alternative, but it means messing about in the Registry:
+<screen> 
+    HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\System\Scripts\Logoff\0\0
+</screen> 
+Add you can add the path to the script to execute.
+</para>
+<para>
+If you are experiencing startup problems then take a look at the
+<command>msconfig</command> and <command>MMC</command> utilities.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to enable ctl-v in the command prompt?
+</para>
+</question>
+<answer>
+<para>
+Create a new script in <ulink url="http://www.autohotkey.com/">AutoHotkey</ulink> with the following text:
+<programlisting><![CDATA[
+#IfWinActive ahk_class ConsoleWindowClass
+^V::
+SendInput {Raw}%clipboard%
+return
+#IfWinActive
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<!-- question & answer template 
+   <qandaentry>
+   <question>
+   <para>
+   another question
+   </para>
+   </question>
+   <answer>
+   <para>
+   another answer
+   </para>
+   </answer>
+   </qandaentry>
+-->
+
+</qandaset>

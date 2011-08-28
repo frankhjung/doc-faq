@@ -1,0 +1,129 @@
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V4.0//EN" [
+    <!ENTITY ant system "ant.sgml">
+    <!ENTITY linux system "linux.sgml">
+    <!ENTITY perl system "perl.sgml">
+    <!ENTITY groovy system "groovy.sgml">
+    <!ENTITY sql system "sql.sgml">
+    <!ENTITY java system "java.sgml">
+    <!ENTITY windows system "windows.sgml">
+    <!ENTITY lyx system "lyx.sgml">
+]>
+
+<!--
+build with: 
+   db2html index.sgml 
+   or 
+   docbook2html -o html index.sgml
+   or
+   build.sh
+
+See also:
+   docbook2pdf
+-->
+
+<article id=index lang=en class=faq>
+
+<articleinfo>
+
+<title>Frequently Asked Questions</title>
+
+<releaseinfo>
+$Id: index.sgml 890 2011-05-25 13:13:32Z frank $
+</releaseinfo>
+
+<legalnotice>
+    <para>Copyright (c) Frank Jung. All rights reserved.</para>
+</legalnotice>
+
+<editor>
+    <firstname>Frank</firstname><surname>Jung</surname>
+</editor>
+
+</articleinfo>
+
+<!-- TOC should appear here -->
+
+<section><title>Introduction</title>
+<para>
+Permission is granted to copy, distribute and/or modify this document under the
+terms of the GNU Free Documentation License, Version 1.2 or any later version
+published by the Free Software Foundation; with no Invariant Sections, no
+Front-Cover Texts, and no Back-Cover Texts.  A copy of the license is included
+in the section entitled "GNU Free Documentation License".
+</para>
+<blockquote>
+   <attribution>Frank Jung</attribution>
+   <para>
+   This is a collection of tips and techniques that I have used over the years.
+   Some are included so that I can record how I manage my FreeBSD and Linux
+   machines.  Others, because it was hard to solve a problem.  And finally,
+   others because they are clever.
+   </para>
+   <para>
+   None of this would have been possible without the
+   <emphasis>World-Wide-Web</emphasis>.  So I must thank the web community for
+   their input.  In keeping with this community spirit, please feel free to use
+   what you can.  I hope that you find something useful here!
+   </para>
+</blockquote>
+</section>
+
+<!-- qanda sets begin here -->
+
+<section><title>Apache Ant</title>
+<subtitle>Tips, hints and information for using Apache Ant.</subtitle>
+&ant;
+</section>
+
+<section><title>Linux</title>
+<subtitle>Tips, hints and information for the Linux Operating Systems.</subtitle>
+&linux;
+</section>
+
+<section><title>Perl</title>
+<subtitle>Tips, hints and information for Larry Wall's Perl scripting language.</subtitle>
+&perl;
+</section>
+
+<section><title>Groovy</title>
+<subtitle>Tips, hints and information for the Groovy scripting language.</subtitle>
+&groovy;
+</section>
+
+<section><title>Java</title>
+<subtitle>Tips, Java on Debian.</subtitle>
+&java;
+</section>
+
+<section><title>SQL</title>
+<subtitle>Tips, hints and information about SQL.</subtitle>
+&sql;
+</section>
+
+<section><title>Windows</title>
+<subtitle>Tips, hints and information for the Microsoft's Windows Operating System.</subtitle>
+&windows;
+</section>
+
+<section><title>Lyx</title>
+<subtitle>Tips, hints and information for LyX interface.</subtitle>
+&lyx;
+</section>
+
+<section><title>Docbook Installation</title>
+<para>
+After installation of Docbook packages, ensure that the environment variable
+SGML_CATALOG_FILES has been set.  This typically points to a system wide
+catalog file called <Filename>/etc/sgml/catalog</Filename>.
+</para>
+<para>
+To rebuild this from SGML source use:
+<screen>
+db2html index.sgml
+</screen>
+</para>
+</section>
+
+<!-- add addtional sections here -->
+
+</article>

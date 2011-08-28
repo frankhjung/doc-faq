@@ -1,0 +1,101 @@
+<qandaset defaultlabel=qanda id=lyx>
+
+<title>LyX Frequently Asked Questions</title>
+
+<qandaentry>
+<question>
+<para>How can you print a PDF from a LyX document?</para>
+</question>
+<answer>
+<para>
+Use 
+<screen>
+lyx -e pdf file.lyx
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to print a symbol?
+</para>
+</question>
+<answer>
+<para>
+Get the symbol code using:
+<screen>
+$ xfd -fn "-*-symbol-*-*-*-*-*-*-*-*-*-107-*-*" &
+</screen>
+If using <command>vim(1)</command> use:
+<screen>
+xfd -fn "-misc-fixed-medium-r-normal--14-130-75-75-c-70-iso8859-1" &
+</screen>
+Select the code (eg 326 for sqrt symbol). Enter math mode and type in \326.
+</para>
+<para>
+You can also use LaTeX shortcuts like:
+<simplelist columns='1'>
+    <member>\therefore</member>
+    <member>\alpha</member>
+    <member>\beta</member>
+    <member>\box</member>
+    <member>\forall</member>
+    <member>\exists</member>
+    <member>\copyright</member>
+</simplelist>
+</para>
+<para>
+Another way is to echo the character to a command prompt then cut and paste into 
+your document. For example:
+<screen>
+echo $'\xFB'
+</screen>
+Which should print û. See <command>iso_8859-1.7</command> or
+<command>ascii(7)</command> for more codes.
+</para>
+<para>
+For a full list check out the following
+<simplelist columns='1'>
+<member>
+    <ulink url="http://sea.am.ub.es/Latex/ltx-401.html">
+    <citetitle>Accents</citetitle>
+    </ulink>
+</member>
+<member>
+    <ulink url="http://sea.am.ub.es/Latex/ltx-407.html">
+    <citetitle>Miscellaneous symbols</citetitle>
+    </ulink>
+</member>
+<member>
+    <ulink url="http://sea.am.ub.es/Latex/ltx-405.html">
+    <citetitle>Greek</citetitle>
+    </ulink>
+</member>
+<member>
+    <ulink url="http://sea.am.ub.es/Latex/ltx-119.html">
+    <citetitle>Math Miscellany</citetitle>
+    </ulink>
+</member>
+</simplelist>
+</para>
+</answer>
+</qandaentry>
+
+<!-- question & answer template 
+   <qandaentry>
+   <question>
+   <para>
+   another question
+   </para>
+   </question>
+   <answer>
+   <para>
+   another answer
+   </para>
+   </answer>
+   </qandaentry>
+-->
+
+</qandaset>

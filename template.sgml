@@ -1,0 +1,83 @@
+<qandaset defaultlabel=qanda id=template>
+
+<title>title Frequently Asked Questions</title>
+
+<qandaentry>
+
+<question>
+	<para>
+	</para>
+</question>
+
+<answer>
+	<para>
+
+    <literal>#</literal>
+
+	<command>
+	</command>
+
+	<filename>
+	</filename>
+
+	<programlisting>
+	</programlisting>
+
+	<screen>
+	</screen>
+
+	<errorname>
+	</errorname>
+
+	<example>
+	<title>
+	</title>
+	<programlisting>
+	</programlisting>
+	</example>
+
+	<ulink url=""><citetitle></citetitle></ulink>
+
+	<orderedlist>
+		<listitem>
+		<para>
+		</para>
+		</listitem>
+	</orderedlist>
+
+	<variablelist><title></title>
+	<varlistentry>
+	<term>
+	</term>
+	<listitem>
+	<para>
+	</para>
+	</listitem>
+	</varlistentry>
+	</variablelist>
+
+	<citerefentry>
+		<refentrytitle> </refentrytitle> 
+		<manvolnum> </manvolnum>
+	</citerefentry>
+
+	</para>
+</answer>
+
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+another question
+</para>
+</question>
+
+<answer>
+<para>
+another answer
+</para>
+</answer>
+</qandaentry>
+
+</qandaset>

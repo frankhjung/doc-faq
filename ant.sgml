@@ -1,0 +1,707 @@
+<qandaset defaultlabel=qanda id=template>
+
+<title>Apache Ant</title>
+
+<qandaentry>
+<question>
+<para>
+How to log a build script?
+</para>
+</question>
+<answer>
+<para>
+Append to a log file any build requests using:
+<programlisting><![CDATA[
+<record name="build.log" append="true"/>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to use regular expressions?
+</para>
+</question>
+<answer>
+<para>
+This Ant Library contains tasks to test Ant tasks using Ant instead of JUnit.
+Get from <ulink url="http://ant.apache.org/antlibs/antunit/"><citetitle>antunit</citetitle></ulink>.
+As an example, count frequency of the string "^ERROR:\s+.*", using a regular
+expression search in a file.
+<programlisting><![CDATA[
+<property name="regexp" value="^ERROR:\s+.*"/>
+<echo message="regexp=${regexp}"/>
+<!-- copy errors in log file -->
+<copy file="test.file" tofile="result.file" overwrite="true">
+    <filterchain>
+        <linecontainsregexp>
+            <regexp pattern="${regexp}"/>
+        </linecontainsregexp>
+     </filterchain>
+</copy>
+<!-- count number of errors received -->
+<resourcecount property="error.count">
+    <tokens>
+        <linetokenizer/>
+        <file file="result.file"/>
+    </tokens>
+</resourcecount>
+<!-- should have no errors -->
+<au:assertEquals expected="0" actual="${error.count}" casesensitive="false"/>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to reset a variable property?
+</para>
+</question>
+<answer>
+<para>
+Ant uses immutable properties.  If you need to modify a property
+use ant-contrib variable instead.
+<programlisting><![CDATA[
+<var name="mine" value="true"/>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to wait for condition with timeout?
+</para>
+</question>
+<answer>
+<para>
+Wait for server to quieten down:
+<programlisting><![CDATA[
+<waitfor maxwait="2" maxwaitunit="minute">
+   <not><http url="http://${oc4j.http.hostname}:${oc4j.http.port}/em/"/></not>
+</waitfor>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to execute SQL?
+</para>
+</question>
+<answer>
+<para>
+The following setup target runs SQL initialisation tasks:
+<programlisting><![CDATA[
+<path id="library.JDBC"> (1)
+   <fileset dir="${oracle.home}/jdbc/lib">
+      <include name="*.jar"/>
+   </fileset>
+</path>
+
+<target name="setup" description="re-initialise database schema" depends="init">
+   <sql driver="oracle.jdbc.driver.OracleDriver" (2)
+        url="jdbc:oracle:thin:@localhost:1521:XE"
+        userid="oc4jadmin"
+        password="welcome1"
+        src="${src}/sql/schema.sql"
+        classpathref="library.JDBC" (3)
+        onerror="continue"
+   />
+</target>
+]]></programlisting>
+</para>
+<para>
+Where:
+    <orderedlist>
+        <listitem>
+        <para>
+declares the path reference to the Oracle JDBC drivers, used at (3), and,
+        </para>
+        </listitem>
+        <listitem>
+        <para>
+is the driver class
+        </para>
+        </listitem>
+        <listitem>
+        <para>
+the reference to classpath
+        </para>
+        </listitem>
+    </orderedlist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to check existence of file or directory?
+</para>
+</question>
+<answer>
+<para>
+To check for a file,
+<programlisting><![CDATA[
+<!-- check for a file -->
+<available file="${dependent.jar}" property="jar.present"/>
+<fail unless="jar.present" message="File not found: ${dependent.jar}"/>
+]]></programlisting>
+</para>
+<para>
+To check for a directory,
+<programlisting><![CDATA[
+<available file="${dir.path}/" property="dir.present"/>
+<fail unless="dir.present" message="Directory not found: ${dir.path}"/>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to print a usage message?
+</para>
+</question>
+<answer>
+<para>
+For a usage message (see also -p option):
+<programlisting><![CDATA[
+<target name="usage">
+    <exec executable="ant" dir="${basedir}" vmlauncher="false">
+        <arg value="-projecthelp"/>
+    </exec>
+</target>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to format a date?
+</para>
+</question>
+<answer>
+<para>
+This is a standard task,
+<programlisting><![CDATA[
+<tstamp>
+  <format property="test.date" pattern="yyyy-MM-dd HH:mm:ss z"/>
+</tstamp>
+<echo message="test date = ${test.date}" />
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to ignore failing target?
+</para>
+</question>
+<answer>
+<para>
+Using the antcontrib a try-catch can be placed around the task that may fail.
+This is useful for  setup tasks  where for example you remove a resource then
+add it. If the resource does not exist, removing it will fail. So, a try-catch
+around the remove task will prevent the setup script from failing.
+<programlisting><![CDATA[
+<trycatch>
+    <try>
+        <antcall target="some_target"/>
+    </try>
+    <catch>
+        <echo message="ignoring"/>
+    </catch>
+</trycatch>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to read lines from a text file?
+</para>
+</question>
+<answer>
+<para>
+Read a text file and process it line-by-line.  For example, given a properties
+style input file,
+<screen>
+# Input file for task.
+# $Revision$
+first_action
+second_action
+third_action
+</screen>
+Then using the standard Ant task, <command>loadfile</command> and the
+<command>for</command> loop from antcontrib,
+<programlisting><![CDATA[
+<target name="read" description="read a properties style file" depends="init">
+<available file="input.file" property="file.present"/>
+<fail unless="file.present" message="WARNING: file not found, input.file"/>
+    <loadfile property="actions" srcFile="actions.txt">
+        <filterchain>
+            <striplinecomments>
+                <comment value="#"/>
+                <comment value=" "/>
+            </striplinecomments>
+        </filterchain>
+    </loadfile>
+    <for list="${actions}" delimiter=";" trim="true" param="action">
+        <sequential>
+            <do_something action="@{action}"/>
+        </sequential>
+    </for>
+</target>
+]]></programlisting>
+</para>
+<para>
+And the macro <command>do_something</command> is,
+<programlisting><![CDATA[
+<macrodef name="do_something">
+    <attribute name="action"/>
+    <sequential>
+        <echo message="Have been asked to do @{action}!"/>
+    </sequential>
+</macrodef>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to remove CRLF and replace with tabs?
+</para>
+</question>
+<answer>
+<para>
+This will strip CRLF and blank lines from a file:
+<programlisting><![CDATA[
+<copy file="from.file" tofile="to.file">
+    <filterchain>
+        <fixcrlf eol="unix"/>
+        <linecontainsregexp negate="true">
+           <regexp pattern="^\s*$"/>
+        </linecontainsregexp>
+   </filterchain>
+</copy>
+]]></programlisting>
+</para>
+<para>
+An alternate method using the standard <command>fixcrlf</command> task is,
+<programlisting><![CDATA[
+<target name="crlf" description="fix CrLf to Unix line endings">
+    <fixcrlf srcdir="src" includes="**/*.java,*/*.properties" eol="unix" tab="remove" tablength="4"/>
+</target>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to remove spaces from blank lines?
+</para>
+</question>
+<answer>
+<para>
+A similar task to above, with a completely different solution.  It is useful to
+remove embedded spaces to blank lines for use with the vim editor quick
+paragraph navigation.
+<programlisting><![CDATA[
+<replaceregexp match="^\s*$" replace="" byline="true">
+    <fileset dir="${basedir}" includes="**/*.java,,**/*.properties"/>
+</replaceregexp>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to test that file exists?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+<fail message="ERROR: file ${my.test} not found">
+    <condition> <not> <available file="${my.test}"/> </not> </condition>
+</fail>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to loop through a list and perform a task?
+</para>
+</question>
+<answer>
+<para>
+Given,
+<screen>
+modules.list=moduleA,moduleB,moduleC
+</screen>
+Then, to loop through this list use antcontrib task,
+<programlisting><![CDATA[
+<for list="${modules.list}" delimiter="," trim="true" param="module">
+    <sequential>
+           <echo message="Perform task on @{module}"/>
+    </sequential>
+</for>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to replace token in a file?
+</para>
+</question>
+<answer>
+<para>
+This will replace the TYPE token in a file,
+<programlisting><![CDATA[
+<replace file="${my.test}" token="@TYPE@" value="MyValue" summary="yes"/>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to set a property on a condition test?
+</para>
+</question>
+<answer>
+<para>
+The simplest version of this is if you have an either / or value to set. Either
+something is true or false:
+<programlisting><![CDATA[
+<condition property="fruit" value="apple" else="orange">
+    <isset property="citrus"/>
+</condition>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to convert path to a property?
+</para>
+</question>
+<answer>
+<para>
+This shows how to convert a directory of JARs into a property that can be used as a classpath.
+First, declare a reference to a fileset containing the JARs,
+<programlisting><![CDATA[
+<fileset id="classpath.fileset" dir="${basedir}">
+    <include name="lib/*.jar"/>
+    <include name="lib/*.zip"/>
+</fileset>
+]]></programlisting>
+Next, convert this path into a classpath like property value,
+<programlisting><![CDATA[
+<pathconvert pathsep=";" property="classpath.result" refid="classpath.fileset"/>
+<echo message="Have classpath=${classpath.result}"/>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to count lines in a file?
+</para>
+</question>
+<answer>
+<para>
+Use a filterchain to count lines matching a string. In this example look for
+all XML files that contain the string, "&lt;qandaset ".
+<programlisting><![CDATA[
+<typedef resource="net/sf/antcount/defs.properties" classpath="lib/antcount.jar" />
+<concat destfile="${dir.work}/count.tmp">
+<fileset dir="${basedir}" includes="*.sgml"/>
+<filterchain>
+    <tokenfilter>
+        <countfilter property="count" override="true" contains="&lt;qandaset "/>
+    </tokenfilter>
+    <linecontains>
+        <contains value="&lt;qandaset "/>
+    </linecontains>
+</filterchain>
+</concat>
+<echo message="Found ${count} qandaset's."/>
+]]></programlisting>
+</para>
+<para>
+This counting example works for Apache Ant version 1.6.5.  From version 1.7
+there is a new task called <command>ResourceCount</command>.  To count the
+number of files, 
+<programlisting><![CDATA[
+<resourcecount property="count">
+    <tokens>
+        <file file="${basedir}/*.sgml"/>
+    </tokens>
+</resourcecount>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to trim whitespace from a property?
+</para>
+</question>
+<answer>
+<para>
+When getting user input, it is handy to trim any white-space.  Using the <ulink
+url="http://ant-contrib.sourceforge.net/"><citetitle>antcontrib</citetitle></ulink> library,
+<programlisting><![CDATA[
+<target name="input" description="test removing whitespace from user input">
+   <input message="Please enter a text string:" addproperty="my.input"/>
+   <propertyregex property="my.trimmed" input="${my.input}" regexp="^\s*(.*?)\s*$" select="\1"/>
+   <echo message="Before=[${my.input}]"/>
+   <echo message="After=[${my.trimmed}]"/>
+</target>
+]]></programlisting>
+This uses the regular expression to search for white-space before and after.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to use a path file name mapper?
+</para>
+</question>
+<answer>
+<para>
+The problem here was there were non-Windows characters in the path that
+prevented the archive from expanding.  To fix this, translate ':' to '-' in the
+path,
+<programlisting><![CDATA[
+<unzip src="${basedir}/some.zip" dest="${basedir}/temp" overwrite="true">
+   <!-- select files to unzip -->
+   <patternset>
+      <include name="**/10_1_0*"/>
+   </patternset>
+   <!-- apply mapper -->
+   <filtermapper>
+      <replacestring from=":" to="-"/>
+   </filtermapper>
+</unzip>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to copy using secure ftp?
+</para>
+</question>
+<answer>
+<para>
+This uses the <command>scp</command> task to securely copy a file,
+<programlisting><![CDATA[
+<target name="copy" description="secure copy">
+   <delete file="${basedir}/the.file"/>
+   <scp file="${host.userid}:${host.password}@${host.name}:${host.home}/the.file" todir="${basedir}" trust="yes" />
+</target>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to get file and directory names?
+</para>
+</question>
+<answer>
+<para>
+The following shows how to get the path and file basename.  To get the name of
+the parent directory, use dirname then basename.  The dirname will get the
+path, and basename will get the last directory of that path.
+<programlisting><![CDATA[
+<typedef resource="net/sf/antcontrib/antlib.xml" classpath="lib/ant-contrib-1.0b3.jar"/>
+<target name="index" description="list local XML files and directories">
+   <for param="file">
+      <path>
+         <fileset dir="${basedir}">
+            <include name="**/*.xml"/>
+         </fileset>
+      </path>
+      <sequential>
+         <var name="file.basename" unset="true"/>
+         <basename property="file.basename" file="@{file}"/>
+         <var name="file.dirname" unset="true"/>
+         <dirname property="file.dirname" file="@{file}"/>
+         <var name="app.name" unset="true" />
+         <propertyregex property="xml.name" input="${file.dirname}" regexp="(.*).xml" replace="\1" />
+         <echo message="Found XML ${xml.name} : ${file.basename} in ${file.dirname}"/>
+      </sequential>
+   </for>
+</target>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to apply a style sheet?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+<property name="release" value="$Id$"/>
+<mkdir dir="${basedir}/output"/>
+<delete file="${basedir}/output/result.xml" quiet="true"/>
+<xslt
+    in="${basedir}/build.xml"
+    out="${basedir}/output/build.html"
+    style="${basedir}/build.xsl">
+        <param name="release-number" expression="${release}" />
+</xslt>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to update an xml document?
+</para>
+</question>
+<answer>
+<para>
+Using the external <command>xmltask</command> from <ulink
+url="http://www.oopsconsultancy.com/software/xmltask/"><citetitle>oops
+consultancy</citetitle></ulink>,
+<programlisting><![CDATA[
+<echo message="Setting runtime WSDL location ..."/>
+<xmltask source="Transaction.esbsvc" todir="${build}/esb">
+    <replace
+        path="/service/serviceDefinition/wsdlURL"  
+        withXml="&lt;wsdlURL&gt;http://@hostname@:@port@/orabpel/@domain@/Transaction/Transaction?wsdl&lt;/wsdlURL&gt;"/>
+</xmltask>
+<xmltask source="Process.esbsvc" todir="${build}/esb">
+    <replace
+        path="/service/serviceDefinition/wsdlURL"
+        withXml="&lt;wsdlURL&gt;http://@hostname@:@port@/orabpel/@domain@/Process/Process?wsdl&lt;/wsdlURL&gt;"/>
+</xmltask>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to convert a path using a regular expression?
+</para>
+</question>
+<answer>
+<para>
+The problem being solved here, is to use part of a path name to derive a
+property name. Now use this to retrieve the associated property value. 
+Given sample input data,
+<screen>
+# input data
+mq.qmgr=MRS_MQM1
+mq.q.GAS.B2B.CARROT=MRS.ABC.CUSTOMER
+mq.q.GAS.B2B.BALLOON=MRS.ABC.CUSTOMER
+mq.q.GAS.B2B.ABALONE=MRS.ABC.CUSTOMER
+</screen>
+<programlisting><![CDATA[
+<macrodef name="getQueueName">
+   <attribute name="name" description="get queue name for this property"/>
+   <attribute name="qname" description="associated queue name"/>
+   <sequential>
+      <var name="_dirname" unset="true" />
+      <dirname file="@{name}" property="_dirname" />
+      <echo message="_dirname=${_dirname}" level="verbose"/>
+      <propertyregex
+         property="_pname"
+         override="true"
+         input="${_dirname}"
+         regexp="inbound\\([^\\]*)\\([^\\]*)\\([^\\]*)"
+         select="mq.q.\1.\2.\3"
+         casesensitive="true" />
+      <echo message="_pname=${_pname}" level="verbose"/>
+      <propertycopy name="qname" from="${_pname}" override="true" />
+      <echo message="qname=${qname}" level="verbose"/>
+   </sequential>
+</macrodef>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to select a property using a regular expression?
+</para>
+</question>
+<answer>
+<para>
+Given sample input data,
+<screen>
+# input data
+mq.qmgr=MRS_MQM1
+mq.q.GAS.B2B.CARROT=MRS.ABC.CUSTOMER
+mq.q.GAS.B2B.BALLOON=MRS.ABC.CUSTOMER
+mq.q.GAS.B2B.ABALONE=MRS.ABC.CUSTOMER
+</screen>
+<programlisting><![CDATA[
+<propertyselector property="test.dir.list" delimiter="," match="mq\.q\.(.*)" select="\1" casesensitive="true" />
+<for list="${test.dir.list}" delimiter="," param="directory" keepgoing="true">
+   <sequential>
+      <echo message="for @{directory} have ${mq.q.@{directory}}" />
+   </sequential>
+</for>
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+</qandaset>

@@ -1,0 +1,605 @@
+<qandaset defaultlabel="qanda" id=groovy>
+
+<title>Groovy Frequently Asked Questions</title>
+
+<qandaentry>
+<question>
+<para>
+How to declare collection classes?
+</para>
+</question>
+<answer>
+<para>
+For array lists:
+<programlisting><![CDATA[
+// the old way
+def list1 = new ArrayList()
+// the groovy way
+def list2 = []
+]]></programlisting>
+</para>
+<para>
+For hash maps:
+<programlisting><![CDATA[
+// the old way
+def map1 = new HashMap()
+// the groovy way
+def map2 = [:]
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to produce sane exception logs?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+try {
+    performAction(arg) 
+} catch (Exception e) {
+    org.codehaus.groovy.runtime.StackTraceUtils.sanitize(e)
+    println "Error: ${e.getMessage()}\n"
+}
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How loop through a range?
+</para>
+</question>
+<answer>
+<para>
+Example loop 6 times:
+<programlisting><![CDATA[
+// verbose method
+indices = 0..5
+for (i in indices) {
+   println "index is ${i}"
+}
+// really simple method using groovy ranges 
+(0..5).each { println "index is ${it}" }
+// or even simpler
+6.times { println "index is ${it}" }
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How show class methods and properties?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+println "listing methods ..."
+def methods = Upload.metaClass.methods.name.sort().unique()
+def base = Object.metaClass.methods.name.sort().unique()
+(methods - base).each { m -> println "\t${m}" }
+println "listing properties ..."
+println "\t${this.metaClass.properties*.name.sort().unique()}"
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to read properties from a file?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+String name = 'etc/custom.properties'
+println "loading properties from ${name} ..."
+// see also ConfigSlurper ... but can't have comments
+// def config = new ConfigSlurper().parse(new File(name).toURL())
+def config = new Properties()
+config.load( new FileInputStream(name) );
+println "have ${config.getClass().getName()}"
+println "env is ${config.'env'}"
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How encode and decode in Base64?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+println ("test base64 ...")
+String testString = "This is a test"
+println "input ...: ${testString}"
+def testEncoded = testString.bytes.encodeBase64()
+// we need a string for decoding
+StringWriter sw = new StringWriter()
+testEncoded.writeTo(sw)   
+// show encoding
+println "base64 ..: ${testEncoded}"
+// check encoding / decoding worked
+String testDecoded = new String(sw.toString().decodeBase64())
+assert testString == testDecoded : "decoding does not match encoding"     
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to read a binary file?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+def encodedData = new File(infileName).readBytes()
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to parse an XML document read from a file?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+def xml = new XmlSlurper().parse(new File(infileName))
+
+// show children of root node
+println "have ' + xml.name()
+xml.children().each { println it.name() }
+
+// compare with XmlParser
+String name = 'xml/test.xml'
+println "loading xml from ${name} ..."
+
+def envelope = new XmlParser().parse(new File(name))
+println "processing ${envelope.name()}"
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to read an XML document with namespaces?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+import  groovy.xml.Namespace
+
+println "loading xml from ${name} ..."
+
+def envelope = new XmlParser().parse(new File(name))
+
+// show xml information
+println "show nodes of ${envelope.name()}"
+envelope.depthFirst().each { println "found ${it.name()}" }
+
+// declare namespaces
+def soapenv = new Namespace("http://schemas.xmlsoap.org/soap/envelope/", 'soapenv')
+def dp = new Namespace("http://www.datapower.com/schemas/management", 'dp')
+
+// use namespaces to read a node
+println "namespaces ${envelope[soapenv.Body]}"
+def requests = envelope[soapenv.Body][dp.request]
+
+// reading a complex node name
+def objects = envelope[soapenv.Body][dp.request][dp.'do-export'][dp.object]
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to search an XML document?
+</para>
+</question>
+<answer>
+<para>
+Search XML document for nodes with a name attribute matching a pattern:
+<programlisting><![CDATA[
+def datapower = new XmlParser().parse(new File("${p.'dir.work'}/export.xml"))
+def files = datapower.depthFirst()
+def commons = files.findAll { it.@name =~ /pattern/ }
+
+println "Nodes found with name attribute 'pattern'"
+
+commons.each {
+     println "\t" + it.name() + ': ' + it.@name
+}
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to update an XML document?
+</para>
+</question>
+<answer>
+<para>
+Read XML using XMLParser (see above) then to update attribute values. This uses
+an XML with namespaces.
+<programlisting><![CDATA[
+import groovy.xml.Namespace
+
+def envelope = new XmlParser().parse(new File('src/xml/export.xml'))
+
+// get requests using namespaces
+def soapenv = new Namespace("http://schemas.xmlsoap.org/soap/envelope/", 'soapenv')
+def dp = new Namespace("http://www.datapower.com/schemas/management", 'dp')
+def requests = envelope[soapenv.Body][dp.request]
+
+// replace domain
+requests.each { it.@domain = props.'dp.domain' }
+
+// replace object and class
+def objects = envelope[soapenv.Body][dp.request][dp.'do-export'][dp.object]
+objects.each { it.@name = 'MotorQuoteService' }
+objects.each { it.@class = 'WebProxyService' }
+]]></programlisting>
+Where the XML document to update is: 
+<programlisting><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Body>
+    <dp:request domain="@domain@"
+       xmlns:dp="http://www.datapower.com/schemas/management">
+      <dp:do-import source-type="ZIP"
+         overwrite-files="true"
+        overwrite-objects="true">
+        <dp:input-file>@file@</dp:input-file>
+       </dp:do-import>
+    </dp:request>
+  </soapenv:Body>
+</soapenv:Envelope>
+]]></programlisting>
+To update a nodes value is simply:
+<programlisting><![CDATA[
+// replace domain
+requests.each { it.@domain = props.'dp.domain' }
+
+// replace file with base64 encoded data
+String file = Common.encodeFile('work/import.zip')
+
+def files = envelope[soapenv.Body][dp.request][dp.'do-import'][dp.'input-file']
+files.each { it.value = "${file}" }
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to write an XML document to a file?
+</para> 
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+/**
+ * Writes a XML node to a file. Ensure that indent is blank so
+ * that there are no additional leading or trailing spaces for
+ * node values.
+ * @param data the XML data to write
+ * @param outfile the file to write to
+ */
+static writeXml (Node data, def outfile) {
+    outfile = (outfile instanceof File ? outfile : new File(outfile))
+    def printer = new XmlNodePrinter(new PrintWriter(outfile), '')
+    printer.print(data)
+}
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to write a node to a string?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+def data = new XmlParser().parse(new File("etc/datapower.xml"))
+def outputStream = new ByteArrayOutputStream()
+def printer = new XmlNodePrinter(new PrintWriter(outputStream))
+printer.print(data)
+print outputStream
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to write bytes to a file?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+String dataString = "This is a test"
+byte[] dataBytes = fileEncoded.decodeBase64()
+def outfile = new FileOutputStream('outfile.bin')
+outfile.write(dataBytes)
+outfile.close()
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to write strings to a file?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+new File('myOutFile').withWriter{ it << myString }
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to write XML using a Builder?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+println ( "creating mainfest for service ..." )
+writer = new PrintWriter(new File('export.xml'))
+builder = new MarkupBuilder(writer)
+// build xml manifest from list of files
+builder.'datapower-configuration'(version : '3') {
+    files() {
+        new FileNameFinder().getFileNames("service", '', 'test').each() {
+            f -> file(name: f, src: f, location: 'local')
+        }
+    }
+}
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to remove an XML node?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+// removing set-file placeholder node
+def setfiles = requests[dp.'set-file'].findAll { it.@name = '@name@' }
+setfiles.each { n -> n.parent().remove(n) }
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to add an XML node?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+import groovy.xml.Namespace
+
+// read in template
+def envelope = new XmlParser().parse(new File('src/xml/set-file.xml'))
+
+// get requests using namespaces
+def soapenv = new Namespace('http://schemas.xmlsoap.org/soap/envelope/', 'soapenv')
+def dp = new Namespace('http://www.datapower.com/schemas/management', 'dp')
+def requests = envelope[soapenv.Body][dp.request]
+
+// replace domain
+requests.each { it.@domain = props.'dp.domain' }
+
+// add logging node
+Node sendlogevent = new Node(requests.getAt(0), 'SendLogEvent')
+new Node(sendlogevent, 'LogType', 'custom-xmlmgmt')
+new Node(sendlogevent, 'GenLogLevel', 'info')
+new Node(sendlogevent, 'LogEvent', 'Uploading service files')
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to show environment variables?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+def env = System.getenv()
+for(k in env){
+    println(k)
+}
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to process command line parameters?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+/** Input XML file name. */
+String infileXml
+/** Input XSL file name. */
+String infileXsl
+/** Output XML file name. */
+String outfileXml
+/** Command line builder. */
+CliBuilder cl
+/** Command line options. */
+def opt
+
+Stylesheet(String[] args) {
+    super()
+    // pass command line arguments
+    cl = new CliBuilder(usage: 'groovy -cp lib stylesheet.groovy [-h] [-x "xmlname"] [-s "xslname"] [-o "outname"] [target] ...')
+    cl.h(longOpt:'help', 'Show usage information and quit')
+    cl.x(argName:'infileXml', longOpt:'infileXml', args:1, required:true, 'name of XML file to transform')
+    cl.s(argName:'infileXsl', longOpt:'infileXsl', args:1, required:true, 'name of XSL file that applies transform')
+    cl.o(argName:'outfileXml', longOpt:'outfileXml', args:1, required:true, 'name of transformed XML file')
+    opt = cl.parse(args)
+    if (!opt) {
+        println "Error: command line arguments not parsed."
+    } else if (opt.h){
+        cl.usage()
+    } else {
+        if (opt.x) infileXml = opt.x
+        if (opt.s) infileXsl = opt.s
+        if (opt.o) outfileXml = opt.o
+    }
+}
+
+static main(String[] args) {
+    // create style sheet
+    def stylesheet = new Stylesheet(args)
+    println "infileXml=${stylesheet.infileXml}"
+    println "infileXsl=${stylesheet.infileXsl}"
+    println "outfileXml=${stylesheet.outfileXml}"
+    // execute each target
+    stylesheet.opt.arguments().each { arg-> stylesheet."${arg}"() }
+}
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<!--
+<qandaentry>
+<question>
+<para>
+How to ?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+-->
+
+<!--
+<qandaentry>
+<question>
+	<para>
+	</para>
+</question>
+<answer>
+	<para>
+
+	<command>
+	</command>
+
+	<filename>
+	</filename>
+
+	<programlisting>
+	</programlisting>
+
+	<screen>
+	</screen>
+
+	<errorname>
+	</errorname>
+
+	<example>
+	<title>
+	</title>
+	<programlisting>
+	</programlisting>
+	</example>
+
+	<ulink url=""><citetitle></citetitle></ulink>
+
+	<orderedlist>
+		<listitem>
+		<para>
+		</para>
+		</listitem>
+	</orderedlist>
+
+	<variablelist><title></title>
+	<varlistentry>
+	<term>
+	</term>
+	<listitem>
+	<para>
+	</para>
+	</listitem>
+	</varlistentry>
+	</variablelist>
+
+	<citerefentry>
+		<refentrytitle> </refentrytitle> 
+		<manvolnum> </manvolnum>
+	</citerefentry>
+
+	</para>
+</answer>
+</qandaentry>
+-->
+
+</qandaset>

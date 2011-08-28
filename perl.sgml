@@ -1,0 +1,699 @@
+<qandaset defaultlabel=qanda id=perl>
+
+<title>Perl Frequently Asked Questions</title>
+
+<qandaentry>
+<question>
+<para>
+What is the regular expression that matches a 24 hour clock?
+</para>
+</question>
+<answer>
+<para>Try: 
+<screen>
+    ([01]?[0-9]|2[0-3]):[0-5][0-9]
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+What is the regular expression that matches a floating point number?
+</para>
+</question>
+<answer>
+<para>
+This is a regular expression for floating point numbers and can also be used
+with grep or egrep for searching floating point numbers in any text file.
+<screen>
+    (\+|-)?([0-9]+\.?[0-9]*|\.[0-9]+)([eE](\+|-)?[0-9]+)?
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to terminate an active job?
+</para>
+</question>
+<answer>
+<para>
+Using shell scripts:
+<screen>
+    $ ps -A | grep radproxy | awk '{ print $1 }' | xargs kill -1
+</screen>
+</para>
+<para>
+Which isn't ~to~ bad, but why use three tools when one will do ?
+<screen>
+    $ ps -A | perl -ane '{/job_name/ && kill -1, $F[0]}'
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to perform a complicated search and replace over a group of files?
+</para>
+</question>
+<answer>
+<para>
+For example:
+</para>
+<para>
+Suppose we had to edit all <filename>*.html</filename> files replacing
+all occurences of name="?" with name="?" rev="1.0" Where "?" is some text
+that is different for each read file.
+</para>
+<para>
+And since I'm cautious, lets keep a back-up copy of changed files with
+suffix <filename>.bak</filename>.
+</para>
+<para>
+<screen>
+    $ perl -pi.bak -e 's/name=".*?"/$& rev="1.0"/g;' *.html
+</screen>
+</para>
+<para>
+Text search and replace can also be done from a shell script, for example:
+<ProgramListing><![CDATA[
+#bin/ksh
+#
+# Replace VAX1 with Calis for all *.mnu files.
+#
+for f in *.mnu; do
+   sed 's/VAX1/Calis/'  $f &gt; ${f%%.mnu}.new
+done
+]]></ProgramListing>
+</para>
+<para>
+While that is all well and good for Unix systems, what about MS-Windows?  
+Well you can still do this, with a little more effort ...
+<screen>
+    DOS> for /F %f in ('findstr /smc:Search &lt;file.*&gt;') do perl -pi.bak -e "s/Search/Replace/gos;" %f
+</screen>
+Which is just a bit worse than:
+<screen>
+    $ perl -pi.bak -e "s/Search/Replace/gos;" `grep -lr Search`
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to print the filesystem mount points listed in
+<filename>/etc/vfstab</filename>, stripping out all the garbage?
+</para>
+</question>
+<answer>
+<para>
+Using awk:
+<screen>
+    $ nawk '/^\/dev/ && $4 !~ /swap/ { print $3 }' /etc/vfstab
+</screen>
+</para>
+<para>
+Using Perl:
+<screen>
+    $ perl -ane '{print $F[2], "\n" if /^\/dev/ && (not /swap/)}' /etc/vfstab
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to find the size of all files in a directory up to 7 days old?
+</para>
+</question>
+<answer>
+<para>
+Using awk:
+<screen>
+    $ find . -mtime -7 -ls| awk 'BEGIN {sum=0} {sum+= $7} END{print sum, "bytes or ", sum/1024, "Kbytes"}'
+</screen>
+Using Perl:
+<screen>
+    $ find . -mtime -7 -ls| perl -ane 'BEGIN{$sum=0} {$sum+= $F[6]} END{printf "%i bytes or %f Kbytes\n", $sum, $sum/1024}'
+</screen>
+(Strictly you should also use the find flag "<command>-type f</command>" for
+plain files.)
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to get the contents of an email message into a perl script?
+</para>
+</question>
+<answer>
+<para>
+Use: <filename>.forward</filename> (see 
+<citerefentry>
+   <refentrytitle>forward</refentrytitle> 
+   <manvolnum>5</manvolnum>
+</citerefentry> for more information about this file)
+<screen>
+    |/bin/mail.pl
+</screen>
+Where:
+<ProgramListing><![CDATA[
+#!/usr/bin/perl
+
+while (&lt;&gt;)
+{
+   # do something with $_;
+}
+]]></ProgramListing>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to calculate days between dates and show dates from epoch values?
+</para>
+</question>
+<answer>
+<para>
+Perl is really useful here:
+<ProgramListing><![CDATA[
+#!/usr/local/bin/perl
+
+use strict;
+use Time::localtime;
+use Time::Local;
+
+my $sesstime=0;
+my $tm=0;
+my $sevendays=0;
+my $sevendaysago=0;
+my $today=0;
+
+# (1) convert from epoch to date
+print("\n1) test calculation from epoch to date\n");
+$sesstime=924789599;
+$tm=localtime($sesstime);
+printf("%d %04d-%02d-%02d %02d:%02d:%02d\n\n", $sesstime, $tm->year+1900, $tm->mon+1, $tm->mday, $tm->hour, $tm->min, $tm->sec);
+
+# (2) calculate 7 days before date
+print("2) test calculation of 7 days before date\n");
+# calculate seconds in 7 days
+$sevendays=7 * 24 * 60 * 60;
+# subtract 7 days from date
+$sevendaysago=$sesstime - $sevendays;
+$tm=localtime($sevendaysago);
+printf("%d %04d-%02d-%02d %02d:%02d:%02d\n\n", $sevendaysago, $tm->year+1900, $tm->mon+1, $tm->mday, $tm->hour, $tm->min, $tm->sec);
+
+# (3) show today as an epoch value
+print("3) show todays date as an epoch value\n");
+$tm=localtime;
+$today=timelocal($tm->sec, $tm->min, $tm->hour, $tm->mday, $tm->mon, $tm->year);
+printf("%d %04d-%02d-%02d %02d:%02d:%02d\n\n", $today, $tm->year+1900, $tm->mon+1, $tm->mday, $tm->hour, $tm->min, $tm->sec);
+
+# (4) calculate 7 days before today
+print("4) show date 7 days before today\n");
+$sevendaysago=$today - $sevendays;
+$tm=localtime($sevendaysago);
+printf("%d %04d-%02d-%02d %02d:%02d:%02d\n\n", $sevendaysago, $tm->year+1900, $tm->mon+1, $tm->mday, $tm->hour, $tm->min, $tm->sec);
+
+exit 0;
+]]></ProgramListing>
+</para>
+<para>
+You don't need the Perl modules though.  Try:
+<ProgramListing><![CDATA[
+#!/usr/local/bin/perl
+#
+# Usage: yesterday
+# Description: show yesterdays date as YYYYMMDD.
+#
+# 86400 = 24 hours x 60 minutes x 60 seconds = seconds in a day.
+# localtime is an array with all numeric elements:
+# ($sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst)
+# isdst = is day-light-savings ?
+#
+# The Perl library module Time::Local has a routine timelocal() that can
+# convert in the opposite direction.
+#
+($year, $month, $day) = (localtime(time - 86400))[5, 4, 3];
+printf("%04d%02d%02d\n", $year+1900, $month+1, $day);
+]]></ProgramListing>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to read the last couple of lines from a file?
+</para>
+</question>
+<answer>
+<para>
+Yes!  This can be done using shell commands <command>tail</command> or
+<command>head</command>, but lets just assume we don't have these tools. Like
+when you're on a <systemitem class="OSname">Microsoft NT</systemitem> box.  
+</para>
+<para>
+I assume you've got them read into an array.  In which case, you can do:
+<screen>
+    @b = @a[-10..-1];
+</screen>
+to store the last 10 lines from <VarName>@a</VarName> into
+<VarName>@b</VarName> (negative numbers in an array slice count backwards from
+the end of the array).
+</para>
+<para>
+Likewise, for the first 10 lines, you can do:
+<screen>
+    @b = @a[0..9];
+</screen>
+to get the first 10 lines...
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to translate the names of files from one case to another?
+</para>
+</question>
+<answer>
+<para>
+For example I have files named:
+</para>
+<para>
+<ComputerOutput>
+FILE1 FILE2 FILE3 FILE4 
+</ComputerOutput>
+</para>
+<para>
+And want to rename them to:
+</para>
+<para>
+<ComputerOutput>
+file1 file2 file3 file4.
+</ComputerOutput>
+</para>
+<para>
+This can be done with a short Perl script:
+<ProgramListing><![CDATA[
+#!/usr/local/bin/perl
+foreach $filename ( @ARGV )
+{
+   rename($filename, lc($filename));
+}
+]]></ProgramListing>
+Where <function>lc</function> in the script is for lower case.
+Be sure to set execute permission for this script:
+<screen>
+    $ chmod +x rename_script.pl
+</screen>
+Then call using: (assuming you are in same directory as script)
+<screen>
+    $ ./rename_script.pl FILE*
+</screen>
+</para>
+<para>
+If you want to convert everything to uppercase, substitute
+<function>uc</function> for <function>lc</function>.
+</para>
+<para>
+This script can further simplified.  If you really want to get clever, try
+these commands ...
+</para>
+<para>
+From lowercase: <filename>file*</filename> to uppercase
+<filename>FILE*</filename>:
+<screen>
+    $ perl -e 'foreach (&lt;file*&gt;) { rename $_, uc($_);}' 
+</screen> 
+From uppercase: <filename>FILE*</filename> to lowercase
+<filename>file*</filename>:
+<screen>
+    $ perl -e 'foreach (&lt;FILE*&gt;) { rename $_, lc($_); }' 
+</screen> 
+</para> 
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to remove <keycode>^M</keycode> from source files?
+</para>
+</question>
+<answer>
+<para>
+Using shell tools:
+<screen>
+    $ cat source.file | tr -d '\r' &gt; source.file
+</screen>
+</para>
+<para>
+Using Perl:
+<screen>
+    $ perl -pi~ -e 's/^M//g' source.file
+</screen>
+Where <keycode>^M</keycode> is entered by <keycode>ctl-v</keycode>, <keycode>ctl-m</keycode>.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to recreate <filename>/etc/aliases</filename> on a <systemitem class="OSname">FreeBSD</systemitem> system from
+the <filename>/etc/aliases.db</filename> file?
+</para>
+</question>
+<answer>
+<para>
+Adjust output formatting to taste using Perl script:
+<ProgramListing><![CDATA[
+#!/usr/bin/perl
+
+use DB_File;
+
+$Database = "/etc/aliases.db";
+
+# Open the DB database.
+tie(%DATABASE, 'DB_File', $Database, O_RDONLY, 0, $DB_HASH) ||
+    die("Cannot open DB \"$Database\"\n");
+
+# Process all the entries in the database.
+while (($key, $data) = each %DATABASE)
+{
+   print ("$key = $data\n");
+}
+
+# Close the DB database.
+untie(%DATABASE);
+
+exit 0;
+]]></ProgramListing>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to run some task on the last day of a month?
+</para>
+</question>
+<answer>
+<para>
+Unfortunately, <command>cron</command> does not give us a simple way to say
+'run this on the last day of month' Fiddling with the different length months,
+leap years, Y2K bugs and so on is messy. Here's a simple solution that gives
+all the dirty work to some well tested utility. The idea is to check whether
+*tomorrow* is the first day of a month.
+</para>
+<para>
+Try this solution using date, but change EST to your local time zone.
+<ProgramListing><![CDATA[
+#!/bin/sh
+if test `TZ=EST-24 date +%d` = 1; then
+   # today is the last day of month
+fi
+]]></ProgramListing>
+You can call this script from cron, say with a crontab of
+<screen>
+4 2 28-31 * * /path/to/your/script
+</screen>
+</para>
+<para>
+A more generic solution is:
+<ProgramListing><![CDATA[
+#!/usr/bin/perl -w
+#
+# last-day-of-month - check if today is the last day of a month
+#
+# Input: none.
+# Output: none.
+# Exit status: 0 (true) if today is the last day in a month, otherwise 1.
+# Algorithm: Get localtime and advance the day of month by one. Let mktime
+# normalize the result and check whether day of month became 1.
+# Requires: perl5.
+#
+
+use POSIX;
+
+@the_time = localtime (time);
+++$the_time[3]; # Element 4 is the day of month [1..31]
+if ((localtime (POSIX::mktime (@the_time)))[3] == 1) {
+   exit 0;
+}
+exit 1;
+]]></ProgramListing>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to monitor interrupts in a script?
+</para>
+</question>
+<answer>
+<para>
+I've been using a simple script to start PPP and monitor the incoming /
+outgoing packets.  To end this script I would press
+<keycode>ctl-c</keycode>.  Then issue another command to end the PPP
+session.  This can all be combined into one script, whereby a
+<keycode>ctl-c</keycode> will automatically end the PPP session then exit.
+This is how it is done:
+<ProgramListing><![CDATA[
+#!/bin/bash
+ifup ppp0
+trap 'echo ending ppp0 ...; /sbin/ifdown ppp0' INT
+pppstats -w 10
+]]></ProgramListing>
+</para>
+<para>
+<function>trap</function> is a 
+<citerefentry>
+   <refentrytitle>bash_bultins</refentrytitle> 
+   <manvolnum>1</manvolnum>
+</citerefentry>
+function
+(also available in Korn Shell) It specifies command(s) to be executed when
+the shell receives signals.
+</para>
+<para>
+So here, it will trap for an interrupt (eg <keycode>ctl-c</keycode>), then
+execute the commands <command>echo</command> and <command>ifdown</command>.
+</para>
+<para>
+Now, how would I do this in Perl?  
+</para>
+<para>
+The answer is not that far from the same solution required for "C".  Namely,
+set-up a 
+<citerefentry>
+   <refentrytitle>signal</refentrytitle> 
+   <manvolnum>2</manvolnum>
+</citerefentry>
+handler.
+</para>
+<para>
+The following link explains how this can be done in Perl, 
+<ulink url="http://www.perldoc.com/perl5.6/pod/perlipc.html#Signals"><citetitle>http://www.perldoc.com/perl5.6/pod/perlipc.html#Signals</citetitle></ulink>
+<ProgramListing><![CDATA[
+#!/usr/bin/perl -w
+
+use strict;
+
+my $isZapped = 0;
+
+sub setZapCatch {
+   my $signame = shift;
+   $isZapped++;
+   die "Somebody sent me a SIG$signame";
+}
+
+# main
+$SIG{INT} = \&amp;setZapCatch;
+
+print "Waiting for ^C\n";
+sleep;
+]]></ProgramListing>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to get random lines from a file?
+</para>
+</question>
+<answer>
+<para>
+An easy way to retrieve random lines from a text file:
+<screen><![CDATA[
+    $ perl -e '$count = 10; @line = <>; for (1..$count) { print $line[int rand @line] }'
+]]></screen>
+</para>
+<para>
+For example:
+<screen><![CDATA[
+    $ cat /etc/passwd | perl -e '$count = 10; @line = <>; for (1..$count) { print $line[int rand @line] }'
+]]></screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to determine the length of lines in a file?
+</para>
+</question>
+<answer>
+<para>
+Try:
+<screen>
+    $ perl -ane 'print $ARGV, "\t", length, "\n" if length &gt; 100' *.[ch]
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to print line numbers of a source file?
+</para>
+</question>
+<answer>
+<para>
+You can do this from Perl with:
+<screen>
+    $ perl -pe "printf \"%02d \", ++$i" source.file
+</screen>
+</para>
+<para>
+Or you can do this using normal shell tools:
+</para>
+<screen>
+    $ gawk "{ print FNR, $0 }" source.file
+</screen>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to rename files with a sequential number scheme?
+</para>
+</question>
+<answer>
+<para>
+<ProgramListing><![CDATA[
+    #!/usr/bin/perl -w
+    use strict;
+    my $count = 0;
+    foreach my $old (@ARGV) {
+        my $new = sprintf "picture%03d.jpg", $count++;
+        rename $old, $new;
+    }
+    exit 0;
+]]></ProgramListing>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to search for lines not matching a pattern?
+</para>
+</question>
+<answer>
+<para>
+Suppose you have a data file <filename>revision.log</filename>that
+contains lines like:
+<screen>
+    FileName1 Label1:=1.0 Label2:=1.1
+    FileName2 Label1:=1.0 Label2:=1.0
+    FileName3 Label1:=1.21 Label2:=1.41
+</screen>
+To show the lines that have different revision numbers, use
+a regular expression like:
+<screen>
+    $ perl -ane "print if ! m/Label1:=(\d+\.\d+) Label2:=\1/;" revision.log
+</screen>
+For the data above, this will yield:
+<screen>
+    FileName1 Label1:=1.0 Label2:=1.1
+    FileName3 Label1:=1.21 Label2:=1.41
+</screen>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to uniquely sort an array?
+</para>
+</question>
+<answer>
+<para>
+There are two ideas here. First: get a unique list of array elements.
+Secondly: sort the hash map.
+</para>
+<para>
+There are two identical methods to get a list of unique array elements.
+The first uses the <function>map</function> function:
+<ProgramListing><![CDATA[
+    my %hash = map { $_ => 1 } @array;
+]]></ProgramListing>
+Another way is to use a little array magic: 
+<ProgramListing><![CDATA[
+    my %hash;
+    @hash { @array } = ();
+]]></ProgramListing>
+The second step is to <function>sort</function> the hash map:
+<ProgramListing><![CDATA[
+    my @uniquesorted = sort keys %hash;
+]]></ProgramListing>
+</para>
+</answer>
+</qandaentry>
+
+<!-- question & answer template 
+
+<qandaentry>
+<question>
+<para>
+another question
+</para>
+</question>
+<answer>
+<para>
+another answer
+</para>
+</answer>
+</qandaentry>
+
+-->
+
+</qandaset>

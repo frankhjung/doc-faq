@@ -1,0 +1,160 @@
+<qandaset defaultlabel=qanda id=sql>
+
+<title>SQL Frequently Asked Questions</title>
+
+<qandaentry>
+<question>
+<para>How can you format an <abbrev>SQL date?</abbrev></para>
+</question>
+<answer>
+<para>
+General information on Oracle can be found 
+<ulink url="http://oracle.cs.uoi.gr/enterprise_server/server.815/a67779/ch1.htm">
+<citetitle>here</citetitle>
+</ulink>.
+<example>
+<title>How to format an SQL date</title>
+<programlisting>
+select to_char(SYSDAT, 'DD/MM/YYYY HH24:MI:SS') from table;
+</programlisting>
+</example>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to compare dates?
+</para>
+</question>
+<answer>
+<para>
+<programlisting>
+select
+     i.from_participant,
+     i.to_participant,  
+     sum(n.accepted) accepted,
+     sum(n.rejected) rejected 
+from
+     meter_data_notification n,
+     meter_data_interaction i  
+where
+     i.meter_data_interaction_id = n.meter_data_interaction_id
+ and
+     n.date_created between to_date('2005/09/14', 'yyyy/mm/dd') and
+to_date('2005/09/15', 'yyyy/mm/dd')
+group by
+     i.from_participant,
+     i.to_participant   
+order by
+     i.from_participant,
+     i.to_participant
+</programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to calculate the difference between two dates?
+</para>
+</question>
+<answer>
+<para>
+Use the <command>numtodsinterval</command> function:
+<programlisting>
+numtodsinterval((max(date_created) - min(date_created)), 'DAY')
+</programlisting>
+Here is a full SQL script to more fully demonstrate the concept:
+<programlisting>
+-- You can subtract two DATE values, and the result is a FLOAT which is the number of days 
+-- between the two DATE values. In general, the result may contain a fraction because DATE 
+-- also has a time component. 
+-- For obvious reasons, adding, multiplying, and dividing two DATE values are not allowed.
+set linesize 100
+
+column counted format 999,999
+column started format a8
+column ended format a8
+column duration format a8
+
+select count(*) counted, 
+	TO_CHAR(min(t.date_created), 'HH24:Mi:SS') started, 
+	TO_CHAR(max(t.date_created), 'HH24:Mi:SS') ended, 
+  	TO_CHAR(
+  		TO_TIMESTAMP('29-NOV-1964','dd-mon-yyyy') + numtodsinterval((max(t.date_created) - min(t.date_created)), 'DAY'),
+  		'HH24:MI:SS'
+  	) duration
+from some_data_file t;
+quit;
+</programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to export table data to files?
+</para>
+</question>
+<answer>
+<para>
+<orderedlist>
+<listitem>
+    <para>
+    Using DB2 you can export to a variety of files.  Here is a sample script.
+<programlisting>
+-- Get stock volumes.
+--
+-- Run with db2cmd with parameters -
+-- DOS> db2cmd db2 -f stock.sql
+
+CONNECT TO database USER user USING password
+
+EXPORT TO stock_count.xls OF WSF \
+    SELECT \
+        STOCK,                  AS HEADER, \
+        HOUR(LOGTIME)           AS HOUR, \
+        COUNT(*)                AS COUNT, \
+        SUM(LENGTH(PAYLOAD))    AS PAYLOAD_SIZE
+    FROM \
+        STOCK_LOG \
+    GROUP BY \
+        HOUR(LOGTIME)
+
+DISCONNECT databasename
+</programlisting>
+    </para>
+</listitem>
+<listitem>
+    <para>
+    todo - Using Oracle.
+<programlisting>
+to do
+</programlisting>
+    </para>
+</listitem>
+</orderedlist>
+</para>
+</answer>
+</qandaentry>
+
+<!-- question & answer template 
+   <qandaentry>
+   <question>
+   <para>
+   another question
+   </para>
+   </question>
+   <answer>
+   <para>
+   another answer
+   </para>
+   </answer>
+   </qandaentry>
+-->
+
+</qandaset>
