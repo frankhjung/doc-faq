@@ -1018,11 +1018,22 @@ How to synchronise system date?
 </question>
 <answer>
 <para>
-Using <command>ntpdate(8)</command>:
+Using <command>ntpd(8)</command>:
 <screen>
-/usr/sbin/ntpdate -svq pool.ntp.org ntp.cs.mu.OZ.AU augean.eleceng.adelaide.edu.au 
+server 0.au.pool.ntp.org
+server 1.au.pool.ntp.org
+server 2.au.pool.ntp.org
+server 3.au.pool.ntp.org
+server 4.au.pool.ntp.org
 </screen>
-Script this and save into <filename>/etc/cron.daily/ntpdate</filename>.
+To set current time, use <command>date(1)</command>:
+<screen>
+date -s 'Sun Sep 11 21:39:58 EST 2011'
+</screen>
+Then set hardware clock using <command>hwclock(8)</command> from current system clock:
+<screen>
+hwclock -w
+</screen>
 </para>
 </answer>
 </qandaentry>
