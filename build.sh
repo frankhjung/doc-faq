@@ -13,7 +13,7 @@ do_help()
     echo "(c) 2010,2011 Frank Jung. All rights reserved." >&2
 }
 
-do_html() 
+do_build() 
 {
     cd $FAQ
     rm -rf $FAQ/index/
@@ -25,7 +25,7 @@ do_html()
 
 do_ftp()
 {
-    ftp -p <<FTP
+    ftp -p <<FTPFAQ
         open ftp.supernerd.com.au
         verbose
         prompt
@@ -42,30 +42,24 @@ do_ftp()
         status
         close
         quit
-FTP
+FTPFAQ
 }
 
 #
 # MAINLINE
 #
 
-# default is to build only
-opt_b=1
-while getopts "fh" opt
+while getopts "fbh" opt
 do
     case "$opt" in
-        f)  unset opt_b;;
+        b)  do_build
+            ;;
+        f)  do_ftp
+            ;;
         *)  do_help
             exit 1;;
     esac
     shift
 done
-
-# build or ftp?
-if [[ $opt_b ]]; then
-    do_html
-else
-    do_ftp
-fi
 
 exit 0
