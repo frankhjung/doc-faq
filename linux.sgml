@@ -267,45 +267,6 @@ gv filename | a2ps -P display
 <qandaentry>
 <question>
 <para>
-How to save a subset of a PDF document?
-</para>
-</question>
-<answer>
-<para>
-This example uses <command>pdftops(1)</command> to specify a range of pages to
-print.  The input format is PDF, and the result is a PostScript file:
-<programlisting><![CDATA[
-pdftops -f 1 -l 2 document.pdf document.ps
-]]></programlisting>
-Use <command>gv(1)</command> to view results.
-</para>
-<para>
-Another way to split a PDF document is to use <command>pdftk(1)</command>.  For
-example to split an 8 page document into pages 1-7, and page 8 use:
-<programlisting><![CDATA[
-pdftk document.pdf cat 1-7 output document-1-7.pdf
-]]></programlisting>
-To split a document into seperate pages you first need to know how many there are in the document,
-<programlisting><![CDATA[
-PAGES=$(pdfinfo document.pdf| awk '/Pages:/ {print $2}')
-]]></programlisting>
-Then split using:
-<programlisting><![CDATA[
-for (( p=1; p <= $PAGES; p++)); do \
-	pdftk document.pdf cat $p output document.pdf-$p.pdf; \
-done
-]]></programlisting>
-Another way to split a document is by using <command>gs(1)</command>:
-<programlisting><![CDATA[
-gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dFirstPage=1 -dLastPage=1 -sOutputFile=document-1-7.pdf document.pdf
-]]></programlisting>
-</para>
-</answer>
-</qandaentry>
-
-<qandaentry>
-<question>
-<para>
 How can I collect all input and output in a terminal session?
 </para>
 </question>
@@ -2231,7 +2192,45 @@ Commit the changed files:
 svn ci -m "* applied svn keyword substitution" *.sgml
 ]]></programlisting>
 </para>
+</answer>
+</qandaentry>
 
+<qandaentry>
+<question>
+<para>
+How to save a subset of a PDF document?
+</para>
+</question>
+<answer>
+<para>
+This example uses <command>pdftops(1)</command> to specify a range of pages to
+print.  The input format is PDF, and the result is a PostScript file:
+<programlisting><![CDATA[
+pdftops -f 1 -l 2 document.pdf document.ps
+]]></programlisting>
+Use <command>gv(1)</command> to view results.
+</para>
+<para>
+Another way to split a PDF document is to use <command>pdftk(1)</command>.  For
+example to split an 8 page document into pages 1-7, and page 8 use:
+<programlisting><![CDATA[
+pdftk document.pdf cat 1-7 output document-1-7.pdf
+]]></programlisting>
+To split a document into seperate pages you first need to know how many there are in the document,
+<programlisting><![CDATA[
+PAGES=$(pdfinfo document.pdf| awk '/Pages:/ {print $2}')
+]]></programlisting>
+Then split using:
+<programlisting><![CDATA[
+for (( p=1; p <= $PAGES; p++)); do \
+	pdftk document.pdf cat $p output document.pdf-$p.pdf; \
+done
+]]></programlisting>
+Another way to split a document is by using <command>gs(1)</command>:
+<programlisting><![CDATA[
+gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dFirstPage=1 -dLastPage=1 -o document-1-7.pdf document.pdf
+]]></programlisting>
+</para>
 </answer>
 </qandaentry>
 
@@ -2247,13 +2246,24 @@ Ghostscript <command>gs(1)</command> gives you the power to combine files, conve
 all from the command line. To combine several input files into one
 combined PDF using Ghostscript:
 <programlisting><![CDATA[
-gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=combined.pdf \
-    first.pdf second.pdf third.pdf [...]
+gs -sDEVICE=pdfwrite -dSAFER -dNOPAUSE -dBATCH -o combined.pdf first.pdf second.pdf third.pdf [...]
 ]]></programlisting>
 Equivalently, using the -o option:
 <programlisting><![CDATA[
-gs -sDEVICE=pdfwrite -dSAFER -o combined.pdf
-    first.pdf second.pdf third.pdf [...]
+gs -sDEVICE=pdfwrite -dSAFER -o combined.pdf first.pdf second.pdf third.pdf [...]
+]]></programlisting>
+</para>
+<para>
+If this doens't give the results you want, try <command>psmerge(1)</command>:
+<programlisting><![CDATA[
+psmerge -ocombined.pdf first.pdf second.pdf third.pdf [...]
+]]></programlisting>
+This gives good results, but the result file size is larger than that achieved with Ghostscript.
+</para>
+<para>
+Another method uses the <command>pdfjoin(1)</command> command:
+<programlisting><![CDATA[
+pdfjoin --outfile combined.pdf first.pdf second.pdf third.pdf [...]
 ]]></programlisting>
 </para>
 </answer>
@@ -2403,35 +2413,6 @@ This will display the required information. On my system the output looks like t
 <screen>
 01:00.0 VGA compatible controller: nVidia Corporation NV44 [GeForce 6200 TurboCache(TM)] (rev a1)
 </screen>
-</para>
-</answer>
-</qandaentry>
-
-<qandaentry>
-<question>
-<para>
-How to merge PDF pages?
-</para>
-</question>
-<answer>
-<para>
-Using Ghostscript <command>gs(1)</command>:
-<programlisting><![CDATA[
-gs -dNOPAUSE -sDEVICE=pdfwrite -sOUTPUTFILE=firstANDsecond.pdf -dBATCH first.pdf second.pdf
-]]></programlisting>
-</para>
-<para>
-If this doens't give the results you want, try <command>psmerge(1)</command>:
-<programlisting><![CDATA[
-psmerge -ofirstANDsecond.pdf first.pdf second.pdf
-]]></programlisting>
-This gives good results, but the result file size is larger than that achieved with Ghostscript.
-</para>
-<para>
-Another method uses the <command>pdfjoin(1)</command> command:
-<programlisting><![CDATA[
-pdfjoin --outfile firstANDsecond.pdf first.pdf second-8.pdf
-]]></programlisting>
 </para>
 </answer>
 </qandaentry>
