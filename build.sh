@@ -2,6 +2,7 @@
 
 FAQ=$(dirname $0)
 SCRIPTNAME=$(basename $0)
+FTPSITE=ftp.supernerd.com.au
 
 do_help()
 {
@@ -9,7 +10,7 @@ do_help()
     echo "Build SGML into HTML and optionally FTP to my ISP." >&2
     echo "Options:" >&2
     echo "  -b = build only" >&2
-    echo "  -f = fpt only" >&2
+    echo "  -f = ftp only" >&2
     echo "  -h = this help" >&2
     echo "Return codes:" >&2
     echo "  0 = build completed successfully" >&2
@@ -30,7 +31,7 @@ do_build()
 do_ftp()
 {
     ftp -p <<FTPFAQ
-        open ftp.supernerd.com.au
+        open $FTPSITE
         verbose
         prompt
         reset
