@@ -21,7 +21,7 @@ Use data from the
 </listitem>
 <listitem>
 <para>
-To get your system information, use:
+To get your system information, use
 <programlisting><![CDATA[
 uname -a
 ]]></programlisting>
@@ -29,7 +29,7 @@ uname -a
 </listitem>
 <listitem>
 <para>
-To show release information (Debian, Ubuntu), use:
+To show release information (Debian, Ubuntu), use
 <programlisting><![CDATA[
 cat /etc/lsb-release
 ]]></programlisting>
@@ -43,12 +43,12 @@ cat /etc/lsb-release
 <qandaentry>
 <question>
 <para>
-How to create a summary of images in a directory?
+How to create a picture summary of images in a directory?
 </para>
 </question>
 <answer>
 <para>
-This command will generate a postcard size summary of images:
+This command will generate a postcard size summary of images
 <programlisting><![CDATA[
 convert 'vid:*.jpg' directory.miff
 ]]></programlisting>
@@ -89,12 +89,39 @@ mogrify -rotate 90 p6260018.jpg
 <qandaentry>
 <question>
 <para>
+How to total directory sizes?
+</para>
+</question>
+<answer>
+<para>
+<programlisting><![CDATA[
+du -sch [directory] ...
+]]></programlisting>
+</para>
+<para>
+<example>
+<title>To summarise size of a list of directories</title>
+<screen>
+$ du -sch pictures/ music/ documents/ 
+8.0G    pictures/
+698M    music/
+1.2G    documents/
+9.9G    total
+</screen>
+</example>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
 How to clear or empty log files?
 </para>
 </question>
 <answer>
 <para>
-To maintain a log directory:
+To maintain a log directory
 <programlisting><![CDATA[
 cp file.log file.log.0
 cat /dev/null > file.log
@@ -102,7 +129,7 @@ compress file.log.0
 ]]></programlisting>
 </para>
 <para>
-General rule of thumb:
+General rule of thumb
 </para>
 <para>
 Do not remove log files - null them. If you just remove the log file and a
@@ -110,7 +137,7 @@ process has the file open, this space will not be reallocated until the demon
 is stopped.
 </para>
 <para>
-To empty a log file:
+To empty a log file
 <programlisting><![CDATA[
 cat /dev/null > file.log
 find /tmp -name '*.log' -exec cp /dev/null {} \;
@@ -128,7 +155,7 @@ How to label tapes?
 </question>
 <answer>
 <para>
-You can label tapes by:
+You can label tapes by
 <programlisting><![CDATA[
 mt -f <tape device> rew
 echo "tape label and date etc"|dd of=<tape device>
@@ -137,7 +164,7 @@ mt -f <tape device> rewoffl.
 ]]></programlisting>
 </para>
 <para>
-When you want to retrieve the tape label do:
+When you want to retrieve the tape label do
 <programlisting><![CDATA[
 dd if=<tape device>
 ]]></programlisting>
@@ -145,7 +172,7 @@ dd if=<tape device>
 <para>
 When retrieving filesystems, just remember to skip the first save set as it
 is the label.
-To retrieve the 2nd filesystem dumped do:
+To retrieve the 2nd filesystem dumped do
 <programlisting><![CDATA[
 mt -f <tape device> rew
 mt -f <no rewind tape device> fsf 2
@@ -162,7 +189,7 @@ How to forward email?
 </question>
 <answer>
 <para>
-Add the following entry to <filename>$HOME/.forward</filename>:
+Add the following entry to <filename>$HOME/.forward</filename>
 <screen>
 \frank@troll, jungf@ains.net.au
 </screen>
@@ -170,7 +197,7 @@ This says that mail should keep one copy for the local account, and send one
 copy to my AINS account.
 </para>
 <para>
-When on vacation, do this:
+When on vacation, do this
 <screen>
 \jungf, "| /usr/bin/vacation jungf"
 </screen>
@@ -188,7 +215,7 @@ What mail is currently queued to send?
 </question>
 <answer>
 <para>
-If you are using <command>sendmail(8)</command>, then:
+If you are using <command>sendmail(8)</command>, then
 <screen>
 sendmail -bp   
 </screen>
@@ -252,11 +279,11 @@ How to format an ASCII file into PostScript?
 <answer>
 <para>
 This example uses <command>a2ps(1)</command>. Print PostScript to an ASCII
-printer by piping to <command>ghostview(1)</command>:
+printer by piping to <command>ghostview(1)</command>
 <programlisting><![CDATA[
 lp filename | a2ps -2q --strip=3 -o -|gs - -sDEVICE=ljet3 -sOutputFile=|lpr
 ]]></programlisting>
-Alternatively:
+Alternatively
 <programlisting><![CDATA[
 gv filename | a2ps -P display
 ]]></programlisting>
@@ -272,7 +299,7 @@ How can I collect all input and output in a terminal session?
 </question>
 <answer>
 <para>
-Try <command>script(1)</command>, for example:
+Try <command>script(1)</command>, for example
 <programlisting><![CDATA[
 script -a filename            // this appends to filename
 ]]></programlisting>
@@ -288,11 +315,11 @@ How to send a binary files when using email?
 </question>
 <answer>
 <para>
-Compress with uuencoding:
+Compress with uuencoding
 <screen>
 tar cf - files | gzip | uuencode files.tar.gz &gt; files.tar.gz.uu
 </screen>
-To extract use:
+To extract use
 <screen>
 uudecode -p files.tar.gz.uu | gzip -c -d - | tar xf -
 </screen>
@@ -309,7 +336,7 @@ How to generate random numbers from a shell?
 <answer>
 <para>
 To generate a random number, using Korn Shell, between $LO and $HI
-(inclusive), use the following code:
+(inclusive), use the following code
 <programlisting><![CDATA[
 #/bin/ksh
 (( RANGE = HI - LO + 1 ))
@@ -329,7 +356,7 @@ How to remove a directory that is too deep for <command>ls(1)</command> or
 </question>
 <answer>
 <para>
-Use following script (which does not use <command>pwd(1)</command>):
+Use following script (which does not use <command>pwd(1)</command>)
 <programlisting><![CDATA[
 #!/usr/local/bin/bash
 
@@ -357,7 +384,7 @@ fi
 ]]></programlisting>
 </para>
 <para>
-This is easier to implement, but very slow to execute:
+This is easier to implement, but very slow to execute
 <programlisting><![CDATA[
 #!/bin/local/bin/bash
 
@@ -387,7 +414,7 @@ What devices are available?
 </question>
 <answer>
 <para>
-Use the <command>lspci(8)</command>:
+Use the <command>lspci(8)</command>
 <screen>
 lspci -v
 </screen>
@@ -403,12 +430,12 @@ associated UUID.
 </para>
 <para>
 Another tool is <command>devkit-disks(1)</command>.  This has a dump option
-that will list very detailed information of mounted devices. Example:
+that will list very detailed information of mounted devices. For example
 <screen>
 devkit-disks --dump
 </screen>
 Information about a singe device can also be captured, but for that you
-need the name of the device file.  Use a combination of commands, like:
+need the name of the device file.  Use a combination of commands, like
 <screen>
 devkit-disks --enumerate 
 devkit-disks --enumerate-device-files
@@ -436,15 +463,15 @@ also allows you to configure and test X input devices.
    disk and <command>lame(1)</command> to convert WAV to MP3.
    </para>
    <para>
-   FreeBSD: To copy an entire audio CD to disk as WAV files:
+   FreeBSD: To copy an entire audio CD to disk as WAV files
    <screen>dagrab -a -d /dev/acd0c -f "Sacred_Fire-%02d.wav"</screen>
-   Linux: To copy an entire audio CD to disk as WAV files:
+   Linux: To copy an entire audio CD to disk as WAV files
    <screen>cdda2wav -x -B -D 0,0,0</screen>
-   Or the more friendly:
+   Or the more friendly
    <screen>nice cdda2wav -D 0,1,0 -alltracks -x -Q -H -S 48 -v disable &</screen>
    You may also try the <command>cdparanoia(1)</command> with
    <screen>cdparanoia -w -B -d /dev/dvd </screen>
-   or more simply:
+   or more simply
    <screen>cdparanoia -w -B </screen>
    The advantage of <command>cdparanoia(1)</command> is better quality and easier
    access to specific tracks.
@@ -452,11 +479,11 @@ also allows you to configure and test X input devices.
 </listitem>
 <listitem>
    <para>
-   FreeBSD: To copy only certain tracks of an audio CD to disk as WAV files:
+   FreeBSD: To copy only certain tracks of an audio CD to disk as WAV files
    <screen>dagrab -d /dev/acd0c -f "%02d-Sacred_File.wav" 1 2 3 5 7 11</screen>
    </para>
    <para>
-   Where the options to <command>dagrab(1)</command> are:
+   Where the options to <command>dagrab(1)</command> are
    <simplelist type=horiz columns=2>
       <member>-a</member> 
       <member>Dumps all tracks and ignores the optional track list.</member>
@@ -475,41 +502,41 @@ also allows you to configure and test X input devices.
    FreeBSD: Don't write these WAV files straight to disk though,
    as you will get a nasty audible "click" recorded between each track.
    To eliminate this click use <command>sox(1)</command> to convert to raw
-   audio:
+   audio
    <screen>for f in *.wav; do sox $f ${f%%wav}raw; done</screen>
    </para>
 </listitem>
 <listitem>
    <para>
-   Linux: You can seperate these file into volumes with:
+   Linux: You can seperate these file into volumes with
    <screen>v=01 && for f in audio_??.wav; do mv $f audio_${v}_${f##audio_}; done</screen>
    </para>
 </listitem>
 <listitem>
    <para>
-   To convert WAV to OGG Vorbis format use:
-   <command>oggenc(1)</command>:
+   To convert WAV to OGG Vorbis format use
+   <command>oggenc(1)</command>
    <screen>oggenc *.wav</screen>
    </para>
 </listitem>
 <listitem>
    <para>
-   To convert WAV to MP3 use:
-   <command>lame(1)</command>:
+   To convert WAV to MP3 use
+   <command>lame(1)</command>
    <screen>for w in *.wav; do lame -h $w ${w%%wav}mp3; done</screen>
    </para>
 </listitem>
 <listitem>
    <para>
-   To convert MP3 to OGG use:
-   <command>mp32ogg(1)</command>:
+   To convert MP3 to OGG use
+   <command>mp32ogg(1)</command>
    <screen>mp32ogg  --preserve-timestamp [dir1] [dir2] ...</screen>
    </para>
 </listitem>
 <listitem>
    <para>
-   To convert OGG to MP3 use:
-   <command>soundconvert.pl(1)</command>:
+   To convert OGG to MP3 use
+   <command>soundconvert.pl(1)</command>
    <screen>for f in *.ogg; do soundconvert -o MP3 "$f"; done</screen>
    </para>
 </listitem>
@@ -517,7 +544,7 @@ also allows you to configure and test X input devices.
    <para>
    To determine space used by mp3 files use
    <screen>du -mc *.mp3</screen>
-   Or by album:
+   Or by album
    <screen>for ((i=1;i&lt;10;i++)); do du -cm audio_0${i}_??.mp3; done</screen>
    </para>
 </listitem>
@@ -555,11 +582,11 @@ How to copy  data CD?
 <orderedlist>
 <listitem>
     <para>
-    Copy a data CD:
+    Copy a data CD
     <screen>
     dd if=/dev/cdrom of=image.iso
     </screen>
-    This command can also be used to write an ISO image to a USB device:
+    This command can also be used to write an ISO image to a USB device
     <screen>
     dd if=/path/to/iso of=/dev/usb_device
     </screen>
@@ -567,7 +594,7 @@ How to copy  data CD?
 </listitem>
 <listitem>
     <para>
-    Check image before writing:
+    Check image before writing
     <screen>
     mount -t iso9660 -o loop image.iso /mnt/cdrom
     </screen>
@@ -577,7 +604,7 @@ How to copy  data CD?
 </listitem>
 <listitem>
     <para>
-    Write the image to the CD:
+    Write the image to the CD
     <screen>
     cdrecord -v -speed=6 dev=/dev/cdrom image.iso
     </screen>
@@ -597,11 +624,11 @@ How to record a multi-session CD?
 <answer>
 <para>
 This answer is for use of <command>cdrecord(1)</command>.
-Recall for a single (or first) session CD, follow this plan:
+Recall for a single (or first) session CD, follow this plan
 <orderedlist>
 <listitem>
     <para>
-    Find location of CDRW device.  This will be used in dev option of <command>cdrecord(1)</command>):
+    Find location of CDRW device.  This will be used in dev option of <command>cdrecord(1)</command>)
     <screen>
     cdrecord -scanbus
     </screen>
@@ -609,7 +636,7 @@ Recall for a single (or first) session CD, follow this plan:
 </listitem>
 <listitem>
     <para>
-    Write ISO image:
+    Write ISO image
     <screen>
     mkisofs -R -J -o image.iso /thedirectory/
     </screen>
@@ -617,14 +644,14 @@ Recall for a single (or first) session CD, follow this plan:
     </listitem>
     <listitem>
     <para>
-    Write the image to the CD:
+    Write the image to the CD
     <screen>
     cdrecord -v -speed=6 dev=/dev/cdrom image.iso
     </screen>
     </para>
 </listitem>
 </orderedlist>
-Now, for a multi-session CD use:
+Now, for a multi-session CD use
 <orderedlist>
 <listitem>
     <para>
@@ -636,7 +663,7 @@ Now, for a multi-session CD use:
 </listitem>
 <listitem>
     <para>
-    Use the previous session information to build new ISO image:
+    Use the previous session information to build new ISO image
     <screen>
     mkisofs -C $info -o image.iso /thedirectory
     </screen>
@@ -644,7 +671,7 @@ Now, for a multi-session CD use:
 </listitem>
 <listitem>
     <para>
-    Add -multi option when writing multi-session disks:
+    Add -multi option when writing multi-session disks
     <screen>
     cdrecord -v -multi -speed=6 dev=/dev/cdrom image.iso
     </screen>
@@ -653,7 +680,7 @@ Now, for a multi-session CD use:
 </orderedlist>
 </para>
 <para>
-To test an ISO image before writing, use:
+To test an ISO image before writing, use
 <screen>
     mount -t iso9660 -o loop image.raw /mnt/image
 </screen>
@@ -694,13 +721,13 @@ How to manage a CUPS printer?
 <orderedlist>
 <listitem>
     <para>
-    CUPS has a web management interface here: 
+    CUPS has a web management interface here 
     <ulink url="http://localhost:631/admin">http://localhost:631/admin</ulink>.
     </para>
 </listitem>
 <listitem>
     <para>
-    As superuser start CUPS printer daemon with:
+    As superuser start CUPS printer daemon with
     <screen>
     /etc/init.d/cupsys start
     </screen>
@@ -709,7 +736,7 @@ How to manage a CUPS printer?
 </listitem>
 <listitem>
     <para>
-    To see printer status use:
+    To see printer status use
     <screen>
     lpstat -t
     </screen>
@@ -717,7 +744,7 @@ How to manage a CUPS printer?
 </listitem>
 <listitem>
     <para>
-    To remove all spooled job entries use:
+    To remove all spooled job entries use
     <screen>
     lprm -P OfficeJet -
     </screen>
@@ -752,7 +779,7 @@ How to FTP using a script?
 </question>
 <answer>
 <para>
-Use the $HOME/.netrc resource script.  For example:
+Use the $HOME/.netrc resource script.  For example
 <programlisting><![CDATA[
 #!/bin/ksh
 
@@ -777,7 +804,7 @@ bye
 
 " > $HOME/.netrc
 
-# for ftp to use the .netrc from $HOME you MUST have these rights:
+# for ftp to use the .netrc from $HOME you MUST have these rights
 chmod 600 $HOME/.netrc
 ftp $REMOTEHOST
 
@@ -801,7 +828,7 @@ How can you turn off cookies?
 </question>
 <answer>
 <para>
-You can forcibly switch off cookies in Communicator/Navigator by:
+You can forcibly switch off cookies in Communicator/Navigator by
 <command>
 rm -f ~/.netscape/cookies
 ln -s /dev/null ~/.netscape/cookies
@@ -813,12 +840,12 @@ ln -s /dev/null ~/.netscape/cookies
 <qandaentry>
 <question>
 <para>
-How to add five years to a date and display in following format: dd-mmm-YYYY?
+How to add five years to a date and display in following format dd-mmm-YYYY?
 </para>
 </question>
 <answer>
 <para>
-From a shell script this can be achieved by:
+From a shell script this can be achieved by
 <screen>
 date "+%d-%b-$((year=$(date +%Y)+5))"
 </screen>
@@ -852,7 +879,7 @@ Is there a way to change the date timestamp on a file?
 <para>
 Use <command>touch(1)</command>, and using the arguments (months, days, hours,
 minutes, optional century and years, optional seconds) instead of the
-current time:
+current time
 <screen>
 touch -t MMDDhhmm[[CC]YY][.ss]
 </screen>
@@ -870,7 +897,7 @@ How can you extract from a corrupted TAR file?
 <answer>
 <para>
 In many case if there is a corrupted tar file, the following command can
-be used in an attempt to extract the file:
+be used in an attempt to extract the file
 <screen>
 cat [tar-filename] | tar -xvf -
 </screen>
@@ -897,13 +924,13 @@ Use <command>comm(1)</command> command.
 <screen>
 comm text1 text2
 </screen>
-This will print 3 columns:
+This will print 3 columns
 <simplelist type=horiz columns=1>
    <member>1st column contains lines in file text1 only</member>
    <member>2nd column contains lines in file text2 only</member>
    <member>3rd column contains lines that are in both file text1 and text2</member>
 </simplelist>
-You can then mask any of these columns by:
+You can then mask any of these columns by
 <screen>
 comm -23 text1 text2
 </screen>
@@ -921,7 +948,7 @@ How do you do decimal calculations in a Shell script?
 </question>
 <answer>
 <para>
-Use <command>bc(1)</command>:
+Use <command>bc(1)</command>
 <example>
 <title>To calculate 12/3</title>
 <screen>
@@ -929,7 +956,7 @@ echo 12/3 | bc -l
 4.00000000000000000000
 </screen>
 </example>
-So to do this in a script do something like:
+So to do this in a script do something like
 <programlisting><![CDATA[
 #!/bin/ksh
 # Decimal Calculations
@@ -939,7 +966,9 @@ fi
 ]]></programlisting>
 </para>
 <para>
-As an aside, <command>bc(1)</command> can also be scripted to perform calculations.  For example:
+As an aside, <command>bc(1)</command> can also be scripted to perform calculations.  
+<example>
+<title>Count from 1 to 10</title>
 <programlisting><![CDATA[
 #!/usr/bin/bc -q
 for ( i=0; i<10; i++) {
@@ -947,10 +976,11 @@ for ( i=0; i<10; i++) {
 }
 quit
 ]]></programlisting>
+</example>
 Which is just a complicated way to count from 1 to 10.
 </para>
 <para>
-In <command>bash(1)</command> you can count from 1 to 10 by:
+In <command>bash(1)</command> you can count from 1 to 10 by
 <programlisting><![CDATA[
 for ((i=1;i<11;i++));
 do 
@@ -960,7 +990,7 @@ done
 ]]></programlisting>
 </para>
 <para>
-You can take it one step further by using <command>expr(1)</command>:
+You can take it one step further by using <command>expr(1)</command>
 <programlisting><![CDATA[
 for ((i=4;i<9;i++));
 do 
@@ -979,7 +1009,7 @@ How to synchronise system date?
 </question>
 <answer>
 <para>
-Using <command>ntpd(8)</command>:
+Using <command>ntpd(8)</command>
 <screen>
 server 0.au.pool.ntp.org
 server 1.au.pool.ntp.org
@@ -987,11 +1017,11 @@ server 2.au.pool.ntp.org
 server 3.au.pool.ntp.org
 server 4.au.pool.ntp.org
 </screen>
-To set current time, use <command>date(1)</command>:
+To set current time, use <command>date(1)</command>
 <screen>
 date -s 'Sun Sep 11 21:39:58 EST 2011'
 </screen>
-Then set hardware clock using <command>hwclock(8)</command> from current system clock:
+Then set hardware clock using <command>hwclock(8)</command> from current system clock
 <screen>
 hwclock -w
 </screen>
@@ -1024,13 +1054,13 @@ Please add all new fonts to new sub-directories of
    </orderedlist>
 </para>
 <para>
-New fonts can be tested by:
+New fonts can be tested by
    <orderedlist>
    <listitem>
       <para>untar font to fonts directory</para>
    </listitem>
    <listitem>
-      <para>call:
+      <para>call
       <screen>
         $ xset fp+ /usr/X11R6/lib/X11/fonts/newFont
         $ xset fp rehash
@@ -1058,7 +1088,7 @@ address name@domain.com does not resolve
 </question>
 <answer>
 <para>
-A simple explanation:
+A simple explanation
 <literallayout>
 Posted by Adriaan Tijsseling on April 26, 2002 at 23:48:46:
 
@@ -1095,7 +1125,7 @@ done as a user process with the help of the tunnel device driver (tun).
 </listitem>
 <listitem>
 <para>
-<command>netstat</command>: The <command>netstat -rnf inet</command>
+<command>netstat</command> The <command>netstat -rnf inet</command>
 command allows you to view your IPV4 routing table; tun0 is the tunnel
 device driver your modem uses with PPP. Flags of UG indicate that you
 have a gateway that is up. The IP address associated with this entry is
@@ -1104,11 +1134,11 @@ the address of your default gateway.
 </listitem>
 <listitem>
 <para> 
-Modem Access Control:
+Modem Access Control
 <screen>
 vi /etc/group
 </screen>
-Change the network: line to 
+Change the network line to 
 <screen>
 network:*:69:username1,username2, 
 </screen>
@@ -1117,7 +1147,7 @@ wish to give ppp access to.
 <screen>
 vi /etc/ppp/ppp.conf
 </screen>
-At the end of the default: section, add the following line:
+At the end of the default section, add the following line
 <screen>
 allow users username1 username2
 </screen>
@@ -1138,26 +1168,26 @@ How to install files?
 </question>
 <answer>
 <para>
-Use <command>install(1)</command>, for example:
+Use <command>install(1)</command>.
+<example>
+<title>Using the install command</title>
 <orderedlist>
-
 <listitem>
-<para>Copy rather than move the file to install location:
+<para>Copy rather than move the file to install location
 <screen>
 install -c /home/frank/bin/save2cd /usr/local/sbin/save2cd
 </screen>
 </para> 
 </listitem>
-
 <listitem>
-<para>To install a new file and set attributes:
+<para>To install a new file and set attributes
 <screen>
 install -cp -m 555 -o root -g wheel /home/frank/bin/save2cd /usr/local/sbin/
 </screen>
 </para> 
 </listitem>
-
 </orderedlist>
+</example>
 </para>
 </answer>
 </qandaentry>
@@ -1170,7 +1200,7 @@ Why do I get "bad interpreter" errors when running a script?
 </question>
 <answer>
 <para>
-If you are getting the following error:
+If you are getting the following error
 <screen>
 bash: ./someScript: bad interpreter: No such file or directory
 </screen>
@@ -1197,7 +1227,7 @@ networking services, starts up miscellaneous system daemons, and finally
 runs the startup scripts of locally installed packages.
 </para>
 <para>
-Part of the <filename>/etc/defaults/rc.conf</filename> file:
+Part of the <filename>/etc/defaults/rc.conf</filename> file
 <screen>
 local_startup="/usr/local/etc/rc.d /usr/X11R6/etc/rc.d" # startup script dirs.
 rc_conf_files="/etc/rc.conf /etc/rc.conf.local"
@@ -1226,14 +1256,14 @@ How can realaudio be captured for local replay?
 <para>Take these steps to retreive a Realaudio stream and convert to WAV.
 <orderedlist>
 <listitem>
-<para>Get realaudio from web-site using <command>vsound</command> and <command>realplay</command>:
+<para>Get realaudio from web-site using <command>vsound</command> and <command>realplay</command>
 <screen>
 vsound -n -f ScienceShow.au realplay http://www.abc.net.au/rn/mod/science.ram
 </screen>
 </para> 
 </listitem>
 <listitem>
-<para>Convert from Sun audio to WAV:
+<para>Convert from Sun audio to WAV
 <screen>
 sox ScienceShow.au MarsQuestAndBirdBrains.wav
 </screen>
@@ -1259,11 +1289,11 @@ How to format and mount a MS-DOS or VFAT device?
 It depends what type of device you are managing.
 </para>
 <para>
-For diskette use these commands:
+For diskette use these commands
 <orderedlist>
     <listitem>
     <para>
-    To format a MS-DOS diskette:
+    To format a MS-DOS diskette
     <screen>
     fdformat -f 1440 /dev/fd0
     disklabel -w -r /dev/fd0 fd1440
@@ -1273,7 +1303,7 @@ For diskette use these commands:
     </listitem>
     <listitem>
     <para>
-    To mount a DOS diskette:
+    To mount a DOS diskette
     <screen>
     mount_msdos -u frank -g staff /dev/fd0 /mnt/floppy
     </screen>
@@ -1282,11 +1312,11 @@ For diskette use these commands:
 </orderedlist>
 </para>
 <para>
-For VFAT USB device use these commands:
+For VFAT USB device use these commands
 <orderedlist>
     <listitem>
     <para>
-    To format a VFAT device: (this will also set the label)
+    To format a VFAT device (this will also set the label)
     <screen>
     mkfs.vfat -n FRANKJUNG /dev/sdb1
     </screen>
@@ -1294,7 +1324,7 @@ For VFAT USB device use these commands:
     </listitem>
     <listitem>
     <para>
-    To show label:
+    To show label
     <screen>
     dosfslabel /dev/sdb1
     </screen>
@@ -1335,7 +1365,7 @@ How to quickly compare MD5 checksums?
 </question>
 <answer>
 <para>
-To compare MD5 checksum use:
+To compare MD5 checksum use
 <screen>
 md5 -q file.tgz | diff -b file.tgz.md5 -
 </screen>
@@ -1357,7 +1387,7 @@ How to restart console mouse cursor?
 </question>
 <answer>
 <para>
-To control the console mouse (not the mouse in X) use:
+To control the console mouse (not the mouse in X) use
 <screen>
 /etc/init.d/gpm [start|stop]
 </screen>
@@ -1373,7 +1403,7 @@ How to reset the root password?
 </question>
 <answer>
 <para>
-Use the following option when booting:
+Use the following option when booting
 <screen>
 linux init=/bin/bash rw
 </screen>
@@ -1381,7 +1411,7 @@ This should drop you to a root shell, just edit <filename>/etc/passwd</filename>
 <command>sync</command> before you reboot. 
 </para>
 <para>
-When using the rescue disk:
+When using the rescue disk
 <screen>
 rescue root=/dev/hda1 init=/bin/bash rw
 </screen>
@@ -1414,11 +1444,11 @@ How to print special characters on console?
 </question>
 <answer>
 <para>
-Using the vim editor and you know the hex code:
+Using the vim editor and you know the hex code
 <screen>
 ctl-v xYY = to insert character with hex code YY
 </screen>
-You can get the hex code of a character from vim with:
+You can get the hex code of a character from vim with
 <screen>
 ga = character code under cursor
 </screen>
@@ -1429,7 +1459,7 @@ ctrl-v 251
 </screen>
 </para>
 <para>
-Special characters can be written to console (for example):
+Special characters can be written to console (for example)
 <screen>
 echo $'\xFB'
 </screen>
@@ -1462,18 +1492,18 @@ How to remove a USB device?
 <answer>
 <para>
 You have to remove the USB module if you want to plug in another device.
-To do this use:
+To do this use
 <screen>
 rmmod usb-storage
 </screen>
 You do not need to add a USB module, since the kernel will pick this up automatically.
-Before:
+Before
 <screen>
 usb-storage            60256   0 (unused)
 usb-ohci               17000   0 (unused)
 usbcore                54240   1 [printer usb-storage usb-ohci]
 </screen>
-After:
+After
 <screen>
 usb-ohci               17000   0 (unused)
 usbcore                54240   1 [printer usb-ohci]
@@ -1490,13 +1520,13 @@ How to clean-up CUPS spooled jobs?
 </question>
 <answer>
 <para>
-The following removes entries from the completed jobs log:
+The following removes entries from the completed jobs log
 <screen>
 lprm -P OfficeJet -
 </screen>
 </para>
 <para>
-To find spooled job entries older than 7 days:
+To find spooled job entries older than 7 days
 <screen>
 find /var/spool/cups -type f -ctime +7 -print
 </screen>
@@ -1528,7 +1558,7 @@ How to capture screenshots?
 </question>
 <answer>
 <para>
-Images can be grabbed and converted to PNG format with the following commands:
+Images can be grabbed and converted to PNG format with the following commands
 <screen>
 xwd -frame -out temp_image
 xwdtopnm temp_image  > fig1.pnm
@@ -1554,7 +1584,7 @@ versatile.
 <orderedlist>
 <listitem>
 <para>Create a file called <filename>~/.calendar/calendar</filename>.
-The file will contain tab delimetered entries like:
+The file will contain tab delimetered entries like
 <programlisting><![CDATA[
 /* $Id: linux.sgml 900 2011-07-03 08:21:40Z frank $ */
 #ifndef _calendar_frank_
@@ -1641,7 +1671,7 @@ system for my regular bills.
 <para>
 Now, activate and automatic reminder via email by adding the following entries
 to <command>crontab(5)</command>.  The following will give me warning of events
-7 days in advance:
+7 days in advance
 <screen>
 @reboot /usr/bin/calendar -A 7 | mail -e -s "Reminders from Calendar" frank@localhost
 @daily  /usr/bin/calendar -A 7 | mail -e -s "Reminders from Calendar" frank@localhost
@@ -1708,7 +1738,7 @@ How to create a temporary file?
 </question>
 <answer>
 <para>
-Using Korn shell and a combination of current program and current process id:
+Using Korn shell and a combination of current program and current process id
 <programlisting><![CDATA[
 # create a unique temporary file
 tempfile=/tmp/${0##*/}.$$
@@ -1734,20 +1764,20 @@ Firstly, the value of the characters can be use found using
 <command>less(1)</command>.
 </para>
 <para>
-Or use <command>od(1)</command> to see *what* the control characters are:
+Or use <command>od(1)</command> to see *what* the control characters are
 <programlisting><![CDATA[
 od -cx my_file| less
 ]]></programlisting>
 </para>
 <para>
-These characters can be replaced using sed(1):
+These characters can be replaced using sed(1)
 <programlisting><![CDATA[
 sed 's/\x00//g' my_file > my_new_file
 ]]></programlisting>
 </para>
 <para>
 But, if you think it is just bad control characters - then you can short cut
-this using:
+this using
 <programlisting><![CDATA[
 sed '' my_file > my_new_file
 ]]></programlisting>
@@ -1770,11 +1800,11 @@ How to read emails formatted in HTML?
 </question>
 <answer>
 <para>
-Add the following into <filename>/etc/mailcap</filename> or <filename>~/.mailcap</filename>:
+Add the following into <filename>/etc/mailcap</filename> or <filename>~/.mailcap</filename>
 <programlisting><![CDATA[
 text/html; /usr/bin/lynx -dump -force_html '%s'; copiousoutput; description=HTML Text; nametemplate=%s.html
 ]]></programlisting>
-You can also use a web browser if you are running X:
+You can also use a web browser if you are running X
 <programlisting><![CDATA[
 text/html; /usr/bin/firefox '%s'; description=HTML Text; test=test -n "$DISPLAY";  nametemplate=%s.html
 ]]></programlisting>
@@ -1808,7 +1838,7 @@ How do you (re)set local timezone?
 </question>
 <answer>
 <para>
-For Debian based systems use <command>dpkg-reconfigure(1)</command>, as in:
+For Debian based systems use <command>dpkg-reconfigure(1)</command>, as in
 <programlisting><![CDATA[
 dpkg-reconfigure tzdata
 ]]></programlisting>
@@ -1827,7 +1857,7 @@ Hint on how to unpack an <filename>TAR</filename> archives.
 You don't need to move a <filename>.tar</filename> archive file to a certain
 directory because it happens to be in the directory you want to extract it into.
 Instead, unpack a <filename>.tar</filename> archive file into any directory you
-like using the -C option:
+like using the -C option
 <programlisting><![CDATA[
 tar xvf -C tmp/a/b/c newarc.tar.gz
 ]]></programlisting>
@@ -1846,19 +1876,19 @@ How to read a Java style properties file from a shell script?
 </question>
 <answer>
 <para>
-To search for a properties value called "key", use:
+To search for a properties value called "key", use
 <programlisting><![CDATA[
 KEY=`awk 'BEGIN{FS="="}; /^key/ {printf("%s", $2); exit}' java.properties`
 ]]></programlisting>
 </para>
 <para>
-The problem is if there is embedded spaces. In which case use:
+The problem is if there is embedded spaces. In which case use
 <programlisting><![CDATA[
 `awk 'BEGIN{FS="[ \t]*=[ \t]*"}; /^[ \t]*key/ {printf("%s", $2); exit}' java.properties`
 ]]></programlisting>
 </para>
 <para>
-Here is a little test program for the above process:
+Here is a little test program for the above process
 <programlisting><![CDATA[
 # create a temporary properties file
 tempproperties=/tmp/${0##*/}.$$
@@ -1890,7 +1920,7 @@ echo "key5=$key5"
 ]]></programlisting>
 </para>
 <para>
-Another way to do this is:
+Another way to do this is
 <programlisting><![CDATA[
 # general pattern to search for a key from a properties file
 value=$(grep "^key1.*=" ${propertiesFile} | sed 's/^.*=//')
@@ -1907,18 +1937,18 @@ How to remove empty lines from a file?
 </question>
 <answer>
 <para>
-In <command>vim(1)</command> this can be done globally using:
+In <command>vim(1)</command> this can be done globally using
 <programlisting><![CDATA[
 :%g/^$/d
 ]]></programlisting>
 </para>
 <para>
 A related problem is to remove white space from a line. 
-To remove leading white space use:
+To remove leading white space use
 <programlisting><![CDATA[
 :%s/^\s\+//
 ]]></programlisting>
-To remove trailing white space use:
+To remove trailing white space use
 <programlisting><![CDATA[
 :%s/\s\+$//
 ]]></programlisting>
@@ -2012,7 +2042,7 @@ Determine which file system you want to check.  This can be done by inspecting
 <programlisting><![CDATA[
 fsck.vfat -vfalt /dev/sdb1
 ]]></programlisting>
-Alternatively, for <filename>ext2</filename> and <filename>ext4</filename> file systems try:
+Alternatively, for <filename>ext2</filename> and <filename>ext4</filename> file systems try
 <programlisting><![CDATA[
 e2fsck -vfp /dev/sdb1
 ]]></programlisting>
@@ -2048,7 +2078,7 @@ F5 to start a X terminal.
 <orderedlist>
 <listitem>
 <para>
-Create a xbindkeys configuration file:
+Create a xbindkeys configuration file
 <screen>
 HOME:~$ xbindkeys -d > ~/.xbindkeysrc
 </screen>
@@ -2056,7 +2086,7 @@ HOME:~$ xbindkeys -d > ~/.xbindkeysrc
 </listitem>
 <listitem>
 <para>
-Determine what the keycode is for F5: 
+Determine what the keycode is for F5 
 <screen>
 HOME:~$ xbindkeys -k
 Press combination of keys or/and click under the window.
@@ -2070,7 +2100,7 @@ in $HOME/.xbindkeysrc to bind a key.
 </listitem>
 <listitem>
 <para>
-Edit this file, adding the following lines:
+Edit this file, adding the following lines
 <screen>
 # F5 = xterm
 "xterm -sb -right"
@@ -2080,7 +2110,7 @@ Edit this file, adding the following lines:
 </listitem>
 <listitem>
 <para>
-xbindkeys is invoked on X window startup by adding this into <filename>~/.xprofile</filename>:
+xbindkeys is invoked on X window startup by adding this into <filename>~/.xprofile</filename>
 </para>
 <screen>
 # use my keyboard bindings
@@ -2104,7 +2134,7 @@ How to support the Mac wired 220 aluminium keyboard?
 </question>
 <answer>
 <para>
-To fully support this keyboard you may want to re-map to support the code changes:
+To fully support this keyboard you may want to re-map to support the code changes
 <itemizedlist>
 <listitem>
 <para>
@@ -2132,7 +2162,7 @@ access <command>F8</command> for example, press <command>fn + F8</command>.
 This can be re-mapped to give the function key priority. So function keys are
 used as first key. Pressing <command>F8</command> key will behave like a
 <command>F8</command>. Pressing <command>fn + F8</command> will act as special
-key (play/pause).  To change to this key priority:
+key (play/pause).  To change to this key priority
     <orderedlist>
     <listitem>
     <para>
@@ -2167,7 +2197,7 @@ How to list subversion repository projects?
 </question>
 <answer>
 <para>
-Using just <command>svn(1)</command> and <command>awk(1)</command>:
+Using just <command>svn(1)</command> and <command>awk(1)</command>
 <programlisting><![CDATA[
 svn list -R file:///var/lib/svn/frank/trunk |awk -F/ '$NF ~ /^$/ && NF <= 3'
 ]]></programlisting>
@@ -2183,11 +2213,11 @@ How to set subversion keywords?
 </question>
 <answer>
 <para>
-Using just <command>svn(1)</command>:
+Using just <command>svn(1)</command>
 <programlisting><![CDATA[
 svn propset svn:keywords "Id" *.sgml
 ]]></programlisting>
-Commit the changed files:
+Commit the changed files
 <programlisting><![CDATA[
 svn ci -m "* applied svn keyword substitution" *.sgml
 ]]></programlisting>
@@ -2204,7 +2234,7 @@ How to save a subset of a PDF document?
 <answer>
 <para>
 This example uses <command>pdftops(1)</command> to specify a range of pages to
-print.  The input format is PDF, and the result is a PostScript file:
+print.  The input format is PDF, and the result is a PostScript file
 <programlisting><![CDATA[
 pdftops -f 1 -l 2 document.pdf document.ps
 ]]></programlisting>
@@ -2212,7 +2242,7 @@ Use <command>gv(1)</command> to view results.
 </para>
 <para>
 Another way to split a PDF document is to use <command>pdftk(1)</command>.  For
-example to split an 8 page document into pages 1-7, and page 8 use:
+example to split an 8 page document into pages 1-7, and page 8 use
 <programlisting><![CDATA[
 pdftk document.pdf cat 1-7 output document-1-7.pdf
 ]]></programlisting>
@@ -2220,13 +2250,13 @@ To split a document into seperate pages you first need to know how many there ar
 <programlisting><![CDATA[
 PAGES=$(pdfinfo document.pdf| awk '/Pages:/ {print $2}')
 ]]></programlisting>
-Then split using:
+Then split using
 <programlisting><![CDATA[
 for (( p=1; p <= $PAGES; p++)); do \
 	pdftk document.pdf cat $p output document.pdf-$p.pdf; \
 done
 ]]></programlisting>
-Another way to split a document is by using <command>gs(1)</command>:
+Another way to split a document is by using <command>gs(1)</command>
 <programlisting><![CDATA[
 gs -sDEVICE=pdfwrite -dNOPAUSE -dQUIET -dBATCH -dFirstPage=1 -dLastPage=1 -o document-1-7.pdf document.pdf
 ]]></programlisting>
@@ -2244,24 +2274,24 @@ How to combine a number of PDF files?
 <para>
 Ghostscript <command>gs(1)</command> gives you the power to combine files, convert files, and much more,
 all from the command line. To combine several input files into one
-combined PDF using Ghostscript:
+combined PDF using Ghostscript
 <programlisting><![CDATA[
 gs -sDEVICE=pdfwrite -dSAFER -dNOPAUSE -dBATCH -o combined.pdf first.pdf second.pdf third.pdf [...]
 ]]></programlisting>
-Equivalently, using the -o option:
+Equivalently, using the -o option
 <programlisting><![CDATA[
 gs -sDEVICE=pdfwrite -dSAFER -o combined.pdf first.pdf second.pdf third.pdf [...]
 ]]></programlisting>
 </para>
 <para>
-If this doens't give the results you want, try <command>psmerge(1)</command>:
+If this doens't give the results you want, try <command>psmerge(1)</command>
 <programlisting><![CDATA[
 psmerge -ocombined.pdf first.pdf second.pdf third.pdf [...]
 ]]></programlisting>
 This gives good results, but the result file size is larger than that achieved with Ghostscript.
 </para>
 <para>
-Another method uses the <command>pdfjoin(1)</command> command:
+Another method uses the <command>pdfjoin(1)</command> command
 <programlisting><![CDATA[
 pdfjoin --outfile combined.pdf first.pdf second.pdf third.pdf [...]
 ]]></programlisting>
@@ -2277,7 +2307,7 @@ How to copy a large amount of data?
 </question>
 <answer>
 <para>
-To copy from a source to some target directory using the <command>tar(1)</command>:
+To copy from a source to some target directory using the <command>tar(1)</command>
 <programlisting><![CDATA[
 tar cvf - source_directory | ( cd target_directory && tar xBf - )
 ]]></programlisting>
@@ -2328,7 +2358,7 @@ How to synchronise files in a directory on a USB stick to a local directory?
 </question>
 <answer>
 <para>
-Using <command>rsync(1)</command>:
+Using <command>rsync(1)</command>
 <programlisting><![CDATA[
 rsync -riW /media/verbatim/oss/dev/graph /home/frank/dev
 ]]></programlisting>
@@ -2346,11 +2376,11 @@ Why do I get an error when running <command>showrgb(1)</command>?
 </question>
 <answer>
 <para>
-If you get this error message when showing the RGB colour program:
+If you get this error message when showing the RGB colour program
 <screen>
 showrgb:  unable to open rgb database "/usr/share/X11/rgb"
 </screen>
-This is likely due to a broken symbolic link.  Fix it with:
+This is likely due to a broken symbolic link.  Fix it with
 <programlisting><![CDATA[
 ln -s /etc/X11/rgb.txt /usr/share/X11
 ]]></programlisting>
@@ -2367,7 +2397,7 @@ How to import a project directory to subversion?
 <answer>
 <para>
 Assuming the project directory is a subdirectory of the current directory, use
-the following command:
+the following command
 <programlisting><![CDATA[
 svn import file:///var/lib/svn/home/project -m "initial import"
 ]]></programlisting>
@@ -2385,11 +2415,11 @@ How to move a subversion project to a different location?
 <para>
 I had incorrectly loaded a project into the wrong path.
 I wanted under trunk, but put it under home.  How do I move it?
-Simple:
+Simple
 <programlisting><![CDATA[
 svn mv file:///var/lib/svn/home/project file:///var/lib/svn/home/trunk/project
 ]]></programlisting>
-List the results using:
+List the results using
 <programlisting><![CDATA[
 svn list file:///var/lib/svn/home/trunk
 ]]></programlisting>
@@ -2405,11 +2435,11 @@ How to determine the model and revision of your video chipset?
 </question>
 <answer>
 <para>
-Use the <command>lspci(8)</command> command. Type:
+Use the <command>lspci(8)</command> command. Type
 <programlisting><![CDATA[
 lspci -v | grep VGA
 ]]></programlisting>
-This will display the required information. On my system the output looks like this:
+This will display the required information. On my system the output looks like this
 <screen>
 01:00.0 VGA compatible controller: nVidia Corporation NV44 [GeForce 6200 TurboCache(TM)] (rev a1)
 </screen>
@@ -2427,7 +2457,7 @@ How to send an email attachment?
 <para>
 This is how to send mail attachments using commands,
 <command>uuencode(1)</command> to prepare the attachment, then sending via
-<command>mailx(1)</command>:
+<command>mailx(1)</command>
 <orderedlist> 
 <listitem> 
 <para>
@@ -2454,11 +2484,11 @@ How to set the volume name of a device?
 </question>
 <answer>
 <para>
-Use <command>tune2fs(8)</command>:
+Use <command>tune2fs(8)</command>
 <programlisting><![CDATA[
 tune2fs -L MYNAME /dev/sdb2
 ]]></programlisting>
-List device information using either <command>tune2fs(8)</command>, or <command>volname</command>:
+List device information using either <command>tune2fs(8)</command>, or <command>volname</command>
 <programlisting><![CDATA[
 tune2fs -l /dev/sdb2
 volname /dev/sdb2
@@ -2476,7 +2506,7 @@ How to efficiently search through many files?
 </question>
 <answer>
 <para>
-Use the following:
+Use the following
 <programlisting><![CDATA[
 find /dir/path -type f -print0 | xargs -0 grep -Hi "search term"
 ]]></programlisting>
@@ -2497,14 +2527,14 @@ All you need to record a live stream from the web is
 ASF or Live WMV stream to a file called <filename>stream.dump</filename>.
 </para>
 <para>
-For example:
+For example
 <programlisting><![CDATA[
 mplayer -dumpstream mmsh://streamer3.carnation.hu/mtvonlinem2?MSWMExt=.asf
 ]]></programlisting>
 will create a stream.dump file that you can later rename to my_recorded_stream.wmv.
 </para>
 <para>
-Note: This will not work with Flash-powered streams.
+Note This will not work with Flash-powered streams.
 </para>
 </answer>
 </qandaentry>
@@ -2537,7 +2567,7 @@ How to manage podcasts?
 <ulink url="http://podracer.sourceforge.net/">Podracer</ulink> was written by
 <author><firstname>Lorenzo</firstname><surname>Taylor</surname></author>. It is
 a simple to use, command line tool that uses only two plain text configuration
-files:
+files
 <screen><![CDATA[
 $HOME/.podracer/podracer.conf - configure podracer behaviour
 $HOME/.podracer/subscriptions - list of subscriptions
@@ -2611,7 +2641,7 @@ How to start a process from TTY without GDM, GNOME or KDE?
 </question>
 <answer>
 <para>
-There a multiple parts to this answer:
+There a multiple parts to this answer
    <simplelist type=horiz columns=1>
       <member>switch off graphical display manager (GDM)</member> 
       <member>allocate a job to a TTY session</member> 
