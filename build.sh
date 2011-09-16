@@ -32,6 +32,7 @@ do_ftp()
 {
     ftp -p <<FTPFAQ
         open $FTPSITE
+        ascii
         verbose
         prompt
         reset
