@@ -36,7 +36,7 @@ do_ftp()
         verbose
         prompt
         reset
-        hash
+        tick
         lcd $FAQ/index
         cd public_html
         dir .
@@ -45,9 +45,7 @@ do_ftp()
         mdelete x*.html
         mput x*.html
         dir .
-        status
-        close
-        quit
+        bye
 FTPFAQ
 }
 
@@ -55,17 +53,14 @@ FTPFAQ
 # MAINLINE
 #
 
-while getopts "fbh" opt
+while getopts "fbh" opt;
 do
     case "$opt" in
-        b)  do_build
-            ;;
-        f)  do_ftp
-            ;;
+        b)  do_build ;;
+        f)  do_ftp ;;
         *)  do_help
-            exit 1;;
+            exit 1 ;;
     esac
-    shift
 done
 
 exit 0
