@@ -704,4 +704,114 @@ mq.q.GAS.B2B.ABALONE=MRS.ABC.CUSTOMER
 </answer>
 </qandaentry>
 
+<qandaentry>
+<question>
+<para>
+How to create wiki markup using Apache Ant?
+</para>
+</question>
+<answer>
+<para>
+<ulink url="http://fmpp.sourceforge.net/"><citetitle>FMPP</citetitle></ulink>
+is a general-purpose text file pre-processor tool that uses FreeMarker
+templates. It is particularly designed for HTML preprocessor, to generate
+complete (static) homepages: directory structure that contains HTML's, image
+files, etc. But of course it can be used to generate source code or whatever
+text files. FMPP is extendable with Java classes to pull data from any data
+sources (database, etc.) and embed the data into the generated files.
+</para>
+<para>
+Download from <ulink url="http://fmpp.sourceforge.net/"><citetitle>FMPP</citetitle></ulink>
+and follow installation instructions.
+</para>
+<para>
+To use just as an Ant task,
+<orderedlist>
+    <listitem>
+    <para>
+extract archive, example <filename>/usr/local/fmpp_0.9.1</filename>
+    </para>
+    </listitem>
+    <listitem>
+    <para>
+copy JARs from <filename>/usr/local/fmpp_0.9.14/lib into Ant projects lib directory</filename>
+    </para>
+    </listitem>
+    <listitem>
+    <para>
+set-up classpath
+<programlisting><![CDATA[
+<path id="build.classpath">
+   <fileset dir="lib" includes="*.jar" />
+</path>
+]]></programlisting>
+    </para>
+    </listitem>
+    <listitem>
+    <para>
+define FMPP tasks
+<programlisting><![CDATA[
+<taskdef name="fmpp" classname="fmpp.tools.AntTask" classpathref="build.classpath" />
+]]></programlisting>
+    </para>
+    </listitem>
+</orderedlist>
+The following examples show how Ant can be used to create
+<ulink url="http://confluence.atlassian.com/"><citetitle>Confluence</citetitle></ulink>
+wiki markup which is based on
+<ulink url="http://textism.com/tools/textile/"><citetitle>Textile</citetitle></ulink>.
+<example>
+<title>Calling FMPP from Ant</title>
+<para>
+This is how to call FMPP from an Ant task using properties and an XML document as input.
+<programlisting><![CDATA[
+<fmpp sourceFile="src/text/ChangeNotes.ftl" outputfile="${dist}/ChangeNotes.txt" quiet="false" logfile="logs/fmpp.log">
+    <data expandProperties="yes">
+        svn_range: "${svn.range}"
+        c: xml("${data}/changes.xml")
+    </data>
+</fmpp>
+]]></programlisting>
+This is the template text file to create Confluence markup, <filename>ChangeNotes.ftl</filename>.
+<programlisting><![CDATA[
+h1. List Changes
+
+Change log for revisions: ${svn_range}
+
+<#list c.log.logentry as logentry>
+    <#assign icc = "${logentry.msg}"?matches("(JRA-[1-9]+[0-9]*)(.*)")>
+    <#list icc as i>
+Revision: [${logentry.@revision}|http://jra-svn/websvn/revision.php?repname=jra&amp;location=/&amp;rev=${logentry.@revision}] 
+Author: ${logentry.author} 
+Description: [${i?groups[1]}|http://jra-jira/browse/${i?groups[1]}] ${i?groups[2]} 
+    </#list>
+</#list>
+]]></programlisting>
+This is the XML input data from a subversion log command, <filename>changes.xml</filename>.
+<programlisting><![CDATA[
+<?xml version="1.0"?>
+<log>
+    <logentry revision="2164">
+        <author>first.last</author>
+        <date>2011-09-26T03:18:57.258509Z</date>
+        <msg>JRA-2104 Added timestamp for third type</msg>
+    </logentry>
+    <logentry revision="2163">
+        <author>first.last</author>
+        <date>2011-09-26T01:56:34.604507Z</date>
+        <msg>JRA-2096 Added message for second type</msg>
+    </logentry>
+    <logentry revision="2162">
+        <author>first.last</author>
+        <date>2011-09-26T01:51:51.433079Z</date>
+        <msg>JRA-2096 Added message for first type</msg>
+    </logentry>
+</log>
+]]></programlisting>
+</para>
+</example>
+</para>
+</answer>
+</qandaentry>
+
 </qandaset>
