@@ -719,15 +719,6 @@ Unix tools
 
 <listitem>
 <para>
-Web browser 
-<ulink url="http://www.mozilla.com/firefox/">
-<citetitle>Firefox http://www.mozilla.com/firefox</citetitle>
-</ulink>.
-</para>
-</listitem>
-
-<listitem>
-<para>
 The definitive cross-platform vector drawing tool 
 <ulink url="http://www.inkscape.org/">
 <citetitle>Inkscape http://www.inkscape.org</citetitle>
@@ -736,7 +727,7 @@ The definitive cross-platform vector drawing tool
 <para>
 This is also a very good tool
 <ulink url="http://www.getpaint.net">
-<citetitle>Paint.net http://www.getpaint.net</citetitle>
+<citetitle>paint.net http://www.getpaint.net</citetitle>
 </ulink>.
 </para>
 </listitem>
@@ -759,7 +750,6 @@ Remote control software
 </para>
 </listitem>
 
-
 <listitem>
 <para>
 Libre Office (The Document Foundation)
@@ -767,27 +757,9 @@ Libre Office (The Document Foundation)
 <citetitle>Libre Office http://www.libreoffice.org/</citetitle>
 </ulink>.
 </para>
-<para>
-Open Office (Oracle)
-<ulink url="http://www.openoffice.org/">
-<citetitle>Open Office http://www.openoffice.org/</citetitle>
-</ulink>.
-</para>
 </listitem>
 
 <listitem>
-<para>
-Create PDF's 
-<ulink url="http://www.pdfforge.org/">
-<citetitle>PDFCreator http://www.pdfforge.org/</citetitle>
-</ulink>.
-</para>
-<para>
-Alternatively there is 
-<ulink url="http://www.cutepdf.com/">
-<citetitle>CutePDF http://www.cutepdf.com/</citetitle>
-</ulink>.
-</para>
 <para>
 A fast PDF reader is 
 <ulink url="http://www.foxitsoftware.com/">
@@ -807,24 +779,9 @@ Unix tail
 
 <listitem>
 <para>
-Email 
-<ulink url="http://www.mozilla.com/thunderbird/">
-<citetitle>Thunderbird http://www.mozilla.com/thunderbird/</citetitle>
-</ulink>.
-</para>
-</listitem>
-
-<listitem>
-<para>
 Multi-media player 
 <ulink url="http://www.videolan.org/">
 <citetitle>VideoLAN - VLC media player at http://www.videolan.org</citetitle>
-</ulink>.
-</para>
-<para>
-See also the jukebox 
-<ulink url="http://www.rockbox.org/">
-<citetitle>ROCKbox http://www.rockbox.org</citetitle>
 </ulink>.
 </para>
 </listitem>
@@ -857,24 +814,6 @@ You can also do the same using the <command>Vim</command> tool
 
 <listitem>
 <para>
-An open source virtual machine is 
-<ulink url="http://www.virtualbox.org/">
-<citetitle>VirtualBox http://www.virtualbox.org/</citetitle>
-</ulink>.
-</para>
-</listitem>
-
-<listitem>
-<para>
-A free X window server is 
-<ulink url="http://sourceforge.net/projects/xming/">
-<citetitle>Xming http://sourceforge.net/projects/xming/</citetitle>
-</ulink>. 
-</para>
-</listitem>
-
-<listitem>
-<para>
 For a zip archives, use 
 <ulink url="http://www.7-zip.org/">
 <citetitle>7-zip http://www.7-zip.org/</citetitle>
@@ -883,24 +822,6 @@ For a zip archives, use
 <para>
 I used to use Zip Genius under Windows, but it had too many stray pop-up error
 pages and was just an annoyances.
-</para>
-</listitem>
-
-<listitem>
-<para>
-For a an explorer plug-in for CVS, use 
-<ulink url="http://www.tortoisecvs.org/">
-<citetitle>TortoiseCVS http://www.tortoisecvs.org/</citetitle>
-</ulink>.
-</para>
-</listitem>
-
-<listitem>
-<para>
-For school students the mathematics package 
-<ulink url="http://www.geogebra.org">
-<citetitle>GeoGebra http://www.geogebra.org/</citetitle>
-</ulink>.
 </para>
 </listitem>
 
