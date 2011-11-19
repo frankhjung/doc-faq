@@ -710,21 +710,6 @@ Write CD/DVD
 
 <listitem>
 <para>
-Virus scanners 
-<ulink url="http://free.grisoft.com/">
-<citetitle>AVG Free http://free.grisoft.com</citetitle>
-</ulink>.
-</para>
-<para>
-See also 
-<ulink url="http://www.clamav.net/">
-<citetitle>Clam AV http://www.clamav.net/</citetitle>
-</ulink>.
-</para>
-</listitem>
-
-<listitem>
-<para>
 Unix tools 
 <ulink url="http://unxutils.sourceforge.net/">
 <citetitle>GNU utilities for Win32 http://unxutils.sourceforge.net</citetitle>
@@ -743,9 +728,15 @@ Web browser
 
 <listitem>
 <para>
-Drawing tool 
+The definitive cross-platform vector drawing tool 
 <ulink url="http://www.inkscape.org/">
 <citetitle>Inkscape http://www.inkscape.org</citetitle>
+</ulink>.
+</para>
+<para>
+This is also a very good tool
+<ulink url="http://www.getpaint.net">
+<citetitle>Paint.net http://www.getpaint.net</citetitle>
 </ulink>.
 </para>
 </listitem>
