@@ -53,11 +53,18 @@ FTPFAQ
 # MAINLINE
 #
 
+# default
+if [[ $# -eq 0 ]]; then
+    do_help
+fi
+
+# at least one parameter
 while getopts "fbh" opt;
 do
     case "$opt" in
         b)  do_build ;;
         f)  do_ftp ;;
+        h)  do_help ;;
         *)  do_help
             exit 1 ;;
     esac
