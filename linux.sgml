@@ -1281,6 +1281,37 @@ Get <command>vsound</command> from
 <qandaentry>
 <question>
 <para>
+How to switch off PC Beep?
+</para>
+</question>
+<answer>
+<para>
+I used both these methods:
+<orderedlist>
+    <listitem>
+    <para>edit <filename>/etc/inputrc</filename> and 
+    <programlisting><![CDATA[
+    set bell-style none
+    ]]></programlisting>
+    </para>
+    </listitem>
+    <listitem>
+    <para>
+    use the <command>alsamixer(1)</command> or
+    <command>amixer(1)</command> command to unset using
+    <programlisting><![CDATA[
+    amixer -c 0 set "Beep" off
+    ]]></programlisting>
+    </para>
+    </listitem>
+</orderedlist>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
 How to format and mount a MS-DOS or VFAT device?
 </para>
 </question>
