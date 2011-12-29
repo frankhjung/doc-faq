@@ -2,12 +2,12 @@
 
 FAQ=$(dirname $0)
 SCRIPTNAME=$(basename $0)
-FTPSITE=ftp.supernerd.com.au
+FTPSITE=$(grep machine ~/.netrc| cut -f 2)
 
 do_help()
 {
     echo "Usage: ${SCRIPTNAME}" >&2
-    echo "Build SGML into HTML and optionally FTP to my ISP." >&2
+    echo "Build SGML into HTML and optionally FTP to my ISP at ${FTPSITE}." >&2
     echo "Options:" >&2
     echo "  -b = build only" >&2
     echo "  -f = ftp only" >&2
@@ -18,19 +18,31 @@ do_help()
     echo "(c) 2010,2011 Frank Jung. All rights reserved." >&2
 }
 
+do_check()
+{
+    # check dependencies
+    if [[ ! -x /usr/bin/db2html ]]; then
+        echo "ERROR: /usr/bin/db2html not installed" >&2
+        echo "" >&2
+        do_help
+        exit 1
+    fi
+}
+
 do_build() 
 {
+    do_check
     cd $FAQ
     rm -rf $FAQ/index/
     rm -rf $FAQ/index.junk/
-    db2html index.sgml
+    /usr/bin/db2html index.sgml
     chmod 755 $FAQ/index/
     chmod 644 $FAQ/index/*
 }
 
 do_ftp()
 {
-    ftp -p <<FTPFAQ
+    ftp -pv <<FTPFAQ
         open $FTPSITE
         ascii
         verbose
@@ -38,7 +50,6 @@ do_ftp()
         reset
         tick
         lcd $FAQ/index
-        cd public_html
         dir .
         delete index.html
         put index.html
@@ -53,9 +64,10 @@ FTPFAQ
 # MAINLINE
 #
 
-# default
+# check for action to perform, show help if none 
 if [[ $# -eq 0 ]]; then
     do_help
+    exit 0
 fi
 
 # at least one parameter
