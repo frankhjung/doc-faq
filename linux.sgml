@@ -2663,28 +2663,39 @@ $HOME/.podracer/subscriptions - list of subscriptions
 </answer>
 </qandaentry>
 
-<!-- TO COMPLETE
 <qandaentry>
 <question>
 <para>
-How to start a process from TTY without GDM, GNOME or KDE?
+How to determine your public IP address?
 </para>
 </question>
 <answer>
 <para>
-There a multiple parts to this answer
-   <simplelist type=horiz columns=1>
-      <member>switch off graphical display manager (GDM)</member> 
-      <member>allocate a job to a TTY session</member> 
-      <member></member> 
-   </simplelist>
-<programlisting><![CDATA[
-some code
-]]></programlisting>
+<variablelist>
+<varlistentry>
+    <term>Using <command>curl(1)</command></term>
+    <listitem>
+        <para>
+            <screen>
+curl ifconfig.me
+            </screen>
+        </para>
+   </listitem>
+</varlistentry>
+<varlistentry>
+    <term>Using <command>wget(1)</command></term>
+    <listitem>
+        <para>
+            <screen>
+wget -qO- ifconfig.me/ip
+            </screen> 
+        </para>
+   </listitem>
+</varlistentry>
+</variablelist>
 </para>
 </answer>
 </qandaentry>
--->
 
 <!-- to add a new FAQ entry
 <qandaentry>
@@ -2696,9 +2707,6 @@ The question.
 <answer>
 <para>
 The answer.
-<programlisting><![CDATA[
-some code
-]]></programlisting>
 </para>
 </answer>
 </qandaentry>
