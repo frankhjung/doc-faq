@@ -2333,6 +2333,34 @@ pdfjoin --outfile combined.pdf first.pdf second.pdf third.pdf [...]
 <qandaentry>
 <question>
 <para>
+How to scan a document and save as a PDF?
+</para>
+</question>
+<answer>
+<para>
+If you use <command>xsane</command> to scan documents, it will save as a PDF.
+However, the document saved in this format is often many megabytes larger than
+it should be. Instead save as a <filename>PNM</filename> or Portable Any Map
+document.
+</para>
+<para>
+Convert scanned PNM to a PDF using <command>mogrify(1)</command>, from the
+<command>ImageMagick(1)</command> command family: 
+<programlisting><![CDATA[
+mogrify -format pdf input.pnm
+]]></programlisting>
+Next, post process using Ghostscript <command>gs(1)</command>. 
+<programlisting><![CDATA[
+gs -sDEVICE=pdfwrite -dSAFER -ooutput.pdf input.pdf
+]]></programlisting>
+This results is a much better sized PDF document.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
 How to copy a large amount of data?
 </para>
 </question>
