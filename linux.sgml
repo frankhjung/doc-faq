@@ -1864,6 +1864,19 @@ Apply stylesheet with
 <qandaentry>
 <question>
 <para>
+How to edit recently viewed gnucash files?
+</para>
+</question>
+<answer>
+<para>
+See <filename>$HOME/.gconf/apps/gnucash/history/%gconf.xml</filename>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
 How do you (re)set local timezone?
 </para>
 </question>

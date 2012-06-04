@@ -9,8 +9,8 @@ do_help()
     echo "Usage: ${SCRIPTNAME}" >&2
     echo "Build SGML into HTML and optionally FTP to my ISP at ${FTPSITE}." >&2
     echo "Options:" >&2
-    echo "  -b = build only" >&2
-    echo "  -f = ftp only" >&2
+    echo "  -b = build" >&2
+    echo "  -f = ftp to iiNet" >&2
     echo "  -h = this help" >&2
     echo "Return codes:" >&2
     echo "  0 = build completed successfully" >&2
