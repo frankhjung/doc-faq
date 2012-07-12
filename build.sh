@@ -21,8 +21,8 @@ do_help()
 do_check()
 {
     # check dependencies
-    if [[ ! -x /usr/bin/db2html ]]; then
-        echo "ERROR: /usr/bin/db2html not installed" >&2
+    if [[ ! -x /usr/bin/jw ]]; then
+        echo "ERROR: /usr/bin/jw not installed" >&2
         echo "" >&2
         do_help
         exit 1
@@ -32,10 +32,9 @@ do_check()
 do_build() 
 {
     do_check
-    cd $FAQ
-    rm -rf $FAQ/index/
-    rm -rf $FAQ/index.junk/
-    /usr/bin/db2html index.sgml
+    rm -rf $FAQ/index/*
+    rm -rf $FAQ/index.junk
+    /usr/bin/jw -f docbook -b html -o index index.sgml
     chmod 755 $FAQ/index/
     chmod 644 $FAQ/index/*
 }
