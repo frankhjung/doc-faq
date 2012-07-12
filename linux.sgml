@@ -191,18 +191,19 @@ How to forward email?
 <para>
 Add the following entry to <filename>$HOME/.forward</filename>
 <screen>
-\frank@troll, jungf@ains.net.au
+\frank@localhost, frankhjung@linux.com
 </screen>
 This says that mail should keep one copy for the local account, and send one
-copy to my AINS account.
+copy to my internet account.
 </para>
 <para>
 When on vacation, do this
 <screen>
-\jungf, "| /usr/bin/vacation jungf"
+\frank, "| /usr/bin/vacation -r 0 frank"
 </screen>
-This keeps one copy for the local account, and sends one nasty message
-(stored in a file called .vacation for example) to the sender of any mail.
+This keeps one copy for the local account, and sends a vacation message stored
+in a file called <filename>$HOME/.vacation.msg</filename> back to the sender of any
+mail.
 </para>
 </answer>
 </qandaentry>
