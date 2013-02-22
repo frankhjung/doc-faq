@@ -3,6 +3,7 @@
 FAQ=$(dirname $0)
 SCRIPTNAME=$(basename $0)
 FTPSITE=$(grep machine ~/.netrc| cut -f 2)
+JW=/usr/bin/jw
 
 do_help()
 {
@@ -10,18 +11,18 @@ do_help()
     echo "Build SGML into HTML and optionally FTP to my ISP at ${FTPSITE}." >&2
     echo "Options:" >&2
     echo "  -b = build" >&2
-    echo "  -f = ftp to iiNet" >&2
+    echo "  -f = ftp to site set in .netrc" >&2
     echo "  -h = this help" >&2
     echo "Return codes:" >&2
     echo "  0 = build completed successfully" >&2
     echo "  1 = build failed, see previous messages" >&2
-    echo "(c) 2010,2011 Frank Jung. All rights reserved." >&2
+    echo "Copyright 2010 Frank Jung. All rights reserved." >&2
 }
 
 do_check()
 {
     # check dependencies
-    if [[ ! -x /usr/bin/jw ]]; then
+    if [[ ! -x ${JW} ]]; then
         echo "ERROR: /usr/bin/jw not installed" >&2
         echo "" >&2
         do_help
@@ -34,7 +35,7 @@ do_build()
     do_check
     rm -rf $FAQ/index/*
     rm -rf $FAQ/index.junk
-    /usr/bin/jw -f docbook -b html -o index index.sgml
+    ${JW} -f docbook -b html -o index index.sgml
     chmod 755 $FAQ/index/
     chmod 644 $FAQ/index/*
 }
