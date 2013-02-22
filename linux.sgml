@@ -2739,19 +2739,70 @@ wget -qO- ifconfig.me/ip
 </answer>
 </qandaentry>
 
-<!-- to add a new FAQ entry
 <qandaentry>
 <question>
 <para>
-The question.
+How to export a Git archive?
 </para>
 </question>
 <answer>
 <para>
-The answer.
+The simplest method is to use
+<programlisting>git archive -o latest.zip HEAD</programlisting>
+And here is a script to archive a git repositories relative to current
+directory,
+<programlisting><![CDATA[
+#!bash
+
+basedir=$(pwd)
+for f in $(find . -maxdepth 1 -type d); do
+    if [ -d $f/.git ]; then
+        echo -n "archiving $f ..."
+        cd $f
+        git archive -o $basedir/$f.zip HEAD
+        cd $basedir
+        echo " done!"
+    else
+        echo "ignoring $f"
+    fi
+done
+]]></programlisting>
 </para>
 </answer>
 </qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to run command to show on alternate machine?
+</para>
+</question>
+<answer>
+<para>
+If <command>xhost(1)</command> doesn't work, try this
+<screen><![CDATA[
+echo $DISPLAY                  # you'll be needing this value 3 lines below
+sudo -i                        # or "su -" on older Slackwares
+xauth merge ~alien/.Xauthority # use your own username here instead of "alien"
+export DISPLAY=:0.0            # use the value of DISPLAY you've seen 3 lines before
+]]></screen>
+</para>
+</answer>
+</qandaentry>
+
+<!-- to add a new FAQ entry
+    <qandaentry>
+    <question>
+    <para>
+    The question.
+    </para>
+    </question>
+    <answer>
+    <para>
+    The answer.
+    </para>
+    </answer>
+    </qandaentry>
 -->
 
 </qandaset>
