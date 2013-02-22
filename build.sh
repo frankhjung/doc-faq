@@ -3,6 +3,7 @@
 FAQ=$(dirname $0)
 SCRIPTNAME=$(basename $0)
 FTPSITE=$(grep machine ~/.netrc| cut -f 2)
+# required program provided by docbook-utils
 JW=/usr/bin/jw
 
 do_help()
@@ -23,7 +24,7 @@ do_check()
 {
     # check dependencies
     if [[ ! -x ${JW} ]]; then
-        echo "ERROR: /usr/bin/jw not installed" >&2
+        echo "ERROR: ${JW} not installed" >&2
         echo "" >&2
         do_help
         exit 1
