@@ -23,7 +23,7 @@ Use the script
 [build.sh](https://github.com/frankhjung/faq/blob/master/build.sh) to format
 them as HTML pages. 
 
-For example, to get full
+For example, to get help, run
 
     ./build.sh -h
     Usage: build.sh
