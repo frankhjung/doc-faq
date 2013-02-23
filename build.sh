@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Documents are DocBook qandaset (SGML)
+# For more see http://www.docbook.org/tdg/en/html/qandaset.html
+# Copyright 2012 Frank Jung. All rights reserved.
+
 FAQ=$(dirname $0)
 SCRIPTNAME=$(basename $0)
 FTPSITE=$(grep machine ~/.netrc| cut -f 2)
@@ -71,7 +75,7 @@ if [[ $# -eq 0 ]]; then
     exit 0
 fi
 
-# at least one parameter
+# need at least one parameter
 while getopts "fbh" opt;
 do
     case "$opt" in
