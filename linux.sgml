@@ -2791,18 +2791,20 @@ export DISPLAY=:0.0            # use the value of DISPLAY you've seen 3 lines be
 </qandaentry>
 
 <!-- to add a new FAQ entry
-    <qandaentry>
-    <question>
-    <para>
-    The question.
-    </para>
-    </question>
-    <answer>
-    <para>
-    The answer.
-    </para>
-    </answer>
-    </qandaentry>
+
+<qandaentry>
+<question>
+<para>
+The question.
+</para>
+</question>
+<answer>
+<para>
+The answer.
+</para>
+</answer>
+</qandaentry>
+
 -->
 
 </qandaset>

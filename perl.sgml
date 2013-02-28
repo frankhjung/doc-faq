@@ -11,7 +11,7 @@ What is the regular expression that matches a 24 hour clock?
 <answer>
 <para>Try: 
 <screen>
-    ([01]?[0-9]|2[0-3]):[0-5][0-9]
+([01]?[0-9]|2[0-3]):[0-5][0-9]
 </screen>
 </para>
 </answer>
@@ -28,7 +28,7 @@ What is the regular expression that matches a floating point number?
 This is a regular expression for floating point numbers and can also be used
 with grep or egrep for searching floating point numbers in any text file.
 <screen>
-    (\+|-)?([0-9]+\.?[0-9]*|\.[0-9]+)([eE](\+|-)?[0-9]+)?
+(\+|-)?([0-9]+\.?[0-9]*|\.[0-9]+)([eE](\+|-)?[0-9]+)?
 </screen>
 </para>
 </answer>
@@ -44,13 +44,13 @@ How to terminate an active job?
 <para>
 Using shell scripts:
 <screen>
-    $ ps -A | grep radproxy | awk '{ print $1 }' | xargs kill -1
+$ ps -A | grep radproxy | awk '{ print $1 }' | xargs kill -1
 </screen>
 </para>
 <para>
 Which isn't ~to~ bad, but why use three tools when one will do ?
 <screen>
-    $ ps -A | perl -ane '{/job_name/ && kill -1, $F[0]}'
+$ ps -A | perl -ane '{/job_name/ && kill -1, $F[0]}'
 </screen>
 </para>
 </answer>
@@ -77,13 +77,13 @@ suffix <filename>.bak</filename>.
 </para>
 <para>
 <screen>
-    $ perl -pi.bak -e 's/name=".*?"/$& rev="1.0"/g;' *.html
+$ perl -pi.bak -e 's/name=".*?"/$& rev="1.0"/g;' *.html
 </screen>
 </para>
 <para>
 Text search and replace can also be done from a shell script, for example:
 <ProgramListing><![CDATA[
-#bin/ksh
+#!env ksh
 #
 # Replace VAX1 with Calis for all *.mnu files.
 #
@@ -96,11 +96,11 @@ done
 While that is all well and good for Unix systems, what about MS-Windows?  
 Well you can still do this, with a little more effort ...
 <screen>
-    DOS> for /F %f in ('findstr /smc:Search &lt;file.*&gt;') do perl -pi.bak -e "s/Search/Replace/gos;" %f
+DOS> for /F %f in ('findstr /smc:Search &lt;file.*&gt;') do perl -pi.bak -e "s/Search/Replace/gos;" %f
 </screen>
 Which is just a bit worse than:
 <screen>
-    $ perl -pi.bak -e "s/Search/Replace/gos;" `grep -lr Search`
+$ perl -pi.bak -e "s/Search/Replace/gos;" `grep -lr Search`
 </screen>
 </para>
 </answer>
@@ -117,13 +117,13 @@ How to print the filesystem mount points listed in
 <para>
 Using awk:
 <screen>
-    $ nawk '/^\/dev/ && $4 !~ /swap/ { print $3 }' /etc/vfstab
+$ nawk '/^\/dev/ && $4 !~ /swap/ { print $3 }' /etc/vfstab
 </screen>
 </para>
 <para>
 Using Perl:
 <screen>
-    $ perl -ane '{print $F[2], "\n" if /^\/dev/ && (not /swap/)}' /etc/vfstab
+$ perl -ane '{print $F[2], "\n" if /^\/dev/ && (not /swap/)}' /etc/vfstab
 </screen>
 </para>
 </answer>
@@ -139,11 +139,11 @@ How to find the size of all files in a directory up to 7 days old?
 <para>
 Using awk:
 <screen>
-    $ find . -mtime -7 -ls| awk 'BEGIN {sum=0} {sum+= $7} END{print sum, "bytes or ", sum/1024, "Kbytes"}'
+$ find . -mtime -7 -ls| awk 'BEGIN {sum=0} {sum+= $7} END{print sum, "bytes or ", sum/1024, "Kbytes"}'
 </screen>
 Using Perl:
 <screen>
-    $ find . -mtime -7 -ls| perl -ane 'BEGIN{$sum=0} {$sum+= $F[6]} END{printf "%i bytes or %f Kbytes\n", $sum, $sum/1024}'
+$ find . -mtime -7 -ls| perl -ane 'BEGIN{$sum=0} {$sum+= $F[6]} END{printf "%i bytes or %f Kbytes\n", $sum, $sum/1024}'
 </screen>
 (Strictly you should also use the find flag "<command>-type f</command>" for
 plain files.)
@@ -165,11 +165,11 @@ Use: <filename>.forward</filename> (see
    <manvolnum>5</manvolnum>
 </citerefentry> for more information about this file)
 <screen>
-    |/bin/mail.pl
+|/bin/mail.pl
 </screen>
 Where:
 <ProgramListing><![CDATA[
-#!/usr/bin/perl
+#!env perl
 
 while (&lt;&gt;)
 {
@@ -190,7 +190,7 @@ How to calculate days between dates and show dates from epoch values?
 <para>
 Perl is really useful here:
 <ProgramListing><![CDATA[
-#!/usr/local/bin/perl
+#!env perl
 
 use strict;
 use Time::localtime;
@@ -235,7 +235,7 @@ exit 0;
 <para>
 You don't need the Perl modules though.  Try:
 <ProgramListing><![CDATA[
-#!/usr/local/bin/perl
+#!env perl
 #
 # Usage: yesterday
 # Description: show yesterdays date as YYYYMMDD.
@@ -270,7 +270,7 @@ when you're on a <systemitem class="OSname">Microsoft NT</systemitem> box.
 <para>
 I assume you've got them read into an array.  In which case, you can do:
 <screen>
-    @b = @a[-10..-1];
+@b = @a[-10..-1];
 </screen>
 to store the last 10 lines from <VarName>@a</VarName> into
 <VarName>@b</VarName> (negative numbers in an array slice count backwards from
@@ -279,7 +279,7 @@ the end of the array).
 <para>
 Likewise, for the first 10 lines, you can do:
 <screen>
-    @b = @a[0..9];
+@b = @a[0..9];
 </screen>
 to get the first 10 lines...
 </para>
@@ -312,7 +312,7 @@ file1 file2 file3 file4.
 <para>
 This can be done with a short Perl script:
 <ProgramListing><![CDATA[
-#!/usr/local/bin/perl
+#!env perl
 foreach $filename ( @ARGV )
 {
    rename($filename, lc($filename));
@@ -321,11 +321,11 @@ foreach $filename ( @ARGV )
 Where <function>lc</function> in the script is for lower case.
 Be sure to set execute permission for this script:
 <screen>
-    $ chmod +x rename_script.pl
+$ chmod +x rename_script.pl
 </screen>
 Then call using: (assuming you are in same directory as script)
 <screen>
-    $ ./rename_script.pl FILE*
+$ ./rename_script.pl FILE*
 </screen>
 </para>
 <para>
@@ -340,12 +340,12 @@ these commands ...
 From lowercase: <filename>file*</filename> to uppercase
 <filename>FILE*</filename>:
 <screen>
-    $ perl -e 'foreach (&lt;file*&gt;) { rename $_, uc($_);}' 
+$ perl -e 'foreach (&lt;file*&gt;) { rename $_, uc($_);}' 
 </screen> 
 From uppercase: <filename>FILE*</filename> to lowercase
 <filename>file*</filename>:
 <screen>
-    $ perl -e 'foreach (&lt;FILE*&gt;) { rename $_, lc($_); }' 
+$ perl -e 'foreach (&lt;FILE*&gt;) { rename $_, lc($_); }' 
 </screen> 
 </para> 
 </answer>
@@ -361,13 +361,13 @@ How to remove <keycode>^M</keycode> from source files?
 <para>
 Using shell tools:
 <screen>
-    $ cat source.file | tr -d '\r' &gt; source.file
+$ cat source.file | tr -d '\r' &gt; source.file
 </screen>
 </para>
 <para>
 Using Perl:
 <screen>
-    $ perl -pi~ -e 's/^M//g' source.file
+$ perl -pi~ -e 's/^M//g' source.file
 </screen>
 Where <keycode>^M</keycode> is entered by <keycode>ctl-v</keycode>, <keycode>ctl-m</keycode>.
 </para>
@@ -385,7 +385,7 @@ the <filename>/etc/aliases.db</filename> file?
 <para>
 Adjust output formatting to taste using Perl script:
 <ProgramListing><![CDATA[
-#!/usr/bin/perl
+#!env perl
 
 use DB_File;
 
@@ -440,7 +440,7 @@ You can call this script from cron, say with a crontab of
 <para>
 A more generic solution is:
 <ProgramListing><![CDATA[
-#!/usr/bin/perl -w
+#!env perl
 #
 # last-day-of-month - check if today is the last day of a month
 #
@@ -516,7 +516,7 @@ handler.
 The following link explains how this can be done in Perl, 
 <ulink url="http://www.perldoc.com/perl5.6/pod/perlipc.html#Signals"><citetitle>http://www.perldoc.com/perl5.6/pod/perlipc.html#Signals</citetitle></ulink>
 <ProgramListing><![CDATA[
-#!/usr/bin/perl -w
+#!env perl
 
 use strict;
 
@@ -548,13 +548,13 @@ How to get random lines from a file?
 <para>
 An easy way to retrieve random lines from a text file:
 <screen><![CDATA[
-    $ perl -e '$count = 10; @line = <>; for (1..$count) { print $line[int rand @line] }'
+$ perl -e '$count = 10; @line = <>; for (1..$count) { print $line[int rand @line] }'
 ]]></screen>
 </para>
 <para>
 For example:
 <screen><![CDATA[
-    $ cat /etc/passwd | perl -e '$count = 10; @line = <>; for (1..$count) { print $line[int rand @line] }'
+$ cat /etc/passwd | perl -e '$count = 10; @line = <>; for (1..$count) { print $line[int rand @line] }'
 ]]></screen>
 </para>
 </answer>
@@ -570,7 +570,7 @@ How to determine the length of lines in a file?
 <para>
 Try:
 <screen>
-    $ perl -ane 'print $ARGV, "\t", length, "\n" if length &gt; 100' *.[ch]
+$ perl -ane 'print $ARGV, "\t", length, "\n" if length &gt; 100' *.[ch]
 </screen>
 </para>
 </answer>
@@ -586,14 +586,14 @@ How to print line numbers of a source file?
 <para>
 You can do this from Perl with:
 <screen>
-    $ perl -pe "printf \"%02d \", ++$i" source.file
+$ perl -pe "printf \"%02d \", ++$i" source.file
 </screen>
 </para>
 <para>
 Or you can do this using normal shell tools:
 </para>
 <screen>
-    $ gawk "{ print FNR, $0 }" source.file
+$ gawk "{ print FNR, $0 }" source.file
 </screen>
 </answer>
 </qandaentry>
@@ -607,14 +607,14 @@ How to rename files with a sequential number scheme?
 <answer>
 <para>
 <ProgramListing><![CDATA[
-    #!/usr/bin/perl -w
-    use strict;
-    my $count = 0;
-    foreach my $old (@ARGV) {
-        my $new = sprintf "picture%03d.jpg", $count++;
-        rename $old, $new;
-    }
-    exit 0;
+#!env perl
+use strict;
+my $count = 0;
+foreach my $old (@ARGV) {
+    my $new = sprintf "picture%03d.jpg", $count++;
+    rename $old, $new;
+}
+exit 0;
 ]]></ProgramListing>
 </para>
 </answer>
@@ -631,19 +631,19 @@ How to search for lines not matching a pattern?
 Suppose you have a data file <filename>revision.log</filename>that
 contains lines like:
 <screen>
-    FileName1 Label1:=1.0 Label2:=1.1
-    FileName2 Label1:=1.0 Label2:=1.0
-    FileName3 Label1:=1.21 Label2:=1.41
+FileName1 Label1:=1.0 Label2:=1.1
+FileName2 Label1:=1.0 Label2:=1.0
+FileName3 Label1:=1.21 Label2:=1.41
 </screen>
 To show the lines that have different revision numbers, use
 a regular expression like:
 <screen>
-    $ perl -ane "print if ! m/Label1:=(\d+\.\d+) Label2:=\1/;" revision.log
+$ perl -ane "print if ! m/Label1:=(\d+\.\d+) Label2:=\1/;" revision.log
 </screen>
 For the data above, this will yield:
 <screen>
-    FileName1 Label1:=1.0 Label2:=1.1
-    FileName3 Label1:=1.21 Label2:=1.41
+FileName1 Label1:=1.0 Label2:=1.1
+FileName3 Label1:=1.21 Label2:=1.41
 </screen>
 </para>
 </answer>
@@ -664,17 +664,40 @@ Secondly: sort the hash map.
 There are two identical methods to get a list of unique array elements.
 The first uses the <function>map</function> function:
 <ProgramListing><![CDATA[
-    my %hash = map { $_ => 1 } @array;
+my %hash = map { $_ => 1 } @array;
 ]]></ProgramListing>
 Another way is to use a little array magic: 
 <ProgramListing><![CDATA[
-    my %hash;
-    @hash { @array } = ();
+my %hash;
+@hash { @array } = ();
 ]]></ProgramListing>
 The second step is to <function>sort</function> the hash map:
 <ProgramListing><![CDATA[
-    my @uniquesorted = sort keys %hash;
+my @uniquesorted = sort keys %hash;
 ]]></ProgramListing>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to prepend a file with data?
+</para>
+</question>
+<answer>
+<para>
+Suppose you want to add a header into a list of file. For example, a copyright
+notice. Suppose you need to do this for many files. Here is how to do it.
+First, add the copyright notice into a file, say
+<filename>copyright</filename>.
+</para>
+<para>
+Then run the command
+<ProgramListing><![CDATA[
+cat copyright | perl -0 -i -pe 'BEGIN {$h = <STDIN>}; print $h' `find . -type f -name "*.java"`
+]]></ProgramListing>
+The example above performs this for all Java files in the current path.
 </para>
 </answer>
 </qandaentry>

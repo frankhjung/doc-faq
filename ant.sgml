@@ -814,4 +814,70 @@ This is the XML input data from a subversion log command, <filename>changes.xml<
 </answer>
 </qandaentry>
 
+<qandaentry>
+<question>
+<para>
+How to download all job configurations from Hudson-CI?
+</para>
+</question>
+<answer>
+<para>
+This method should also work for Jenkins-CI. I use it to capture all job
+configurations from a Master server to add into an external version control
+system.
+<ProgramListing><![CDATA[
+<!-- get config.xml for each project and put into workspace temp area -->
+<target name="getHudsonConfig" description="get Hudson project configuration">
+    <!-- read list of all jobs on master -->
+    <property name="ci.master.jobs" value="http://${ci.master.host}:${ci.master.port}/api/xml/job?" />
+    <get src="${ci.master.jobs}" dest="${basedir}/temp/jobs.xml" verbose="true" />
+    <!-- for each job listed, download associated config -->
+    <xmlproperty file="${basedir}/temp/jobs.xml" keepRoot="false" prefix="hudson" />
+    <echoproperties prefix="hudson" />
+    <antcontrib:for list="${hudson.job.name}" delimiter="," trim="true" param="job.name">
+        <sequential>
+            <get
+                username="${ftp.username}"
+                password="${ftp.password}"
+                src="http://${ci.master.host}:${ci.master.port}/job/@{job.name}/config.xml"
+                dest="${basedir}/config/hudson/@{job.name}-config.xml"
+                verbose="true" />
+        </sequential>
+    </antcontrib:for>
+</target>
+]]></ProgramListing>
+</para>
+<para>
+Where the input properties are
+<simplelist type=horiz columns=2>
+    <member>ci.master.host</member> 
+    <member>host to get job configurations from</member> 
+    <member>ci.master.port</member> 
+    <member>ftp port on host</member> 
+    <member>ftp.username</member> 
+    <member>ftp username</member> 
+    <member>ftp.password</member> 
+    <member>ftp password</member> 
+</simplelist>
+</para>
+</answer>
+</qandaentry>
+
+<!-- question & answer template 
+
+<qandaentry>
+<question>
+<para>
+another question
+</para>
+</question>
+<answer>
+<para>
+another answer
+</para>
+</answer>
+</qandaentry>
+
+-->
+
 </qandaset>
