@@ -12,24 +12,25 @@ JW=/usr/bin/jw
 
 do_help()
 {
-    echo "Usage: ${SCRIPTNAME}" >&2
-    echo "Build SGML into HTML and optionally FTP to my ISP at ${FTPSITE}." >&2
-    echo "Options:" >&2
-    echo "  -b = build" >&2
-    echo "  -f = ftp to site set in .netrc" >&2
-    echo "  -h = this help" >&2
-    echo "Return codes:" >&2
-    echo "  0 = build completed successfully" >&2
-    echo "  1 = build failed, see previous messages" >&2
-    echo "Copyright 2010 Frank Jung. All rights reserved." >&2
+    cat <<EOF >&2
+Usage: ${SCRIPTNAME}
+Build SGML into HTML and optionally FTP to my ISP at ${FTPSITE}.
+Options:
+    -b = build
+    -f = ftp to site set in .netrc
+    -h = this help
+Return codes:
+    0 = build completed successfully
+    1 = build failed, see previous messages
+Copyright 2010 Frank Jung. All rights reserved.
+EOF
 }
 
 do_check()
 {
     # check dependencies
     if [[ ! -x ${JW} ]]; then
-        echo "ERROR: ${JW} not installed" >&2
-        echo "" >&2
+        echo -e "ERROR: ${JW} not installed\n" >&2
         do_help
         exit 1
     fi
