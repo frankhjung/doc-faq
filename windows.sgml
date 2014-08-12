@@ -514,6 +514,7 @@ How to set the Windows 2000 time server?
 </question>
 <answer>
 <para>
+Using the <command>net</command> service command:
 <orderedlist spacing=compact>
 <listitem>
 <para>
@@ -710,6 +711,15 @@ Write CD/DVD
 
 <listitem>
 <para>
+Clipboard history
+<ulink url="http://zodcode.com/clipcube/">
+<citetitle>ClipCube http://zodcode.com/clipcube/</citetitle>
+</ulink>.
+</para>
+</listitem>
+
+<listitem>
+<para>
 Unix tools 
 <ulink url="http://unxutils.sourceforge.net/">
 <citetitle>GNU utilities for Win32 http://unxutils.sourceforge.net</citetitle>
@@ -890,6 +900,7 @@ How to try another program if the first is not found?
 </question>
 <answer>
 <para>
+Capture error code and run alternative:
 <programlisting><![CDATA[
 edit etc\custom.properties
 if errorlevel 9009 @notepad etc\custom.properties
@@ -906,6 +917,7 @@ How to get a response from user?
 </question>
 <answer>
 <para>
+Try <command>set</command> with:
 <programlisting><![CDATA[
 set /p response=Perform this function? (y/n/q)
 if /i "%response%."=="n." goto NO
@@ -989,19 +1001,60 @@ return
 </answer>
 </qandaentry>
 
+<qandaentry>
+<question>
+<para>
+How to have command aliases like those in Linux?
+</para>
+</question>
+<answer>
+<para>
+Unlike mature operating systems, MS-Windows lacks command aliases. But you can
+fake it using <ulink
+url="http://technet.microsoft.com/en-us/library/bb490894.aspx">DOSKEY</ulink> macros.
+For example, create an alias script, <filename>c:\bin\alias.cmd</filename>:
+<programlisting><![CDATA[
+@echo off
+ 
+:: Temporary system path
+set PATH=%PATH%;c:\bin
+ 
+:: Command aliases
+DOSKEY sortpom=c:\bin\maven\bin\mvn com.google.code.sortpom:maven-sortpom-plugin:sort -Dsort.nrOfIndentSpace=4 -Dsort.sortPlugins=groupId,artifactId -Dsort.sortDependencies=scope,groupId,artifactId -Dsort.sortProperties=true $*
+ 
+:: Common directories
+DOSKEY dev=cd C:\dev
+DOSKEY docs=cd %USERPROFILE%\Documents
+DOSKEY downloads=cd %USERPROFILE%\Downloads
+DOSKEY home=cd %USERPROFILE% 
+]]></programlisting>
+Next, invoke this whenever a command prompt is started. To do this we need to
+update the registry. Use <ulink
+url="http://support.microsoft.com/kb/136393">regedit</ulink> to add a new
+String key called AutoRun at 
+<screen>
+HKEY_CURRENT_USER\Software\Microsoft\Command Processor\AutoRun
+</screen> 
+with value of full path to your alias script, which in this case is
+<filename>c:\bin\alias.cmd</filename>. You will need to restart your session for
+this to take effect.
+</para>
+</answer>
+</qandaentry>
+
 <!-- question & answer template 
-   <qandaentry>
-   <question>
-   <para>
-   another question
-   </para>
-   </question>
-   <answer>
-   <para>
-   another answer
-   </para>
-   </answer>
-   </qandaentry>
+<qandaentry>
+<question>
+<para>
+another question
+</para>
+</question>
+<answer>
+<para>
+another answer
+</para>
+</answer>
+</qandaentry>
 -->
 
 </qandaset>
