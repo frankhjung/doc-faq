@@ -1042,6 +1042,87 @@ this to take effect.
 </answer>
 </qandaentry>
 
+<qandaentry>
+<question>
+<para>
+How to set a default value for a variable?
+</para>
+</question>
+<answer>
+<para>
+MicroSoft does not seem to give an elegant way to do this:
+<programlisting><![CDATA[
+rem set default value to fhj-*
+if dummy==dummy%1 (
+set prefix=fhj-*
+) else (
+set prefix=%1
+)
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to echo without a line feed?
+</para>
+</question>
+<answer>
+<para>
+This is using the prompt part of <command>SET</command>
+<programlisting><![CDATA[
+echo | set /p="at revision "
+hg id -i -n -t
+]]></programlisting>
+So this will show Mercurial information for the current directory prefixed with
+a custom comment.
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to run a function over a set of directories?
+</para>
+</question>
+<answer>
+<para>
+This is using tips from above to cycle through a list of directories:
+<programlisting><![CDATA[
+@echo off
+
+rem set default projects to update as fhj-*
+if dummy==dummy%1 (
+set projects=fhj-*
+) else (
+set projects=%1
+)
+
+for /d %%r in (%projects%) do call :pull %%r
+goto :eof
+
+rem function to pull latest changes and update
+:pull
+echo.
+setlocal
+pushd %1
+echo %1 ...
+hg pull -r tip
+rem show revision information on one line
+echo | set /p="at revision "
+hg id -i -n -t
+popd
+endlocal
+
+:eof
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
 <!-- question & answer template 
 <qandaentry>
 <question>
