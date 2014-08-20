@@ -1123,6 +1123,45 @@ endlocal
 </answer>
 </qandaentry>
 
+<qandaentry>
+<question>
+<para>
+How to search PATH for program?
+</para>
+</question>
+<answer>
+<para>
+For example, to search path for program <command>sed</command>, try:
+<programlisting><![CDATA[
+:: fail if sed not in path
+for %%x in (sed.exe) do (set FOUND=%%~$PATH:x)
+if not defined FOUND (
+    echo ERROR: sed executable not found
+    goto :eof
+)
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
+<qandaentry>
+<question>
+<para>
+How to get path of current script?
+</para>
+</question>
+<answer>
+<para>
+Use <command>%~dpi</command>:
+<programlisting><![CDATA[
+setlocal
+set PATH=%PATH%;%%~dpi
+endlocal
+]]></programlisting>
+</para>
+</answer>
+</qandaentry>
+
 <!-- question & answer template 
 <qandaentry>
 <question>
