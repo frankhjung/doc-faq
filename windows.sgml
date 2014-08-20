@@ -125,7 +125,7 @@ user, an area that the profile is in use will be displayed.
 </para>
 <para>
 If you want to remotely delete a locally stored profile you can use the
-<command>DELPROF.EXE</command> utility which is supplied with the <systemitem
+<command>DELPROF</command> utility which is supplied with the <systemitem
 class="OSname"> Windows NT</systemitem> Server Resource Kit. The tool deletes
 all profiles that have not been used for a given number of days, for example:
 <screen><![CDATA[
@@ -936,7 +936,7 @@ How to protect against malicious software?
 </question>
 <answer>
 <para>
-Microsoft provide a Malicious Software Removal Tool <command>mrt.exe</command>
+Microsoft provide a Malicious Software Removal Tool <command>MRT</command>
 that can be downloaded from here <ulink
 url="http://www.microsoft.com/security/malwareremove/default.aspx">http://www.microsoft.com/security/malwareremove/default.aspx</ulink>.
 It has the following command line switches:
@@ -1140,6 +1140,7 @@ if not defined FOUND (
     goto :eof
 )
 ]]></programlisting>
+Run <command>for /?</command> for more.
 </para>
 </answer>
 </qandaentry>
@@ -1154,10 +1155,13 @@ How to get path of current script?
 <para>
 Use <command>%~dpi</command>:
 <programlisting><![CDATA[
+# to set in script
 setlocal
 set PATH=%PATH%;%%~dpi
 endlocal
 ]]></programlisting>
+See <ulink url="http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/percent.mspx?mfr=true">
+<citetitle>this</citetitle></ulink> Microsoft article about path expansion. 
 </para>
 </answer>
 </qandaentry>
