@@ -1,4 +1,12 @@
-faq
+Contents
+========
+
+[FAQ](#FAQ)
+[Build Notes](#Build Notes)
+
+-------------------------------------------------------------------------------
+
+FAQ
 ===
 
 This repository is a collection of tips and techniques that I have used over
