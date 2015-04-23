@@ -1,3 +1,9 @@
+CONTENTS
+========
+
+* [FAQ](README.md#faq)
+* [Build Notes](README.md#build-notes)
+
 FAQ
 ===
 
@@ -14,7 +20,7 @@ here!
 _frankhjung@linux.com_
 
 Build Notes
------------
+===========
 
 These pages are written as [DocBook](http://www.docbook.org/) using the
 [question-and-answer set](http://www.docbook.org/tdg/en/html/qandaset.html)
