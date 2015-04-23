@@ -1,13 +1,13 @@
 Contents
 ========
 
-[FAQ](#FAQ)
-[Build Notes](#Build Notes)
+* [FAQ][1]
+* [Build Notes][2]
 
 -------------------------------------------------------------------------------
 
-FAQ
-===
+[1]: FAQ
+========
 
 This repository is a collection of tips and techniques that I have used over
 the years. Some are included so that I can record how I manage my FreeBSD and
@@ -21,8 +21,8 @@ here!
 
 _frankhjung@linux.com_
 
-Build Notes
------------
+[2]: Build Notes
+----------------
 
 These pages are written as [DocBook](http://www.docbook.org/) using the
 [question-and-answer set](http://www.docbook.org/tdg/en/html/qandaset.html)
