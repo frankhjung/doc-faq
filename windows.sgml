@@ -1166,6 +1166,20 @@ See <ulink url="http://www.microsoft.com/resources/documentation/windows/xp/all/
 </answer>
 </qandaentry>
 
+<qandaentry>
+<question>
+<para>
+How to show system information
+</para>
+</question>
+<answer>
+<para>
+There are two commands to get system information. They are
+<command>systeminfo</command> and <command>cmdinfo </command>.
+</para>
+</answer>
+</qandaentry>
+
 <!-- question & answer template 
 <qandaentry>
 <question>
