@@ -55,6 +55,7 @@ do_ftp()
         prompt
         reset
         tick
+        put homepage.html
         lcd $FAQ/index
         dir .
         delete index.html
