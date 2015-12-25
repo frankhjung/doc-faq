@@ -1,13 +1,13 @@
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook V4.0//EN" 
-"http://nwalsh.com/docbook/xml/4.0/docbookx.dtd" [
-<!ENTITY ant SYSTEM "ant.sgml">
-<!ENTITY linux SYSTEM "linux.sgml">
-<!ENTITY perl SYSTEM "perl.sgml">
-<!ENTITY groovy SYSTEM "groovy.sgml">
-<!ENTITY sql SYSTEM "sql.sgml">
-<!ENTITY java SYSTEM "java.sgml">
-<!ENTITY windows SYSTEM "windows.sgml">
-<!ENTITY lyx SYSTEM "lyx.sgml">
+    "http://nwalsh.com/docbook/xml/4.0/docbookx.dtd" [
+    <!ENTITY ant SYSTEM "ant.sgml">
+    <!ENTITY linux SYSTEM "linux.sgml">
+    <!ENTITY perl SYSTEM "perl.sgml">
+    <!ENTITY groovy SYSTEM "groovy.sgml">
+    <!ENTITY sql SYSTEM "sql.sgml">
+    <!ENTITY java SYSTEM "java.sgml">
+    <!ENTITY windows SYSTEM "windows.sgml">
+    <!ENTITY lyx SYSTEM "lyx.sgml">
 ]>
 
 <!--
