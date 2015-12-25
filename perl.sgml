@@ -1,4 +1,4 @@
-<qandaset defaultlabel=qanda id=perl>
+<qandaset defaultlabel='qanda' id='perl'>
 
 <title>Perl Frequently Asked Questions</title>
 
@@ -50,7 +50,7 @@ $ ps -A | grep radproxy | awk '{ print $1 }' | xargs kill -1
 <para>
 Which isn't ~to~ bad, but why use three tools when one will do ?
 <screen>
-$ ps -A | perl -ane '{/job_name/ && kill -1, $F[0]}'
+$ ps -A | perl -ane '{/job_name/ &amp;&amp; kill -1, $F[0]}'
 </screen>
 </para>
 </answer>
@@ -77,7 +77,7 @@ suffix <filename>.bak</filename>.
 </para>
 <para>
 <screen>
-$ perl -pi.bak -e 's/name=".*?"/$& rev="1.0"/g;' *.html
+$ perl -pi.bak -e 's/name=".*?"/$&amp; rev="1.0"/g;' *.html
 </screen>
 </para>
 <para>
@@ -117,13 +117,13 @@ How to print the filesystem mount points listed in
 <para>
 Using awk:
 <screen>
-$ nawk '/^\/dev/ && $4 !~ /swap/ { print $3 }' /etc/vfstab
+$ nawk '/^\/dev/ &amp;&amp; $4 !~ /swap/ { print $3 }' /etc/vfstab
 </screen>
 </para>
 <para>
 Using Perl:
 <screen>
-$ perl -ane '{print $F[2], "\n" if /^\/dev/ && (not /swap/)}' /etc/vfstab
+$ perl -ane '{print $F[2], "\n" if /^\/dev/ &amp;&amp; (not /swap/)}' /etc/vfstab
 </screen>
 </para>
 </answer>

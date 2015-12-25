@@ -1,4 +1,4 @@
-<qandaset defaultlabel=qanda id=template>
+<qandaset defaultlabel='qanda' id='template'>
 
 <title>Apache Ant</title>
 
@@ -849,7 +849,7 @@ system.
 </para>
 <para>
 Where the input properties are
-<simplelist type=horiz columns=2>
+<simplelist type='horiz' columns='2'>
     <member>ci.master.host</member> 
     <member>host to get job configurations from</member> 
     <member>ci.master.port</member> 

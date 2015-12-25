@@ -1,4 +1,4 @@
-<qandaset defaultlabel=qanda id=lyx>
+<qandaset defaultlabel='qanda' id='lyx'>
 
 <title>LyX Frequently Asked Questions</title>
 
@@ -26,11 +26,11 @@ How to print a symbol?
 <para>
 Get the symbol code using:
 <screen>
-$ xfd -fn "-*-symbol-*-*-*-*-*-*-*-*-*-107-*-*" &
+$ xfd -fn "-*-symbol-*-*-*-*-*-*-*-*-*-107-*-*" &amp;
 </screen>
 If using <command>vim(1)</command> use:
 <screen>
-xfd -fn "-misc-fixed-medium-r-normal--14-130-75-75-c-70-iso8859-1" &
+xfd -fn "-misc-fixed-medium-r-normal--14-130-75-75-c-70-iso8859-1" &amp;
 </screen>
 Select the code (eg 326 for sqrt symbol). Enter math mode and type in \326.
 </para>
@@ -52,7 +52,7 @@ your document. For example:
 <screen>
 echo $'\xFB'
 </screen>
-Which should print û. See <command>iso_8859-1.7</command> or
+Which should print &#251;. See <command>iso_8859-1.7</command> or
 <command>ascii(7)</command> for more codes.
 </para>
 <para>

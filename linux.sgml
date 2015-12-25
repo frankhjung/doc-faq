@@ -1,4 +1,4 @@
-<qandaset defaultlabel=qanda id=Link>
+<qandaset defaultlabel='qanda' id='linux'>
 
 <title>Linux Frequently Asked Questions</title>
 
@@ -469,7 +469,7 @@ also allows you to configure and test X input devices.
    Linux: To copy an entire audio CD to disk as WAV files
    <screen>cdda2wav -x -B -D 0,0,0</screen>
    Or the more friendly
-   <screen>nice cdda2wav -D 0,1,0 -alltracks -x -Q -H -S 48 -v disable &</screen>
+   <screen>nice cdda2wav -D 0,1,0 -alltracks -x -Q -H -S 48 -v disable &amp;</screen>
    You may also try the <command>cdparanoia(1)</command> with
    <screen>cdparanoia -w -B -d /dev/dvd </screen>
    or more simply
@@ -485,7 +485,7 @@ also allows you to configure and test X input devices.
    </para>
    <para>
    Where the options to <command>dagrab(1)</command> are
-   <simplelist type=horiz columns=2>
+   <simplelist type='horiz' columns='2'>
       <member>-a</member> 
       <member>Dumps all tracks and ignores the optional track list.</member>
       <member>-d</member> 
@@ -510,7 +510,7 @@ also allows you to configure and test X input devices.
 <listitem>
    <para>
    Linux: You can seperate these file into volumes with
-   <screen>v=01 && for f in audio_??.wav; do mv $f audio_${v}_${f##audio_}; done</screen>
+   <screen>v=01 &amp;&amp; for f in audio_??.wav; do mv $f audio_${v}_${f##audio_}; done</screen>
    </para>
 </listitem>
 <listitem>
@@ -698,6 +698,7 @@ How to blank a re-writable CD?
 <answer>
 <para>
 This answer is for use of <command>cdrecord(1)</command>.
+</para>
 <para>
 To blank a CDRW use
 <screen>
@@ -926,7 +927,7 @@ Use <command>comm(1)</command> command.
 comm text1 text2
 </screen>
 This will print 3 columns
-<simplelist type=horiz columns=1>
+<simplelist type='horiz' columns='1'>
    <member>1st column contains lines in file text1 only</member>
    <member>2nd column contains lines in file text2 only</member>
    <member>3rd column contains lines that are in both file text1 and text2</member>
@@ -1485,7 +1486,7 @@ You can get the hex code of a character from vim with
 ga = character code under cursor
 </screen>
 To enter a special character in <command>vim</command> enter the 
-decimal code. For example to print û, then
+decimal code. For example to print &#251;, then
 <screen>
 ctrl-v 251
 </screen>
@@ -1495,7 +1496,7 @@ Special characters can be written to console (for example)
 <screen>
 echo $'\xFB'
 </screen>
-Which should print û. See <command>iso_8859-1(7)</command> or
+Which should print &#251;. See <command>iso_8859-1(7)</command> or
 <command>ascii(7)</command> for more codes.
 </para>
 <para>
@@ -1613,6 +1614,7 @@ formatted text file as input, and displays events within a user specified
 number of days forward from today.  I use this feature to remind me of
 birthdays and warn me when bills are due.  It is really easy to maintain, and
 versatile.
+</para>
 <orderedlist>
 <listitem>
 <para>Create a file called <filename>~/.calendar/calendar</filename>.
@@ -1703,7 +1705,9 @@ system for my regular bills.
 <para>
 Now, activate and automatic reminder via email by adding the following entries
 to <command>crontab(5)</command>.  The following will give me warning of events
-7 days in advance
+7 days in advance:
+</para>
+<para>
 <screen>
 @reboot /usr/bin/calendar -A 7 | mail -e -s "Reminders from Calendar" frank@localhost
 @daily  /usr/bin/calendar -A 7 | mail -e -s "Reminders from Calendar" frank@localhost
@@ -1759,6 +1763,7 @@ http://debian.ihug.com.au/debian-non-US/
 ftp://debian.vicnet.net.au/debian-non-US/
 http://debian.vicnet.net.au/debian-non-US/ 
 </literallayout>
+</para>
 </answer>
 </qandaentry>
 
@@ -2156,16 +2161,14 @@ Edit this file, adding the following lines
 <listitem>
 <para>
 xbindkeys is invoked on X window startup by adding this into <filename>~/.xprofile</filename>
-</para>
 <screen>
 # use my keyboard bindings
-nice xbindkeys &
+nice xbindkeys &amp;
 </screen>
+</para>
 </listitem>
 </orderedlist>
 Re-start X window session, and F5 should now start a X11 terminal.
-</para>
-<para>
 Finally, to see a summary of keyboard bindings use <command>xbindkeys_show</command>
 </para>
 </answer>
@@ -2231,6 +2234,7 @@ key (play/pause).  To change to this key priority
 </para>
 </listitem>
 </itemizedlist>
+</para>
 </answer>
 </qandaentry>
 
@@ -2541,7 +2545,7 @@ uuencode /home/ccuser/d364875/reports/buildtimes.xml > attachment
 </listitem> 
 <listitem> 
 <screen>
-mailx -s "attachment.zip" frankhjung@company.dom < attachment
+mailx -s "attachment.zip" frankhjung@company.dom &lt; attachment
 </screen>
 </listitem> 
 </orderedlist> 
@@ -2702,6 +2706,7 @@ $HOME/.podracer/subscriptions - list of subscriptions
     </listitem>
 </varlistentry>
 </variablelist>
+</para>
 </answer>
 </qandaentry>
 
@@ -2803,7 +2808,7 @@ here is a list of shortcuts and hints to get the most out of it.
 </para>
 <para>
 First I use a number of shell aliases:
-   <simplelist type=horiz columns=2>
+   <simplelist type='horiz' columns='2'>
       <member>,</member> 
       <member>ls -Fal</member> 
       <member>l</member> 
