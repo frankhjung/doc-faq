@@ -69,42 +69,42 @@ docbook2pdf
 
     <section><title>Apache Ant</title>
         <subtitle>Tips, hints and information for using Apache Ant.</subtitle>
-        <para> &ant; </para>
+        &ant;
     </section>
 
     <section><title>Linux</title>
         <subtitle>Tips, hints and information for the Linux Operating Systems.</subtitle>
-        <para>&linux;</para>
+        &linux;
     </section>
 
     <section><title>Perl</title>
         <subtitle>Tips, hints and information for Larry Wall's Perl scripting language.</subtitle>
-        <para> &perl; </para>
+        &perl;
     </section>
 
     <section><title>Groovy</title>
         <subtitle>Tips, hints and information for the Groovy scripting language.</subtitle>
-        <para> &groovy; </para>
+        &groovy;
     </section>
 
     <section><title>Java</title>
         <subtitle>Tips, Java on Debian.</subtitle>
-        <para> &java; </para>
+        &java;
     </section>
 
     <section><title>SQL</title>
         <subtitle>Tips, hints and information about SQL.</subtitle>
-        <para> &sql; </para>
+        &sql;
     </section>
 
     <section><title>Windows</title>
         <subtitle>Tips, hints and information for the Microsoft's Windows Operating System.</subtitle>
-        <para> &windows; </para>
+        &windows;
     </section>
 
     <section><title>Lyx</title>
         <subtitle>Tips, hints and information for LyX interface.</subtitle>
-        <para> &lyx; </para>
+        &lyx;
     </section>
 
     <section><title>Docbook Installation</title>
