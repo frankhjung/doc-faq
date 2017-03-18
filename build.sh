@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Documents are DocBook qandaset (SGML)
 # For more see http://www.docbook.org/tdg/en/html/qandaset.html
-# Copyright 2012 Frank Jung. All rights reserved.
+# © 2017 Frank Jung. All rights reserved.
 
 FAQ=$(dirname $0)
 SCRIPTNAME=$(basename $0)
@@ -12,7 +12,7 @@ JW=/usr/bin/jw
 
 do_help()
 {
-    cat <<EOF >&2
+    cat <<EOH >&2
 Usage: ${SCRIPTNAME}
 Build SGML into HTML and optionally FTP to my ISP at ${FTPSITE}.
 Options:
@@ -22,20 +22,23 @@ Options:
 Return codes:
     0 = build completed successfully
     1 = build failed, see previous messages
-Copyright 2010 Frank Jung. All rights reserved.
-EOF
+Copyright 2010-2017 Frank Jung. All rights reserved.
+EOH
 }
 
+# check that conversion utility, jw(1) is installed
 do_check()
 {
     # check dependencies
-    if [[ ! -x ${JW} ]]; then
+    if [[ ! -x ${JW} ]]
+    then
         echo -e "ERROR: ${JW} not installed\n" >&2
         do_help
         exit 1
     fi
 }
 
+# convert to html using jw
 do_build() 
 {
     do_check
@@ -46,6 +49,7 @@ do_build()
     chmod 644 $FAQ/index/*
 }
 
+# upload html to web site
 do_ftp()
 {
     ftp -pv <<FTPFAQ
@@ -72,13 +76,14 @@ FTPFAQ
 #####################################################################
 
 # check for action to perform, show help if none 
-if [[ $# -eq 0 ]]; then
+if [[ $# -eq 0 ]]
+then
     do_help
     exit 0
 fi
 
 # need at least one parameter
-while getopts "fbh" opt;
+while getopts "fbh" opt
 do
     case "$opt" in
         b)  do_build ;;
