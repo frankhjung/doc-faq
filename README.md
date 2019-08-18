@@ -1,5 +1,6 @@
 # CONTENTS
 
+* [GitLab Pages](https://frankhjung1.gitlab.io/faq) - rendered DocBook content
 * [FAQ](README.md#faq)
 * [Build Notes](README.md#build-notes)
 
@@ -11,8 +12,7 @@ Linux machines. Others, because it was hard to solve a problem. And finally,
 others because they are interesting or clever.
 
 The content, however is rather old. Instead I favour the use of
-[Dokuwiki](https://www.dokuwiki.org/dokuwiki#). Consequently, new material
-appears on my GitHub account [here](https://github.com/frankhjung/doc-wiki).
+[Dokuwiki](https://www.dokuwiki.org/dokuwiki#). 
 
 _frankhjung at linux.com_
 
