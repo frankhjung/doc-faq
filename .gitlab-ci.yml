@@ -1,0 +1,31 @@
+cache:
+  key: ${CI_COMMIT_REF_NAME}-cache
+  paths:
+    - public
+
+build:
+  image: debian:stable
+  stage: build
+  script:
+    - dpkg --configure -a
+    - apt-get --assume-yes --list-cleanup update
+    - apt-get --yes install docbook docbook-utils openjade
+    - rm -rf public/
+    - jw -f docbook -b html -o public index.sgml
+  except:
+    - tags
+
+pages:
+  image: alpine:latest
+  stage: deploy
+  script:
+    - echo Publishing pages ...
+    - ls -l public/
+  artifacts:
+    paths:
+      - public
+  except:
+    - tags
+  only:
+    - master
+
