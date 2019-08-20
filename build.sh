@@ -14,7 +14,7 @@ do_help()
 {
     cat <<EOH >&2
 Usage: ${SCRIPTNAME}
-Build SGML into HTML and optionally FTP to my ISP at ${FTPSITE}.
+Build SGML into HTML and optionally FTP to a remote location.
 Options:
     -b = build
     -f = ftp to site set in .netrc

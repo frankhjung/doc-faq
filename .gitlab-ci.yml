@@ -4,12 +4,11 @@ cache:
     - public
 
 build:
-  image: debian:stable
+  image: 
+    name: frankhjung/docbook:latest
+    entrypoint: [""]
   stage: build
   script:
-    - dpkg --configure -a
-    - apt-get --assume-yes --list-cleanup update
-    - apt-get --yes install docbook docbook-utils openjade
     - rm -rf public/
     - jw -f docbook -b html -o public index.sgml
   except:
