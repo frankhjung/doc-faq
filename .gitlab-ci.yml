@@ -1,25 +1,11 @@
-cache:
-  key: ${CI_COMMIT_REF_NAME}-cache
-  paths:
-    - public
-
-build:
-  image: 
+pages:
+  image:
     name: frankhjung/docbook:latest
     entrypoint: [""]
-  stage: build
+  stage: deploy
   script:
     - rm -rf public/
     - jw -f docbook -b html -o public index.sgml
-  except:
-    - tags
-
-pages:
-  image: alpine:latest
-  stage: deploy
-  script:
-    - echo Publishing pages ...
-    - ls -l public/
   artifacts:
     paths:
       - public
